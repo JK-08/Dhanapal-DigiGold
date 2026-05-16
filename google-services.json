@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1038057958960",
+    "project_id": "dhanapal-scheme",
+    "storage_bucket": "dhanapal-scheme.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038057958960:android:64d14053463b051fd147f5",
+        "android_client_info": {
+          "package_name": "com.kiruba08.dhanapaldigold"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1038057958960-h55k8vsr757a6fgk0gtkp1in8ggidict.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kiruba08.dhanapaldigold",
+            "certificate_hash": "82bd0e3749819c34ae847cd37cee9f5f07e2adec"
+          }
+        },
+        {
+          "client_id": "1038057958960-gg9fji7abv6php2ahfi6kf3ttmu33nea.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWYql2rk-BWhCOQZCU8gyEglEn-1NzQ1U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1038057958960-gg9fji7abv6php2ahfi6kf3ttmu33nea.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
