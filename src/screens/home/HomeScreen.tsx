@@ -1,6 +1,6 @@
 // src/screens/home/HomeScreen.tsx
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { ScrollView, View, Text } from 'react-native';
 import { useTheme } from '../../theme';
 
@@ -17,10 +17,25 @@ import AppLoader from '../../components/ui/appcomponents/AppLoader';
 import AppModal from '../../components/ui/appcomponents/AppModal';
 import AppIcon from '../../components/ui/appcomponents/AppIcons';
 import AppHeader from '../../components/ui/appcomponents/AppHeader';
+import AppGoldPriceCard from '../../components/ui/appcomponents/AppGoldPriceCard';
+import AppBottomSheet, { AppBottomSheetRef } from '../../components/ui/appcomponents/AppBottomSheet';
+import AppOTPInput, { AppOTPInputRef } from '../../components/ui/appcomponents/AppOTPInput';
+import AppPinInput, { AppPinInputRef } from '../../components/ui/appcomponents/AppPinInput';
+import AppSearchBar from '../../components/ui/appcomponents/AppSearchBar';
+import AppEmptyState from '../../components/ui/appcomponents/AppEmptyState';
+import AppSchemeCard, { SchemeData } from '../../components/ui/AppSchemeCard';
+import AppSkeletonLoader, { SkeletonBox, SkeletonCircle, SkeletonText } from '../../components/ui/appcomponents/AppSkeletonLoader';
+import AppRadio, { AppRadioItem } from '../../components/ui/appcomponents/AppRadio';
+import AppCheckbox from '../../components/ui/appcomponents/AppCheckbox';
+import AppSwitch from '../../components/ui/appcomponents/AppSwitch';
+import ScreenWrapper from '../../components/ui/appcomponents/ScreenWrapper';
+import KeyboardWrapper from '../../components/ui/appcomponents/KeyboardWrapper';
+import { AppProgressBar, AppProgressSteps } from '../../components/ui/appcomponents/AppProgressBar';
 
 // ── Other Components ─────────────────────────────────────────────
 import Sidebar from '../../components/Sidebar';
 import CustomAlert, { AlertType, CustomAlertProps } from '../../components/ui/CustomAlert';
+import { useToast } from '../../components/ui/Toast';
 
 export default function HomeScreen() {
   const { COLORS, FONTS, SIZES, SHADOWS } = useTheme();
@@ -35,6 +50,114 @@ export default function HomeScreen() {
   const [bottomModal, setBottomModal] = useState(false);
   const [loaderVisible, setLoaderVisible] = useState(false);
   const [alert, setAlert] = useState<CustomAlertProps>({ visible: false, title: '' });
+
+  // ── New component states ─────────────────────────────────────
+  const sheetRef = useRef<AppBottomSheetRef>(null);
+  const otpRef   = useRef<AppOTPInputRef>(null);
+  const pinRef   = useRef<AppPinInputRef>(null);
+  const [otpError, setOtpError]     = useState(false);
+  const [otpErrMsg, setOtpErrMsg]   = useState('');
+  const [pinError, setPinError]     = useState(false);
+  const [pinErrMsg, setPinErrMsg]   = useState('');
+  const [pinSuccess, setPinSuccess] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [filterActive, setFilterActive] = useState(false);
+  const [kycStep, setKycStep] = useState(1);
+  const [skeletonType, setSkeletonType] = useState<'list' | 'card' | 'profile' | 'transaction' | 'portfolio' | 'banner' | 'grid' | 'detail' | 'chart' | 'notification' | 'text'>('card');
+
+  // ── AppRadio states ──────────────────────────────────────────
+  const [radioVal, setRadioVal]         = useState('sip');
+  const [radioGold, setRadioGold]       = useState('24k');
+  const [radioSize, setRadioSize]       = useState('md');
+
+  // ── AppCheckbox states ───────────────────────────────────────
+  const [cbTerms, setCbTerms]           = useState(false);
+  const [cbSIP, setCbSIP]               = useState(true);
+  const [cbNotify, setCbNotify]         = useState(false);
+  const [cbInter, setCbInter]           = useState(false);
+
+  // ── AppSwitch states ─────────────────────────────────────────
+  const [swNotify, setSwNotify]         = useState(true);
+  const [swBiometric, setSwBiometric]   = useState(false);
+  const [swAutoSIP, setSwAutoSIP]       = useState(true);
+  const [swDarkMode, setSwDarkMode]     = useState(false);
+
+  // ── KeyboardWrapper form state ───────────────────────────────
+  const [kwName, setKwName]             = useState('');
+  const [kwEmail, setKwEmail]           = useState('');
+  const [kwRefreshing, setKwRefreshing] = useState(false);
+
+  // ── AppSchemeCard data ────────────────────────────────────────
+  const SCHEMES: SchemeData[] = [
+    {
+      id: '1',
+      name: 'DigiGold SIP',
+      description: 'Invest as low as ₹100/month in 24K digital gold. Auto-debit enabled.',
+      category: 'Investment',
+      status: 'trending',
+      purity: '24K',
+      returns: '12.4%',
+      minAmount: 100,
+      duration: '11 months',
+      rating: 4.7,
+      reviewCount: 2340,
+      tags: ['Tax Saving', 'Auto-debit', 'Flexible'],
+      progress: 68,
+      isFeatured: true,
+    },
+    {
+      id: '2',
+      name: 'Gold Chit Fund',
+      description: 'Traditional chit fund backed by 22K gold. Monthly instalment plan.',
+      category: 'Chit',
+      status: 'active',
+      purity: '22K',
+      returns: '10.8%',
+      minAmount: 500,
+      duration: '12 months',
+      rating: 4.3,
+      reviewCount: 980,
+      tags: ['Chit', 'Monthly'],
+      monthlyAmount: 500,
+      nextDueDate: '15 Jun 2026',
+      accumulatedAmount: 3000,
+    },
+    {
+      id: '3',
+      name: 'Jewellery Savings',
+      description: 'Save monthly and redeem as jewellery. 18K gold scheme.',
+      category: 'Jewellery',
+      status: 'new',
+      purity: '18K',
+      returns: '9.5%',
+      minAmount: 250,
+      tags: ['Jewellery', 'Redeem'],
+    },
+    {
+      id: '4',
+      name: 'Gold Bonds',
+      description: 'Government-backed sovereign gold bonds with fixed interest.',
+      category: 'Bonds',
+      status: 'closing',
+      purity: '24K',
+      returns: '8.0%',
+      minAmount: 1000,
+      rating: 4.9,
+      reviewCount: 5120,
+    },
+    {
+      id: '5',
+      name: 'Legacy Gold Plan',
+      description: 'This scheme has ended. Redeem your accumulated gold now.',
+      category: 'Savings',
+      status: 'expired',
+      purity: '22K',
+      returns: '11.2%',
+      minAmount: 200,
+    },
+  ];
+  const toast = useToast();
 
   const showAlert = (props: Partial<CustomAlertProps>) =>
     setAlert({ ...props, visible: true, title: props.title ?? '' });
@@ -66,6 +189,22 @@ export default function HomeScreen() {
       />
 
       <ScrollView contentContainerStyle={S.scroll} showsVerticalScrollIndicator={false}>
+
+        {/* ══ AppGoldPriceCard ═══════════════════════════════════ */}
+        <AppText variant="h5" style={S.section}>0. AppGoldPriceCard</AppText>
+        <AppGoldPriceCard
+          rates={{ '24K': 6325, '22K': 5798, '18K': 4744 }}
+          change={{ '24K': 1.2, '22K': -0.4, '18K': 0.9 }}
+          sparkline={{
+            '24K': [6100, 6150, 6080, 6200, 6280, 6310, 6325],
+            '22K': [5860, 5840, 5880, 5820, 5800, 5810, 5798],
+            '18K': [4580, 4610, 4570, 4640, 4700, 4730, 4744],
+          }}
+          updatedAt="Today, 10:32 AM"
+          onBuy={(k) => toast.success(`Buying ${k} Gold`, { message: `₹${k === '24K' ? '6,325' : k === '22K' ? '5,798' : '4,744'}/gram` })}
+          onSell={(k) => toast.warning(`Selling ${k} Gold`, { message: 'Confirm in the next step.' })}
+          onRefresh={() => toast.info('Rates refreshed', { duration: 2000 })}
+        />
 
         {/* ══ AppText ════════════════════════════════════════════ */}
         <AppText variant="h5" style={S.section}>1. AppText Variants</AppText>
@@ -350,6 +489,591 @@ export default function HomeScreen() {
           />
         </AppCard>
 
+        {/* ══ Toast ══════════════════════════════════════════════ */}
+        <AppText variant="h5" style={S.section}>13. Toast Notifications</AppText>
+        <AppCard variant="outlined" padding="md">
+          <AppText variant="caption" style={{ marginBottom: 8 }}>Types:</AppText>
+          <View style={S.gap}>
+            <AppButton label="✅ Success Toast" variant="primary" onPress={() =>
+              toast.success('Gold purchased!', { message: '2.5g added to your portfolio.' })
+            } />
+          </View>
+          <View style={S.gap}>
+            <AppButton label="❌ Error Toast" variant="danger" onPress={() =>
+              toast.error('Transaction Failed', { message: 'Payment could not be processed.' })
+            } />
+          </View>
+          <View style={S.gap}>
+            <AppButton label="⚠️ Warning Toast" variant="outline" onPress={() =>
+              toast.warning('KYC Pending', { message: 'Complete KYC to unlock higher limits.' })
+            } />
+          </View>
+          <View style={S.gap}>
+            <AppButton label="ℹ️ Info Toast" variant="secondary" onPress={() =>
+              toast.info('Market Update', { message: 'Gold rate: ₹6,325/gram (+1.2% today).' })
+            } />
+          </View>
+          <View style={S.gap}>
+            <AppButton label="✦ Gold Toast" variant="gold" onPress={() =>
+              toast.gold('Premium Offer!', { message: 'Buy 5g today and get 0.5g bonus.' })
+            } />
+          </View>
+          <View style={S.gap}>
+            <AppButton label="⏳ Loading Toast" variant="outline" onPress={() => {
+              const id = toast.loading('Processing payment…');
+              setTimeout(() => {
+                toast.dismiss(id);
+                toast.success('Payment Complete!', { message: 'Your order has been placed.' });
+              }, 3000);
+            }} />
+          </View>
+          <AppDivider label="Positions" marginVertical={10} />
+          <View style={S.row}>
+            <AppButton label="Top" size="sm" onPress={() => toast.info('Top', { position: 'top' })} />
+            <AppButton label="Bottom" size="sm" variant="outline" onPress={() => toast.info('Bottom', { position: 'bottom' })} />
+            <AppButton label="Top-Right" size="sm" variant="secondary" onPress={() => toast.success('Top Right!', { position: 'top-right' })} />
+            <AppButton label="Center" size="sm" variant="gold" onPress={() => toast.gold('Center!', { position: 'center' })} />
+          </View>
+          <AppDivider label="With Action" marginVertical={10} />
+          <AppButton label="Toast with Action Button" variant="primary" onPress={() =>
+            toast.success('Gold SIP Started!', {
+              message: '₹500/month auto-invest enabled.',
+              action: { label: 'View Plan', onPress: () => {} },
+              duration: 5000,
+            })
+          } />
+        </AppCard>
+
+        {/* ══ AppSearchBar ═══════════════════════════════════════ */}
+        <AppText variant="h5" style={S.section}>14. AppSearchBar</AppText>
+        <AppCard variant="outlined" padding="md">
+          <AppText variant="caption" style={{ marginBottom: 8 }}>Filled (default) + voice + loading:</AppText>
+          <AppSearchBar
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholder="Search gold plans…"
+            onSearch={(q) => {
+              setSearchLoading(true);
+              setTimeout(() => setSearchLoading(false), 1200);
+            }}
+            loading={searchLoading}
+            onVoiceSearch={() => toast.info('Voice search activated')}
+            variant="filled"
+          />
+          <AppDivider label="Outlined + filter button" marginVertical={12} />
+          <AppSearchBar
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholder="Search with filter…"
+            onSearch={(q) => toast.info(`Searching: ${q}`)}
+            variant="outlined"
+            onFilter={() => { setFilterActive(p => !p); toast.info(filterActive ? 'Filter cleared' : 'Filter applied'); }}
+            filterActive={filterActive}
+          />
+          <AppDivider label="Minimal + suggestions + cancel" marginVertical={12} />
+          <AppSearchBar
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholder="Try a suggestion…"
+            onSearch={(q) => toast.success(`Search: ${q}`)}
+            variant="minimal"
+            showCancel
+            onCancel={() => setSearchQuery('')}
+            suggestions={['Gold ETF', 'Digital Gold', 'SIP ₹500', '24K Buy']}
+            onSuggestionPress={(s) => { setSearchQuery(s); toast.info(`Selected: ${s}`); }}
+            debounceMs={300}
+          />
+        </AppCard>
+
+        {/* ══ AppOTPInput ════════════════════════════════════════ */}
+        <AppText variant="h5" style={S.section}>15. AppOTPInput</AppText>
+        <AppCard variant="outlined" padding="md">
+          <AppText variant="caption" style={{ marginBottom: 4, textAlign: 'center' }}>6-digit OTP — enter 123456 to verify:</AppText>
+          <AppOTPInput
+            ref={otpRef}
+            length={6}
+            label="Verification Code"
+            hint="Sent to +91 98765 43210"
+            onChangeText={() => { setOtpError(false); setOtpErrMsg(''); }}
+            onComplete={(v) => {
+              if (v !== '123456') { setOtpError(true); setOtpErrMsg('Invalid OTP. Try 123456'); }
+              else { setOtpError(false); setOtpErrMsg(''); toast.success('OTP Verified! ✓'); }
+            }}
+            error={otpError}
+            errorMessage={otpErrMsg}
+            onResend={() => toast.info('OTP resent!')}
+            resendCountdown={30}
+            autoFocus={false}
+          />
+          <AppDivider label="Secure / masked (4-digit)" marginVertical={14} />
+          <AppOTPInput
+            length={4}
+            secure
+            keyboardType="numeric"
+            success={pinSuccess}
+          />
+          <View style={[S.row, { justifyContent: 'center', marginTop: 12 }]}>
+            <AppButton size="sm" label="Clear" variant="outline" onPress={() => { otpRef.current?.clear(); setOtpError(false); setOtpErrMsg(''); }} />
+          </View>
+        </AppCard>
+
+        {/* ══ AppPinInput ════════════════════════════════════════ */}
+        <AppText variant="h5" style={S.section}>16. AppPinInput</AppText>
+        <AppCard variant="outlined" padding="md">
+          <AppText variant="caption" style={{ marginBottom: 8, textAlign: 'center' }}>Dots variant — enter 1234:</AppText>
+          <AppPinInput
+            ref={pinRef}
+            length={4}
+            variant="dots"
+            label="Enter your PIN"
+            hint="Use the PIN you set during registration"
+            onChangeText={() => { setPinError(false); setPinErrMsg(''); setPinSuccess(false); }}
+            onComplete={(v) => {
+              if (v !== '1234') { setPinError(true); setPinErrMsg('Wrong PIN. Try 1234'); }
+              else { setPinSuccess(true); toast.success('PIN Accepted! ✓'); }
+            }}
+            error={pinError}
+            errorMessage={pinErrMsg}
+            success={pinSuccess}
+            vibrateOnError
+          />
+          <AppDivider label="Boxes variant + custom keypad" marginVertical={14} />
+          <AppPinInput
+            length={4}
+            variant="boxes"
+            label="Confirm PIN"
+            showKeypad
+            onComplete={(v) => toast.info(`Keypad PIN: ${v}`)}
+          />
+          <View style={[S.row, { justifyContent: 'center', marginTop: 8 }]}>
+            <AppButton size="sm" label="Reset" variant="outline" onPress={() => { pinRef.current?.clear(); setPinError(false); setPinErrMsg(''); setPinSuccess(false); }} />
+          </View>
+        </AppCard>
+
+        {/* ══ AppBottomSheet ═════════════════════════════════════ */}
+        <AppText variant="h5" style={S.section}>17. AppBottomSheet</AppText>
+        <AppCard variant="outlined" padding="md">
+          <View style={S.gap}>
+            <AppButton
+              label="Open Sheet (50% → 90%)"
+              variant="primary"
+              leftIcon="chevron-up-outline"
+              onPress={() => sheetRef.current?.open()}
+            />
+          </View>
+          <AppButton
+            label="Snap to 90%"
+            variant="outline"
+            leftIcon="expand-outline"
+            onPress={() => sheetRef.current?.snapTo(1)}
+          />
+        </AppCard>
+
+        {/* ══ AppEmptyState ══════════════════════════════════════ */}
+        <AppText variant="h5" style={S.section}>18. AppEmptyState</AppText>
+        <AppCard variant="outlined" padding="md">
+          <AppText variant="caption" style={{ marginBottom: 4 }}>no-portfolio (sm):</AppText>
+          <AppEmptyState
+            variant="no-portfolio"
+            size="sm"
+            cta={{ label: 'Start Investing', onPress: () => toast.success('Redirecting to Buy…'), icon: '💰' }}
+            secondaryCta={{ label: 'Learn More', onPress: () => toast.info('Opening guide…'), variant: 'ghost' }}
+          />
+          <AppDivider label="no-results" marginVertical={4} />
+          <AppEmptyState
+            variant="no-results"
+            size="sm"
+            cta={{ label: 'Clear Filters', onPress: () => toast.info('Filters cleared'), variant: 'outline' }}
+          />
+          <AppDivider label="error" marginVertical={4} />
+          <AppEmptyState
+            variant="error"
+            size="sm"
+            cta={{ label: 'Try Again', onPress: () => toast.warning('Retrying…'), variant: 'outline' }}
+          />
+          <AppDivider label="coming-soon (custom illustration)" marginVertical={4} />
+          <AppEmptyState
+            variant="coming-soon"
+            size="sm"
+            illustration="🏆"
+            title="Gold Rewards — Coming Soon"
+            subtitle="Earn rewards on every gold purchase. Stay tuned!"
+            showDecorations={false}
+          />
+        </AppCard>
+
+        {/* ══ AppProgressBar ═════════════════════════════════════ */}
+        <AppText variant="h5" style={S.section}>19. AppProgressBar &amp; Steps</AppText>
+        <AppCard variant="outlined" padding="md">
+          <AppText variant="caption" style={{ marginBottom: 8 }}>Sizes:</AppText>
+          <View style={{ gap: 10 }}>
+            <AppProgressBar progress={70} size="xs" />
+            <AppProgressBar progress={55} size="sm" showLabel />
+            <AppProgressBar progress={80} size="md" showLabel labelPosition="outside-right" />
+            <AppProgressBar progress={40} size="lg" showLabel labelPosition="inside" />
+          </View>
+          <AppDivider label="Variants" marginVertical={12} />
+          <View style={{ gap: 10 }}>
+            <AppProgressBar progress={65} variant="default" showLabel labelPosition="outside-top" label="SIP Goal" />
+            <AppProgressBar progress={45} variant="striped" size="md" showLabel color={COLORS.secondary} />
+            <AppProgressBar progress={80} variant="segmented" size="md" showLabel labelPosition="outside-right" />
+          </View>
+          <AppDivider label="With range labels" marginVertical={12} />
+          <AppProgressBar
+            progress={62}
+            size="md"
+            showLabel
+            showRange
+            rangeStart="₹0"
+            rangeEnd="₹1,00,000"
+            label="₹62,000 saved"
+            labelPosition="outside-top"
+            color={COLORS.success}
+          />
+          <AppDivider label="Progress Steps — horizontal (tap to navigate)" marginVertical={12} />
+          <AppProgressSteps
+            steps={[
+              { label: 'PAN', description: 'Verify PAN card' },
+              { label: 'Aadhaar', description: 'Link Aadhaar' },
+              { label: 'Bank', description: 'Add bank account' },
+              { label: 'Done', description: 'KYC complete' },
+            ]}
+            currentStep={kycStep}
+            variant="numbered"
+            showDescriptions
+            onStepPress={setKycStep}
+          />
+          <View style={[S.row, { justifyContent: 'center', marginTop: 12 }]}>
+            <AppButton size="sm" label="← Prev" variant="outline" onPress={() => setKycStep(s => Math.max(0, s - 1))} />
+            <AppButton size="sm" label="Next →" variant="primary" onPress={() => setKycStep(s => Math.min(3, s + 1))} />
+          </View>
+          <AppDivider label="Progress Steps — vertical (checkmarks)" marginVertical={12} />
+          <AppProgressSteps
+            steps={[
+              { label: 'Order Placed', description: 'Your order has been received' },
+              { label: 'Payment Confirmed', description: 'Payment processed successfully' },
+              { label: 'Gold Allocated', description: 'Gold added to your vault' },
+              { label: 'Certificate Issued', description: 'Download your certificate' },
+            ]}
+            currentStep={kycStep}
+            orientation="vertical"
+            variant="checkmarks"
+            showDescriptions
+            connectorStyle="dashed"
+          />
+        </AppCard>
+
+        {/* ══ AppSkeletonLoader ══════════════════════════════════ */}
+        <AppText variant="h5" style={S.section}>20. AppSkeletonLoader</AppText>
+        <AppCard variant="outlined" padding="md">
+
+          <AppText variant="caption" style={{ marginBottom: 8 }}>Switch type:</AppText>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 12 }}>
+            <View style={[S.row, { flexWrap: 'nowrap' }]}>
+              {(['card','list','transaction','notification','portfolio','profile','banner','grid','detail','chart','text'] as const).map(t => (
+                <AppButton
+                  key={t}
+                  label={t}
+                  size="sm"
+                  variant={skeletonType === t ? 'primary' : 'outline'}
+                  onPress={() => setSkeletonType(t)}
+                />
+              ))}
+            </View>
+          </ScrollView>
+
+          <AppSkeletonLoader
+            type={skeletonType}
+            count={skeletonType === 'grid' ? 4 : skeletonType === 'text' ? 1 : 3}
+            lines={5}
+          />
+
+          <AppDivider label="Primitives — SkeletonBox / Circle / Text" marginVertical={14} />
+          <View style={{ gap: 10 }}>
+            <SkeletonBox height={14} width="80%" radius={6} />
+            <SkeletonBox height={14} width="60%" radius={6} />
+            <View style={[S.row, { gap: 10 }]}>
+              <SkeletonCircle size={48} />
+              <SkeletonCircle size={36} />
+              <SkeletonCircle size={24} />
+            </View>
+            <SkeletonText lines={4} lineHeight={13} gap={8} lastLineWidth="45%" />
+          </View>
+
+        </AppCard>
+
+        {/* ══ AppRadio ════════════════════════════════════════════ */}
+        <AppText variant="h5" style={S.section}>21. AppRadio</AppText>
+        <AppCard variant="outlined" padding="md">
+          <AppText variant="caption" style={{ marginBottom: 8 }}>Vertical group — investment type:</AppText>
+          <AppRadio
+            value={radioVal}
+            onChange={setRadioVal}
+            options={[
+              { value: 'sip',  label: 'Gold SIP',      sublabel: 'Auto-invest monthly' },
+              { value: 'buy',  label: 'Buy Gold',       sublabel: 'One-time purchase' },
+              { value: 'sell', label: 'Sell Gold',      sublabel: 'Liquidate holdings' },
+              { value: 'gift', label: 'Gift Gold',      sublabel: 'Send to a friend', disabled: true },
+            ]}
+          />
+          <AppDivider label="Horizontal group — gold purity" marginVertical={12} />
+          <AppRadio
+            value={radioGold}
+            onChange={setRadioGold}
+            variant="gold"
+            direction="horizontal"
+            options={[
+              { value: '24k', label: '24K' },
+              { value: '22k', label: '22K' },
+              { value: '18k', label: '18K' },
+            ]}
+          />
+          <AppDivider label="Sizes — standalone AppRadioItem" marginVertical={12} />
+          <View style={{ gap: 10 }}>
+            {(['sm', 'md', 'lg'] as const).map(sz => (
+              <AppRadioItem
+                key={sz}
+                selected={radioSize === sz}
+                onPress={() => setRadioSize(sz)}
+                label={`Size: ${sz}`}
+                size={sz}
+              />
+            ))}
+          </View>
+        </AppCard>
+
+        {/* ══ AppCheckbox ════════════════════════════════════════ */}
+        <AppText variant="h5" style={S.section}>22. AppCheckbox</AppText>
+        <AppCard variant="outlined" padding="md">
+          <AppText variant="caption" style={{ marginBottom: 8 }}>Variants:</AppText>
+          <View style={{ gap: 12 }}>
+            <AppCheckbox
+              checked={cbSIP}
+              onChange={setCbSIP}
+              label="Enable Gold SIP"
+              sublabel="Auto-debit ₹500 every month"
+              variant="primary"
+            />
+            <AppCheckbox
+              checked={cbNotify}
+              onChange={setCbNotify}
+              label="Price Alerts"
+              sublabel="Notify when gold rate changes by 2%"
+              variant="gold"
+            />
+            <AppCheckbox
+              checked={cbTerms}
+              onChange={setCbTerms}
+              label="I agree to Terms & Conditions"
+              variant="success"
+            />
+            <AppCheckbox
+              checked={false}
+              onChange={() => {}}
+              label="Disabled option"
+              disabled
+            />
+          </View>
+          <AppDivider label="Indeterminate + sizes" marginVertical={12} />
+          <View style={{ gap: 12 }}>
+            <AppCheckbox checked={cbInter} onChange={setCbInter} label="Select all transactions" indeterminate={!cbInter} size="lg" />
+            <AppCheckbox checked={cbSIP}   onChange={setCbSIP}   label="Medium (default)" size="md" />
+            <AppCheckbox checked={cbTerms} onChange={setCbTerms} label="Small checkbox" size="sm" />
+          </View>
+        </AppCard>
+
+        {/* ══ AppSwitch ══════════════════════════════════════════ */}
+        <AppText variant="h5" style={S.section}>23. AppSwitch</AppText>
+        <AppCard variant="outlined" padding="md">
+          <AppText variant="caption" style={{ marginBottom: 8 }}>Settings panel:</AppText>
+          <View style={{ gap: 14 }}>
+            <AppSwitch
+              value={swNotify}
+              onValueChange={setSwNotify}
+              label="Push Notifications"
+              sublabel="Receive alerts for price changes"
+              variant="primary"
+            />
+            <AppDivider />
+            <AppSwitch
+              value={swBiometric}
+              onValueChange={setSwBiometric}
+              label="Biometric Login"
+              sublabel="Use fingerprint or Face ID"
+              variant="primary"
+            />
+            <AppDivider />
+            <AppSwitch
+              value={swAutoSIP}
+              onValueChange={setSwAutoSIP}
+              label="Auto SIP"
+              sublabel="₹500/month auto-invest"
+              variant="gold"
+            />
+            <AppDivider />
+            <AppSwitch
+              value={swDarkMode}
+              onValueChange={setSwDarkMode}
+              label="Dark Mode"
+              sublabel="Switch app appearance"
+              variant="success"
+            />
+            <AppDivider />
+            <AppSwitch
+              value={false}
+              onValueChange={() => {}}
+              label="Disabled Switch"
+              disabled
+            />
+          </View>
+          <AppDivider label="Sizes" marginVertical={12} />
+          <View style={{ gap: 12 }}>
+            <AppSwitch value={swNotify}  onValueChange={setSwNotify}  label="Small"  size="sm" />
+            <AppSwitch value={swAutoSIP} onValueChange={setSwAutoSIP} label="Medium" size="md" />
+            <AppSwitch value={swDarkMode} onValueChange={setSwDarkMode} label="Large" size="lg" />
+          </View>
+        </AppCard>
+
+        {/* ══ ScreenWrapper ═══════════════════════════════════════ */}
+        <AppText variant="h5" style={S.section}>24. ScreenWrapper</AppText>
+        <AppCard variant="outlined" padding="md">
+          <AppText variant="caption" style={{ marginBottom: 8 }}>Simulated ScreenWrapper (scroll + pull-to-refresh + header/footer):</AppText>
+          <View style={{ height: 260, borderRadius: 12, overflow: 'hidden', borderWidth: 1, borderColor: COLORS.border }}>
+            <ScreenWrapper
+              scroll
+              refreshing={kwRefreshing}
+              onRefresh={() => {
+                setKwRefreshing(true);
+                setTimeout(() => { setKwRefreshing(false); toast.success('Refreshed!'); }, 1500);
+              }}
+              backgroundColor={COLORS.background}
+              paddingHorizontal={16}
+              paddingTop={8}
+              paddingBottom={16}
+              header={
+                <View style={{ padding: 12, backgroundColor: COLORS.primary }}>
+                  <AppText variant="bodyMedium" style={{ color: COLORS.white }}>📌 Fixed Header</AppText>
+                </View>
+              }
+              footer={
+                <View style={{ padding: 12, backgroundColor: COLORS.gray100, borderTopWidth: 1, borderTopColor: COLORS.border }}>
+                  <AppText variant="caption">📌 Fixed Footer — always visible</AppText>
+                </View>
+              }
+            >
+              {[1,2,3,4,5].map(i => (
+                <AppCard key={i} variant="flat" padding="sm" style={{ marginBottom: 8 }}>
+                  <AppText variant="body">Scrollable item {i}</AppText>
+                  <AppText variant="caption">Pull down to refresh</AppText>
+                </AppCard>
+              ))}
+            </ScreenWrapper>
+          </View>
+        </AppCard>
+
+        {/* ══ KeyboardWrapper ═════════════════════════════════════ */}
+        <AppText variant="h5" style={S.section}>25. KeyboardWrapper</AppText>
+        <AppCard variant="outlined" padding="md">
+          <AppText variant="caption" style={{ marginBottom: 8 }}>Form inside KeyboardWrapper — keyboard pushes content up, tap outside dismisses:</AppText>
+          <View style={{ height: 220, borderRadius: 12, overflow: 'hidden', borderWidth: 1, borderColor: COLORS.border }}>
+            <KeyboardWrapper scroll dismissOnTap extraScrollHeight={32}>
+              <View style={{ padding: 16, gap: 12 }}>
+                <AppInput
+                  label="Full Name"
+                  placeholder="Enter your name"
+                  leftIcon="person-outline"
+                  value={kwName}
+                  onChangeText={setKwName}
+                />
+                <AppInput
+                  label="Email"
+                  placeholder="Enter your email"
+                  leftIcon="mail-outline"
+                  value={kwEmail}
+                  onChangeText={setKwEmail}
+                />
+                <AppButton
+                  label="Submit"
+                  variant="primary"
+                  onPress={() => toast.success(`Hello ${kwName || 'User'}!`)}
+                />
+              </View>
+            </KeyboardWrapper>
+          </View>
+        </AppCard>
+
+        {/* ══ AppSchemeCard ══════════════════════════════════════ */}
+        <AppText variant="h5" style={S.section}>26. AppSchemeCard</AppText>
+
+        <AppText variant="caption" style={{ marginBottom: 8, marginTop: 4 }}>Default variant — featured + progress + tags:</AppText>
+        <AppSchemeCard
+          scheme={SCHEMES[0]}
+          onPress={(id) => toast.info(`Pressed scheme ${id}`)}
+          onBuy={(id) => toast.success('SIP started! ✓')}
+          onDetails={(id) => toast.info('Opening details…')}
+          onWishlistToggle={(id, w) => toast.info(w ? '❤️ Wishlisted' : 'Removed from wishlist')}
+          style={{ marginBottom: 14 }}
+        />
+
+        <AppText variant="caption" style={{ marginBottom: 8 }}>Default — monthly amount + next due date:</AppText>
+        <AppSchemeCard
+          scheme={SCHEMES[1]}
+          wishlisted
+          onPress={(id) => toast.info(`View plan ${id}`)}
+          onWishlistToggle={(id, w) => toast.info(w ? '❤️ Wishlisted' : 'Removed')}
+          style={{ marginBottom: 14 }}
+        />
+
+        <AppText variant="caption" style={{ marginBottom: 8 }}>Default — loading skeleton:</AppText>
+        <AppSchemeCard
+          scheme={SCHEMES[0]}
+          loading
+          style={{ marginBottom: 14 }}
+        />
+
+        <AppText variant="caption" style={{ marginBottom: 8 }}>Default — expired / closed state:</AppText>
+        <AppSchemeCard
+          scheme={SCHEMES[4]}
+          onRedeem={(id) => toast.warning('Redirecting to redeem…')}
+          style={{ marginBottom: 14 }}
+        />
+
+        <AppDivider label="Horizontal variant" marginVertical={4} />
+        <View style={{ gap: 10, marginBottom: 4 }}>
+          {SCHEMES.slice(0, 3).map(s => (
+            <AppSchemeCard
+              key={s.id}
+              variant="horizontal"
+              scheme={s}
+              onPress={(id) => toast.info(`Horizontal: ${id}`)}
+              onBuy={(id) => toast.success(`Joining ${id}`)}
+              onDetails={(id) => toast.info(`Details: ${id}`)}
+            />
+          ))}
+          <AppSchemeCard
+            variant="horizontal"
+            scheme={SCHEMES[0]}
+            loading
+          />
+        </View>
+
+        <AppDivider label="Mini grid variant" marginVertical={12} />
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
+          {SCHEMES.map(s => (
+            <View key={s.id} style={{ width: '47%' }}>
+              <AppSchemeCard
+                variant="mini"
+                scheme={s}
+                onPress={(id) => toast.info(`Mini: ${id}`)}
+                onBuy={(id) => toast.success(`Invest in ${id}`)}
+              />
+            </View>
+          ))}
+          <View style={{ width: '47%' }}>
+            <AppSchemeCard variant="mini" scheme={SCHEMES[0]} loading />
+          </View>
+        </View>
+
         {/* ══ CustomAlert ════════════════════════════════════════ */}
         <AppText variant="h5" style={S.section}>12. CustomAlert Types</AppText>
         <AppCard variant="outlined" padding="md">
@@ -417,6 +1141,32 @@ export default function HomeScreen() {
           ))}
         </View>
       </AppModal>
+
+      {/* ── AppBottomSheet ──────────────────────────────────── */}
+      <AppBottomSheet
+        ref={sheetRef}
+        snapPoints={['50%', '90%']}
+        title="Quick Invest"
+        subtitle="Choose an action below"
+        showCloseButton
+        scrollable
+        onClose={() => toast.info('Sheet closed')}
+        onOpen={() => toast.info('Sheet opened')}
+        onSnapChange={(i) => toast.info(`Snapped to ${i === 0 ? '50%' : '90%'}`)}
+        footerComponent={
+          <AppButton label="Close Sheet" variant="ghost" onPress={() => sheetRef.current?.close()} />
+        }
+      >
+        <View style={{ gap: 12 }}>
+          <AppButton label="Buy Gold" variant="gold" leftIcon="add-circle-outline" onPress={() => { sheetRef.current?.close(); toast.success('Buy Gold selected'); }} />
+          <AppButton label="Sell Gold" variant="outline" leftIcon="trending-up-outline" onPress={() => { sheetRef.current?.close(); toast.warning('Sell Gold selected'); }} />
+          <AppButton label="Start SIP" variant="primary" leftIcon="repeat-outline" onPress={() => { sheetRef.current?.close(); toast.info('SIP started'); }} />
+          <AppButton label="View Portfolio" variant="secondary" onPress={() => sheetRef.current?.close()} />
+          <AppButton label="Transaction History" variant="secondary" onPress={() => sheetRef.current?.close()} />
+          <AppButton label="Gold Rates" variant="secondary" onPress={() => sheetRef.current?.close()} />
+          <AppButton label="Refer & Earn" variant="secondary" onPress={() => sheetRef.current?.close()} />
+        </View>
+      </AppBottomSheet>
 
       {/* ── CustomAlert ─────────────────────────────────────── */}
       <CustomAlert {...alert} onDismiss={hideAlert} />

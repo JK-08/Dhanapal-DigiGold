@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import lightTheme from '../theme/light';
 import darkTheme from '../theme/dark';
-import type { ThemeContextType } from '../theme/types';
+import type { ThemeContextType, ThemeMode } from '../theme/types';
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
@@ -16,6 +16,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
   const value: ThemeContextType = {
     ...theme,
+    mode: theme.mode as ThemeMode,
     isDark,
     toggleTheme,
   };

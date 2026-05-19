@@ -4,6 +4,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "./src/providers/ThemeProvider";
 import RootNavigator from "./src/navigation/RootNavigator";
 import useFonts from "./src/utils/Fonts";
+import { ToastProvider } from "./src/components/ui/Toast";
 
 function AppContent() {
   const fontsLoaded = useFonts();
@@ -23,7 +24,9 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <ThemeProvider>
-        <AppContent />
+        <ToastProvider>
+          <AppContent />
+        </ToastProvider>
       </ThemeProvider>
     </SafeAreaProvider>
   );

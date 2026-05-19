@@ -13,8 +13,15 @@ import {
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
+
 import { useTheme } from '../theme';
+
+// ── Screens ─────────────────────────────────────────────────────
 import HomeScreen from '../screens/home/HomeScreen';
+import PortfolioScreen from '../screens/portfolio/PortfolioScreen';
+import TransactionsScreen from '../screens/transactions/TransactionsScreen';
+import BuyGoldScreen from '../screens/buygold/BuyGoldScreen';
+import ProfileScreen from '../screens/profile/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
 const { width } = Dimensions.get('window');
@@ -29,11 +36,11 @@ type TabItem = {
 };
 
 const TABS: TabItem[] = [
-  { name: 'Portfolio',    label: 'Portfolio', icon: 'bar-chart-outline', iconActive: 'bar-chart',  component: HomeScreen },
-  { name: 'Transactions', label: 'History',   icon: 'receipt-outline',   iconActive: 'receipt',    badge: 3, component: HomeScreen },
-  { name: 'Home',         label: 'Home',      icon: 'home-outline',      iconActive: 'home',       component: HomeScreen },
-  { name: 'BuyGold',      label: 'Buy Gold',  icon: 'add-circle-outline',iconActive: 'add-circle', component: HomeScreen },
-  { name: 'Profile',      label: 'Profile',   icon: 'person-outline',    iconActive: 'person',     component: HomeScreen },
+  { name: 'Portfolio',    label: 'Portfolio', icon: 'bar-chart-outline', iconActive: 'bar-chart',   component: PortfolioScreen },
+  { name: 'Transactions', label: 'History',   icon: 'receipt-outline',   iconActive: 'receipt',     badge: 3, component: TransactionsScreen },
+  { name: 'Home',         label: 'Home',      icon: 'home-outline',      iconActive: 'home',        component: HomeScreen },
+  { name: 'BuyGold',      label: 'Buy Gold',  icon: 'add-circle-outline',iconActive: 'add-circle',  component: BuyGoldScreen },
+  { name: 'Profile',      label: 'Profile',   icon: 'person-outline',    iconActive: 'person',      component: ProfileScreen },
 ];
 
 // ── Badge dot ────────────────────────────────────────────────────
