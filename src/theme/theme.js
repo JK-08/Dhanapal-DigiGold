@@ -49,7 +49,7 @@ export const COLORS = {
   // ===== NEUTRAL COLORS =====
   white: "#FFFFFF",
   black: "#000000",
-  background: "#F5F3EF",
+  background: "#faf5ea",
   backgroundSecondary: "#F8F8F8",
   backgroundTertiary: "#F5F3EF",
   backgroundDark: "#111111",

@@ -119,9 +119,12 @@
           }
         }
       ],
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      "expo-asset",
+      "@react-native-google-signin/google-signin"
     ],
     "extra": {
+      "apiBaseUrl": "https://scheme.dhanapaljewellery.com/api/v1",
       "eas": {
         "projectId": "42cff07f-ad84-427a-9a37-7689c1dc45b3"
       }

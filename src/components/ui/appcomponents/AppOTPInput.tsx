@@ -235,6 +235,7 @@ const AppOTPInput = forwardRef<AppOTPInputRef, AppOTPInputProps>(
             next[index] = "";
             setOtp(next);
             onChangeText?.(next.join(""));
+            if (index > 0) focusBox(index - 1);
           } else if (index > 0) {
             const next = [...otp];
             next[index - 1] = "";
@@ -267,9 +268,10 @@ const AppOTPInput = forwardRef<AppOTPInputRef, AppOTPInputProps>(
     const boxColor = (index: number) => {
       if (disabled) return COLORS.gray100;
       if (error) return COLORS.errorLight;
-      if (success && otp[index]) return COLORS.success;
-      if (focusedIndex === index) return COLORS.primary;
-      if (otp[index]) return COLORS.primaryLight;
+      if (success && otp[index]) return COLORS.success + '22';
+      if (otp[index] && focusedIndex === index) return COLORS.primaryPale;
+      if (focusedIndex === index) return COLORS.primaryPale;
+      if (otp[index]) return COLORS.primaryPale;
       return COLORS.gray100;
     };
 
@@ -277,7 +279,7 @@ const AppOTPInput = forwardRef<AppOTPInputRef, AppOTPInputProps>(
       if (error) return COLORS.error;
       if (success && otp[index]) return COLORS.success;
       if (focusedIndex === index) return COLORS.primary;
-      if (otp[index]) return COLORS.primaryLight;
+      if (otp[index]) return COLORS.primary;
       return COLORS.borderMedium;
     };
 
@@ -391,18 +393,15 @@ const AppOTPInput = forwardRef<AppOTPInputRef, AppOTPInputProps>(
                         style={[
                           styles.digit,
                           {
-                            color:
-                              error
-                                ? COLORS.error
-                                : success
-                                ? COLORS.success
-                                : isFocused
-                                ? COLORS.primary
-                                : COLORS.textPrimary,
+                            color: error
+                              ? COLORS.error
+                              : success
+                              ? COLORS.success
+                              : COLORS.textPrimary,
                           },
                         ]}
                       >
-                        {secure ? "•" : otp[i]}
+                        {secure ? '•' : otp[i]}
                       </Text>
                     ) : isFocused ? (
                       cursorVisible && <View style={styles.cursor} />

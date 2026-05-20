@@ -25,6 +25,7 @@ type Props = {
   header?: React.ReactNode;
   /** Render something fixed below the scroll area */
   footer?: React.ReactNode;
+  edges?: ('top' | 'bottom' | 'left' | 'right')[];
   style?: ViewStyle;
   contentStyle?: ViewStyle;
 };
@@ -36,6 +37,7 @@ export default function ScreenWrapper({
   paddingTop = 0, paddingBottom = 24,
   statusBarStyle = 'dark-content',
   statusBarBg,
+  edges = ['top', 'bottom'],
   header, footer,
   style, contentStyle,
 }: Props) {
@@ -45,7 +47,7 @@ export default function ScreenWrapper({
   const ph = paddingHorizontal ?? SIZES.padding.container;
 
   return (
-    <SafeAreaView edges={['bottom']} style={[styles.safe, { backgroundColor: bg }, style]}>
+    <SafeAreaView edges={edges} style={[styles.safe, { backgroundColor: bg }, style]}>
       <StatusBar barStyle={statusBarStyle} backgroundColor={statusBarBg ?? bg} />
 
       {header}

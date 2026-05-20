@@ -1,6 +1,6 @@
 // src/components/Sidebar.tsx
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -12,8 +12,14 @@ import {
   Switch,
   StatusBar,
   Platform,
+  ScrollView,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/RootNavigator';
 import { useTheme } from '../theme';
+import { useLanguage } from '../providers/LanguageProvider';
+import AppLanguagePicker, { LanguageCode, INDIAN_LANGUAGES } from './ui/appcomponents/AppLanguage';
 
 const SIDEBAR_WIDTH = Dimensions.get('window').width * 0.75;
 
@@ -22,22 +28,28 @@ type Props = {
   onClose: () => void;
 };
 
-const menuItems = [
-  { icon: '🏠', label: 'Home',         description: 'Dashboard overview' },
-  { icon: '📊', label: 'Portfolio',    description: 'Track your assets',  badge: 'NEW' },
-  { icon: '💰', label: 'Buy Gold',     description: 'Invest in gold' },
-  { icon: '📈', label: 'Sell Gold',    description: 'Liquidate holdings' },
-  { icon: '🔄', label: 'Transactions', description: 'View history',       badge: '3' },
-  { icon: '👤', label: 'Profile',      description: 'Manage account' },
-  { icon: '⚙️', label: 'Settings',    description: 'Preferences' },
-];
-
 export default function Sidebar({ visible, onClose }: Props) {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { COLORS, FONTS, SIZES, SHADOWS, isDark, toggleTheme } = useTheme();
+  const { language, setLanguage, t } = useLanguage();
+  const [langSheetVisible, setLangSheetVisible] = useState(false);
+
+  const selectedLang = INDIAN_LANGUAGES.find(l => l.code === language);
 
   const slideAnim = useRef(new Animated.Value(-SIDEBAR_WIDTH)).current;
   const fadeAnim  = useRef(new Animated.Value(0)).current;
-  const itemAnims = useRef(menuItems.map(() => new Animated.Value(0))).current;
+  const itemAnims = useRef(Array.from({ length: 8 }, () => new Animated.Value(0))).current;
+
+  const menuItems: { icon: string; label: string; description: string; badge?: string; route?: keyof RootStackParamList }[] = [
+    { icon: '🏠', label: t('home'),         description: t('dashboardOverview') },
+    { icon: '📊', label: t('portfolio'),    description: t('trackAssets'),  badge: 'NEW' },
+    { icon: '💰', label: t('buyGold'),      description: t('investInGold') },
+    { icon: '📈', label: t('sellGold'),     description: t('liquidateHoldings') },
+    { icon: '🔄', label: t('transactions'), description: t('viewHistory'),  badge: '3' },
+    { icon: '👤', label: t('profile'),      description: t('manageAccount') },
+    { icon: '⚙️', label: t('settings'),    description: t('preferences') },
+    { icon: '🧩', label: 'Components',      description: 'UI components showcase', route: 'ComponentsUsage' },
+  ];
 
   const STATUS_BAR_H = StatusBar.currentHeight ?? (Platform.OS === 'ios' ? 44 : 0);
 
@@ -143,7 +155,7 @@ export default function Sidebar({ visible, onClose }: Props) {
         </View>
 
         {/* Menu Items */}
-        <View style={{ flex: 1, paddingVertical: SIZES.padding.sm }}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingVertical: SIZES.padding.sm }} showsVerticalScrollIndicator={false}>
           {menuItems.map((item, i) => {
             const isActive = i === 0;
             return (
@@ -155,7 +167,7 @@ export default function Sidebar({ visible, onClose }: Props) {
                 }}
               >
                 <TouchableOpacity
-                  onPress={onClose}
+                  onPress={() => { onClose(); item.route && navigation.navigate(item.route as any); }}
                   activeOpacity={0.6}
                   style={{
                     flexDirection: 'row', alignItems: 'center',
@@ -211,7 +223,7 @@ export default function Sidebar({ visible, onClose }: Props) {
               </Animated.View>
             );
           })}
-        </View>
+        </ScrollView>
 
         {/* Footer */}
         <View style={{
@@ -234,7 +246,7 @@ export default function Sidebar({ visible, onClose }: Props) {
               <Text style={{ fontSize: 16 }}>{isDark ? '🌙' : '☀️'}</Text>
             </View>
             <Text style={[FONTS.bodyMedium, { flex: 1, color: COLORS.textPrimary }]}>
-              {isDark ? 'Dark Mode' : 'Light Mode'}
+              {isDark ? t('darkMode') : t('lightMode')}
             </Text>
             <Switch
               value={isDark}
@@ -243,6 +255,30 @@ export default function Sidebar({ visible, onClose }: Props) {
               thumbColor={isDark ? COLORS.secondary : COLORS.white}
             />
           </View>
+
+          <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: COLORS.border, marginVertical: 4 }} />
+
+          {/* Language Picker */}
+          <TouchableOpacity
+            onPress={() => setLangSheetVisible(true)}
+            style={{ flexDirection: 'row', alignItems: 'center', gap: SIZES.sm, paddingVertical: SIZES.padding.xs }}
+          >
+            <View style={{
+              width: 36, height: 36,
+              borderRadius: SIZES.radius.sm,
+              alignItems: 'center', justifyContent: 'center',
+              backgroundColor: isDark ? COLORS.gray800 : COLORS.gray200,
+            }}>
+              <Text style={{ fontSize: 16 }}>🌐</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={[FONTS.bodyMedium, { color: COLORS.textPrimary }]}>{t('language')}</Text>
+              <Text style={[FONTS.caption, { color: COLORS.textTertiary }]}>
+                {selectedLang ? `${selectedLang.flag}  ${selectedLang.name}` : language.toUpperCase()}
+              </Text>
+            </View>
+            <Text style={{ fontSize: 18, color: COLORS.gray300 }}>›</Text>
+          </TouchableOpacity>
 
           <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: COLORS.border, marginVertical: 4 }} />
 
@@ -255,7 +291,7 @@ export default function Sidebar({ visible, onClose }: Props) {
             backgroundColor: 'rgba(220,38,38,0.08)',
           }}>
             <Text style={{ fontSize: 16 }}>🚪</Text>
-            <Text style={[FONTS.bodyMedium, { color: COLORS.error }]}>Sign Out</Text>
+            <Text style={[FONTS.bodyMedium, { color: COLORS.error }]}>{t('signOut')}</Text>
           </TouchableOpacity>
 
           <Text style={[FONTS.caption, { color: COLORS.textDisabled, textAlign: 'center', marginTop: 4 }]}>
@@ -263,6 +299,19 @@ export default function Sidebar({ visible, onClose }: Props) {
           </Text>
         </View>
       </Animated.View>
+
+      {/* Language Picker Sheet */}
+      <AppLanguagePicker
+        mode="sheet"
+        visible={langSheetVisible}
+        onClose={() => setLangSheetVisible(false)}
+        selectedCode={language as LanguageCode}
+        onSelect={(code) => {
+          setLanguage(code as LanguageCode);
+          setLangSheetVisible(false);
+        }}
+        title={t('selectLanguage')}
+      />
     </>
   );
 }
