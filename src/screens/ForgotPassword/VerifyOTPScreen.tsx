@@ -1,7 +1,7 @@
 // src/screens/ForgotPassword/VerifyOTPScreen.tsx
 
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform, SafeAreaView, ScrollView } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useOtpVerify, removeListener } from 'react-native-otp-verify';
@@ -13,7 +13,6 @@ import AppOTPInput, { AppOTPInputRef } from '../../components/ui/appcomponents/A
 import AppInput from '../../components/ui/appcomponents/AppInput';
 import AppButton from '../../components/ui/appcomponents/AppButton';
 import AppHeader from '../../components/ui/appcomponents/AppHeader';
-import ScreenWrapper from '../../components/ui/appcomponents/ScreenWrapper';
 import { useToast } from '../../components/ui/Toast';
 
 type Nav   = NativeStackNavigationProp<RootStackParamList>;
@@ -109,9 +108,9 @@ export default function VerifyOTPScreen() {
   };
 
   return (
-    <ScreenWrapper scroll edges={['bottom']} paddingHorizontal={SIZES.padding.xl} paddingTop={SIZES.lg} paddingBottom={32}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
       <AppHeader title="Reset Password" showBack variant="white" />
-
+      <ScrollView contentContainerStyle={{ paddingHorizontal: SIZES.padding.xl, paddingTop: SIZES.lg, paddingBottom: 32 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
       <View style={styles.content}>
         {/* Info */}
         <View style={styles.header}>
@@ -174,7 +173,8 @@ export default function VerifyOTPScreen() {
           />
         </View>
       </View>
-    </ScreenWrapper>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

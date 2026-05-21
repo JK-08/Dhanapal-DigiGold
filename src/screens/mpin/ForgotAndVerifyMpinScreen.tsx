@@ -1,7 +1,7 @@
 // src/screens/mpin/ForgotAndVerifyMpinScreen.tsx
 
 import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform, SafeAreaView, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useOtpVerify, removeListener } from 'react-native-otp-verify';
@@ -13,7 +13,6 @@ import AppOTPInput, { AppOTPInputRef } from '../../components/ui/appcomponents/A
 import AppPinInput, { AppPinInputRef } from '../../components/ui/appcomponents/AppPinInput';
 import AppButton from '../../components/ui/appcomponents/AppButton';
 import AppHeader from '../../components/ui/appcomponents/AppHeader';
-import ScreenWrapper from '../../components/ui/appcomponents/ScreenWrapper';
 import { useToast } from '../../components/ui/Toast';
 import { useEffect } from 'react';
 
@@ -92,9 +91,9 @@ export default function ForgotAndVerifyMpinScreen() {
   };
 
   return (
-    <ScreenWrapper scroll edges={['bottom']} paddingHorizontal={SIZES.padding.xl} paddingTop={SIZES.lg} paddingBottom={32}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
       <AppHeader title="Forgot MPIN" showBack variant="white" />
-
+      <ScrollView contentContainerStyle={{ paddingHorizontal: SIZES.padding.xl, paddingTop: SIZES.lg, paddingBottom: 32 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.title}>
@@ -165,7 +164,8 @@ export default function ForgotAndVerifyMpinScreen() {
           </>
         )}
       </View>
-    </ScreenWrapper>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

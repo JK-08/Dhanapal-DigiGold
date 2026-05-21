@@ -82,9 +82,9 @@ export default function AppHeader({
   }
 
   return (
-    <>
+    <View style={{ width: '100%' }}>
       <StatusBar barStyle={onDark ? 'light-content' : 'dark-content'} backgroundColor={bg} />
-      <SafeAreaView edges={['top']} style={{ backgroundColor: bg }}>
+      <SafeAreaView edges={['top']} style={{ backgroundColor: bg, width: '100%', alignSelf: 'stretch' }}>
         {variant === 'gold' && (
           <>
             <View style={[styles.dc1, { backgroundColor: COLORS.orangeOpacity20 }]} />
@@ -94,7 +94,7 @@ export default function AppHeader({
         )}
         <Animated.View style={[
           styles.bar,
-          { minHeight: verticalScale(56), paddingHorizontal: SIZES.padding.md },
+          { minHeight: verticalScale(56), paddingHorizontal: SIZES.padding.md, width: '100%' },
           { transform: [{ translateY: slideY }], opacity: fadeIn },
         ]}>
           {/* Left */}
@@ -141,12 +141,12 @@ export default function AppHeader({
           </View>
         </Animated.View>
       </SafeAreaView>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  bar:       { flexDirection: 'row', alignItems: 'center', overflow: 'hidden' },
+  bar: { flexDirection: 'row', alignItems: 'center', width: '100%', alignSelf: 'stretch' },
   side:      { minWidth: 46, justifyContent: 'center' },
   center:    { flex: 1, alignItems: 'center', paddingHorizontal: 4 },
   title:     { textAlign: 'center' },

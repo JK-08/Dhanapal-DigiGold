@@ -5,7 +5,6 @@ const lightTheme = {
   mode: "light",
   COLORS: {
     ...baseTheme.COLORS,
-    background: "#FFFFFF",
     backgroundSecondary: "#F8F9FB",
     card: "#FFFFFF",
     textPrimary: "#1A1D23",

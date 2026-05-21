@@ -1,28 +1,17 @@
-// src/navigation/RootNavigator.tsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View, ActivityIndicator } from 'react-native';
 import * as Screens from './index';
 import { useTheme } from '../theme';
-import BottomTabNavigator from './BottomTabNavigator';
-
-import RegisterScreen from '../screens/register/RegisterScreen';
-import RegisterOTPVerifyScreen from '../screens/register/RegisterOTPVerifyScreen';
-import LoginScreen from '../screens/login/LoginScreen';
-import EnterMobileScreen from '../screens/ForgotPassword/EnterMobileScreen';
-import VerifyOTPScreen from '../screens/ForgotPassword/VerifyOTPScreen';
-import GoogleContactUpdateScreen from '../screens/googlelogin/GoogleContactUpdateScreen';
-import GoogleContactVerifyOTPScreen from '../screens/googlelogin/GoogleContactVerifyOTPScreen';
-import CreateMpinScreen from '../screens/mpin/CreateMpinScreen';
-import VerifyMpinScreen from '../screens/mpin/VerifyMpinScreen';
-import ForgotAndVerifyMpinScreen from '../screens/mpin/ForgotAndVerifyMpinScreen';
-import ResetMpinScreen from '../screens/mpin/ResetMpinScreen';
-import ComponentsUsageScreen from "../screens/ComponentsUsage/ComponentsUsageScreen"
-
 import { AsyncStorageHelper } from '../utils/AsyncStorageHelper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { initNotifications } from '../utils/NotificationService';
+import {
+  registerForegroundHandlers,
+  handleInitialNotification,
+  handleBackgroundOpenedApp,
+} from '../utils/NotificationHandler';
 
 export type RootStackParamList = {
   Onboarding:              undefined;
@@ -48,21 +37,29 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function RootNavigator() {
   const { COLORS, isDark } = useTheme();
   const [initialRoute, setInitialRoute] = useState<InitialRoute | null>(null);
-// AsyncStorage.clear(); // TEMP: Clear storage on every app start for testing purposes. Remove this line in production.
+  const navigationRef = useRef<any>(null);
+
   useEffect(() => {
     (async () => {
       const onboarded = await AsyncStorageHelper.isOnboarded();
       const token     = await AsyncStorageHelper.getToken();
-      const user      = await AsyncStorageHelper.getUser();
-      const mpinSet   = await AsyncStorageHelper.isMpinSet();
 
-      if (!onboarded)        setInitialRoute('Onboarding');  // first time
-      else if (!user)        setInitialRoute('Register');    // never registered
-      else if (!token)       setInitialRoute('Login');       // logged out
-      else if (!mpinSet)     setInitialRoute('CreateMpin'); // logged in, no MPIN
-      else                   setInitialRoute('MpinLogin');  // fully set up
+      if (!onboarded)  setInitialRoute('Onboarding');
+      else if (!token) setInitialRoute('Login');
+      else             setInitialRoute('MpinLogin');
+
+      // Init notifications only when logged in
+      if (token) await initNotifications();
     })();
   }, []);
+
+  const onNavigationReady = () => {
+    if (!navigationRef.current) return;
+    handleInitialNotification(navigationRef.current);
+    handleBackgroundOpenedApp(navigationRef.current);
+    const unsub = registerForegroundHandlers(navigationRef.current);
+    return unsub;
+  };
 
   const navigationTheme = {
     ...(isDark ? DarkTheme : DefaultTheme),
@@ -86,25 +83,25 @@ export default function RootNavigator() {
   }
 
   return (
-    <NavigationContainer theme={navigationTheme}>
+    <NavigationContainer theme={navigationTheme} ref={navigationRef} onReady={onNavigationReady}>
       <Stack.Navigator
         initialRouteName={initialRoute}
         screenOptions={{ headerShown: false, contentStyle: { backgroundColor: COLORS.background }, animation: 'fade' }}
       >
-        <Stack.Screen name="Onboarding"        component={Screens.OnboardingScreen} />
-        <Stack.Screen name="Register"           component={RegisterScreen} />
-        <Stack.Screen name="RegisterOTPVerify"  component={RegisterOTPVerifyScreen} />
-        <Stack.Screen name="Login"              component={LoginScreen} />
-        <Stack.Screen name="ForgotPassword"          component={EnterMobileScreen} />
-        <Stack.Screen name="ForgotVerifyOTP"           component={VerifyOTPScreen} />
-        <Stack.Screen name="GoogleContactUpdate"       component={GoogleContactUpdateScreen} />
-        <Stack.Screen name="GoogleContactVerifyOTP"    component={GoogleContactVerifyOTPScreen} />
-        <Stack.Screen name="CreateMpin"                component={CreateMpinScreen} />
-        <Stack.Screen name="MpinLogin"                 component={VerifyMpinScreen} />
-        <Stack.Screen name="ForgotMpin"                component={ForgotAndVerifyMpinScreen} />
-        <Stack.Screen name="ResetMpin"                 component={ResetMpinScreen} />
-        <Stack.Screen name="ComponentsUsage"          component={ComponentsUsageScreen} />
-        <Stack.Screen name="Main"                      component={BottomTabNavigator} />
+        <Stack.Screen name="Onboarding"             component={Screens.OnboardingScreen} />
+        <Stack.Screen name="Register"                component={Screens.RegisterScreen} />
+        <Stack.Screen name="RegisterOTPVerify"       component={Screens.RegisterOTPVerifyScreen} />
+        <Stack.Screen name="Login"                   component={Screens.LoginScreen} />
+        <Stack.Screen name="ForgotPassword"          component={Screens.EnterMobileScreen} />
+        <Stack.Screen name="ForgotVerifyOTP"         component={Screens.VerifyOTPScreen} />
+        <Stack.Screen name="GoogleContactUpdate"     component={Screens.GoogleContactUpdateScreen} />
+        <Stack.Screen name="GoogleContactVerifyOTP" component={Screens.GoogleContactVerifyOTPScreen} />
+        <Stack.Screen name="CreateMpin"              component={Screens.CreateMpinScreen} />
+        <Stack.Screen name="MpinLogin"               component={Screens.VerifyMpinScreen} />
+        <Stack.Screen name="ForgotMpin"              component={Screens.ForgotAndVerifyMpinScreen} />
+        <Stack.Screen name="ResetMpin"               component={Screens.ResetMpinScreen} />
+        <Stack.Screen name="ComponentsUsage"         component={Screens.ComponentsUsageScreen} />
+        <Stack.Screen name="Main"                    component={Screens.BottomTabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );

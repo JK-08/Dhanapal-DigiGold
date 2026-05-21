@@ -1,7 +1,7 @@
 // src/screens/register/RegisterOTPVerifyScreen.tsx
 
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform, SafeAreaView } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useOtpVerify, removeListener } from 'react-native-otp-verify';
@@ -14,7 +14,6 @@ import AppButton from '../../components/ui/appcomponents/AppButton';
 import AppHeader from '../../components/ui/appcomponents/AppHeader';
 import AppOTPInput, { AppOTPInputRef } from '../../components/ui/appcomponents/AppOTPInput';
 import { useToast } from '../../components/ui/Toast';
-import ScreenWrapper from '../../components/ui/appcomponents/ScreenWrapper';
 
 type Nav   = NativeStackNavigationProp<RootStackParamList>;
 type Route = RouteProp<RootStackParamList, 'RegisterOTPVerify'>;
@@ -60,7 +59,7 @@ export default function RegisterOTPVerifyScreen() {
     if (verifyOtp.fulfilled.match(res)) {
       await AsyncStorageHelper.saveUserSession(res.payload);
       toast.success('Verified!', { message: 'Account created successfully' });
-      navigation.replace('Main');
+      navigation.replace('CreateMpin');
     } else {
       verifyCalledRef.current = false;
       setOtpError(true);
@@ -80,10 +79,8 @@ export default function RegisterOTPVerifyScreen() {
   };
 
   return (
-    <ScreenWrapper edges={['bottom']} paddingHorizontal={SIZES.padding.xl} paddingTop={SIZES.lg}>
-
+    <SafeAreaView style={styles.safe}>
       <AppHeader title="Verify OTP" showBack variant="white" />
-
       <View style={styles.content}>
         {/* Header */}
         <View style={styles.header}>
@@ -132,12 +129,15 @@ export default function RegisterOTPVerifyScreen() {
           </View>
         </View>
       </View>
-
-    </ScreenWrapper>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safe: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+  },
   content: {
     flex: 1,
     paddingHorizontal: SIZES.padding.xl,

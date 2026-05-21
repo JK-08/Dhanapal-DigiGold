@@ -17,6 +17,7 @@ type Props = TextInputProps & {
   isPassword?: boolean;
   containerStyle?: ViewStyle;
   required?: boolean;
+  size?: 'sm' | 'md';
 };
 
 export default function AppInput({
@@ -24,6 +25,7 @@ export default function AppInput({
   leftIcon, rightIcon, onRightIconPress,
   isPassword = false,
   containerStyle, required = false,
+  size = 'md',
   ...rest
 }: Props) {
   const { COLORS, FONTS, SIZES, moderateScale } = useTheme();
@@ -80,6 +82,7 @@ export default function AppInput({
           borderColor,
           borderWidth: focused ? 1.5 : 1,
           backgroundColor: focused ? COLORS.white : COLORS.inputBackground,
+          minHeight: size === 'sm' ? 42 : 50,
         },
       ]}>
         {leftIcon && (

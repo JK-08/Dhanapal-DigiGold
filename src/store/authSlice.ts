@@ -82,6 +82,10 @@ export const resetPassword = createAsyncThunk(
 
 export const logoutUser = createAsyncThunk('auth/logout', async () => {
   await AsyncStorageHelper.clearSession();
+  try {
+    const { deactivateDeviceToken } = await import('../utils/NotificationService');
+    await deactivateDeviceToken();
+  } catch {}
 });
 
 export const restoreSession = createAsyncThunk('auth/restoreSession', async () => {

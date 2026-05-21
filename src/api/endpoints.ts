@@ -23,3 +23,9 @@ export const MPIN = {
   FORGOT_SEND_OTP: '/mpin/forgot/send-otp',
   FORGOT_VERIFY:   '/mpin/forgot/verify',
 };
+
+export const DEVICE = {
+  REGISTER:    '/device/register',
+  LOGOUT:      '/device/logout',
+  DELETE:      '/device/delete',
+};

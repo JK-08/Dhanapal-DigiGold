@@ -1,7 +1,7 @@
 // src/screens/mpin/CreateMpinScreen.tsx
 
 import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { COLORS, FONTS, SIZES, SHADOWS } from '../../theme/theme';
@@ -11,8 +11,8 @@ import { RootStackParamList } from '../../navigation/RootNavigator';
 import AppPinInput, { AppPinInputRef } from '../../components/ui/appcomponents/AppPinInput';
 import AppHeader from '../../components/ui/appcomponents/AppHeader';
 import AppLoader from '../../components/ui/appcomponents/AppLoader';
-import ScreenWrapper from '../../components/ui/appcomponents/ScreenWrapper';
 import { useToast } from '../../components/ui/Toast';
+import { initNotifications } from '../../utils/NotificationService';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
@@ -57,16 +57,14 @@ export default function CreateMpinScreen() {
     const res = await dispatch(createMpin(pin));
     if (createMpin.fulfilled.match(res)) {
       toast.success('MPIN Created!', { message: 'Your MPIN is set successfully' });
+      await initNotifications();
       navigation.replace('MpinLogin');
     } else {
       const msg = res.payload as string;
-      // 409 = MPIN already exists → navigate to MpinLogin
+      // 409 = MPIN already exists → flag is saved in thunk, go straight to verify
       if (msg?.toLowerCase().includes('already')) {
-        toast.warning('MPIN Already Set', {
-          message: 'Redirecting to MPIN login...',
-          duration: 2000,
-        });
-        setTimeout(() => navigation.replace('MpinLogin'), 2000);
+        toast.warning('MPIN Already Set', { message: 'Redirecting to MPIN login...' });
+        navigation.replace('MpinLogin');
       } else {
         toast.error('Failed', { message: msg });
         pinRef.current?.clear();
@@ -77,7 +75,7 @@ export default function CreateMpinScreen() {
   };
 
   return (
-    <ScreenWrapper edges={['top', 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
       <AppLoader visible={loading} message="Creating MPIN..." />
       <AppHeader title="Create MPIN" variant="white" />
 
@@ -121,7 +119,7 @@ export default function CreateMpinScreen() {
         </View>
 
       </View>
-    </ScreenWrapper>
+    </SafeAreaView>
   );
 }
 

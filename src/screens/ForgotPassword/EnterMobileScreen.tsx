@@ -1,7 +1,7 @@
 // src/screens/ForgotPassword/EnterMobileScreen.tsx
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { COLORS, FONTS, SIZES, SHADOWS } from '../../theme/theme';
@@ -11,7 +11,6 @@ import { RootStackParamList } from '../../navigation/RootNavigator';
 import AppInput from '../../components/ui/appcomponents/AppInput';
 import AppButton from '../../components/ui/appcomponents/AppButton';
 import AppHeader from '../../components/ui/appcomponents/AppHeader';
-import ScreenWrapper from '../../components/ui/appcomponents/ScreenWrapper';
 import { useToast } from '../../components/ui/Toast';
 import { getHash } from 'react-native-otp-verify';
 
@@ -54,10 +53,9 @@ export default function EnterMobileScreen() {
   };
 
   return (
-    <ScreenWrapper edges={['bottom']} paddingHorizontal={SIZES.padding.xl} paddingTop={SIZES.lg}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
       <AppHeader title="Forgot Password" showBack variant="white" />
-
-      <View style={styles.content}>
+      <View style={[styles.content, { paddingHorizontal: SIZES.padding.xl }]}>
         <View style={styles.header}>
           <Text style={styles.title}>Reset Password</Text>
           <Text style={styles.subtitle}>
@@ -86,7 +84,7 @@ export default function EnterMobileScreen() {
           />
         </View>
       </View>
-    </ScreenWrapper>
+    </SafeAreaView>
   );
 }
 

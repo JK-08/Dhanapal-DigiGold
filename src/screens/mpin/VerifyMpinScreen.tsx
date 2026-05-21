@@ -1,7 +1,8 @@
 // src/screens/mpin/VerifyMpinScreen.tsx
 
 import React, { useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { COLORS, FONTS, SIZES, SHADOWS } from '../../theme/theme';
@@ -10,9 +11,8 @@ import { verifyMpin } from '../../store/mpinSlice';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 import AppPinInput, { AppPinInputRef } from '../../components/ui/appcomponents/AppPinInput';
 import AppLoader from '../../components/ui/appcomponents/AppLoader';
-import ScreenWrapper from '../../components/ui/appcomponents/ScreenWrapper';
 import { useToast } from '../../components/ui/Toast';
-import AppHeader from '../../components/ui/appcomponents/AppHeader';
+import { initNotifications } from '../../utils/NotificationService';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
@@ -31,6 +31,7 @@ export default function VerifyMpinScreen() {
     const res = await dispatch(verifyMpin(value));
     if (verifyMpin.fulfilled.match(res)) {
       toast.success('Welcome!', { message: `Hello, ${user?.username ?? 'User'}` });
+      await initNotifications();
       navigation.replace('Main');
     } else {
       setPinError(true);
@@ -40,9 +41,9 @@ export default function VerifyMpinScreen() {
   };
 
   return (
-    <ScreenWrapper edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.safe}>
+      <StatusBar barStyle="dark-content" backgroundColor={COLORS.background} />
       <AppLoader visible={loading} message="Verifying..." />
-      <AppHeader title="Verify MPIN" variant="white" />
       <View style={styles.content}>
 
         {/* Brand + greeting */}
@@ -83,11 +84,15 @@ export default function VerifyMpinScreen() {
         </View>
 
       </View>
-    </ScreenWrapper>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safe: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+  },
   content: {
     flex: 1,
     paddingHorizontal: SIZES.padding.xl,

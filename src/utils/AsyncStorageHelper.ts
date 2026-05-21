@@ -18,6 +18,8 @@ const KEYS = {
   USED_REFERRAL:  '@used_referral_code',
   MPIN_SET:       '@mpin_set',
   ONBOARDED:      '@onboarding_complete',
+  FCM_TOKEN:      '@fcm_token',
+  DEVICE_ID:      '@device_id',
 } as const;
 
 // ── Save after login / register / verifyOtp ───────────────────────
@@ -60,6 +62,10 @@ const isOnboarded      = async () => (await AsyncStorage.getItem(KEYS.ONBOARDED)
 // ── Update specific fields ────────────────────────────────────────
 const setMpinSet    = (val: boolean) => AsyncStorage.setItem(KEYS.MPIN_SET,  String(val));
 const setOnboarded  = ()             => AsyncStorage.setItem(KEYS.ONBOARDED, 'true');
+const setFcmToken   = (token: string) => AsyncStorage.setItem(KEYS.FCM_TOKEN, token);
+const getFcmToken   = () => AsyncStorage.getItem(KEYS.FCM_TOKEN);
+const setDeviceId   = (id: string) => AsyncStorage.setItem(KEYS.DEVICE_ID, id);
+const getDeviceId   = () => AsyncStorage.getItem(KEYS.DEVICE_ID);
 
 // ── Clear session (logout) ────────────────────────────────────────
 const clearSession = () =>
@@ -75,7 +81,7 @@ const clearSession = () =>
     KEYS.PLAYSTORE_LINK,
     KEYS.WHATSAPP_LINK,
     KEYS.USED_REFERRAL,
-    KEYS.MPIN_SET,
+    // MPIN_SET intentionally kept — MPIN persists across logout/login
   ]);
 
 // ── Clear everything including onboarding ────────────────────────
@@ -98,6 +104,10 @@ export const AsyncStorageHelper = {
   isOnboarded,
   setMpinSet,
   setOnboarded,
+  setFcmToken,
+  getFcmToken,
+  setDeviceId,
+  getDeviceId,
   clearSession,
   clearAll,
 };

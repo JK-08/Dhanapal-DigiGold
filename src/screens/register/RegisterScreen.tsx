@@ -1,7 +1,7 @@
 // src/screens/register/RegisterScreen.tsx
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, SafeAreaView, ScrollView } from 'react-native';
 import { getHash } from 'react-native-otp-verify';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -15,13 +15,12 @@ import { RootStackParamList } from '../../navigation/RootNavigator';
 import AppInput from '../../components/ui/appcomponents/AppInput';
 import AppButton from '../../components/ui/appcomponents/AppButton';
 import { useToast } from '../../components/ui/Toast';
-import ScreenWrapper from '../../components/ui/appcomponents/ScreenWrapper';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export default function RegisterScreen() {
   const navigation = useNavigation<Nav>();
-  const dispatch   = useAppDispatch();
+  const dispatch = useAppDispatch();
   const { loading } = useAppSelector((s) => s.auth);
   const toast = useToast();
 
@@ -32,7 +31,7 @@ export default function RegisterScreen() {
     password: '',
     confirmPassword: '',
   });
-  const [errors, setErrors]   = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [hashKey, setHashKey] = useState<string>('');
   const [googleLoading, setGoogleLoading] = useState(false);
 
@@ -55,23 +54,24 @@ export default function RegisterScreen() {
         const hash = await getHash();
         if (hash?.[0]) setHashKey(hash[0]);
       }
-    } catch {}
+    } catch { }
   }, []);
 
   const set = (key: string, val: string) => {
-    setForm((p) => ({ ...p, [key]: val }));
+    const value = key === 'contactNumber' ? val.replace(/\D/g, '').slice(0, 10) : val;
+    setForm((p) => ({ ...p, [key]: value }));
     setErrors((p) => ({ ...p, [key]: '' }));
   };
 
   const validate = () => {
     const e: Record<string, string> = {};
-    if (!form.username.trim())       e.username       = 'Username is required';
-    if (!form.email.trim())          e.email          = 'Email is required';
+    if (!form.username.trim()) e.username = 'Username is required';
+    if (!form.email.trim()) e.email = 'Email is required';
     else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = 'Invalid email';
-    if (!form.contactNumber.trim())  e.contactNumber  = 'Mobile number is required';
-    else if (form.contactNumber.length < 10) e.contactNumber = 'Enter valid 10-digit number';
-    if (!form.password)              e.password       = 'Password is required';
-    else if (form.password.length < 6) e.password     = 'Minimum 6 characters';
+    if (!form.contactNumber.trim())          e.contactNumber = 'Mobile number is required';
+    else if (!/^[0-9]{10}$/.test(form.contactNumber)) e.contactNumber = 'Enter valid 10-digit number';
+    if (!form.password) e.password = 'Password is required';
+    else if (form.password.length < 6) e.password = 'Minimum 6 characters';
     if (form.confirmPassword !== form.password) e.confirmPassword = 'Passwords do not match';
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -82,7 +82,7 @@ export default function RegisterScreen() {
       setGoogleLoading(true);
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      const idToken  = userInfo.data?.idToken;
+      const idToken = userInfo.data?.idToken;
       if (!idToken) { toast.error('Google Sign-In Failed', { message: 'No ID token received' }); return; }
       const res = await dispatch(googleLogin({ idToken }));
       if (googleLogin.fulfilled.match(res)) {
@@ -94,7 +94,8 @@ export default function RegisterScreen() {
           navigation.navigate('GoogleContactUpdate', { userId: user.id });
         } else {
           toast.success('Welcome!', { message: `Signed in as ${user.username ?? user.email}` });
-          navigation.replace('Main');
+          const mpinSet = await AsyncStorageHelper.isMpinSet();
+          navigation.replace(mpinSet ? 'MpinLogin' : 'CreateMpin');
         }
       } else {
         toast.error('Google Sign-In Failed', { message: res.payload as string });
@@ -111,10 +112,10 @@ export default function RegisterScreen() {
   const handleRegister = async () => {
     if (!validate()) return;
     const res = await dispatch(registerUser({
-      username:      form.username.trim(),
-      email:         form.email.trim(),
+      username: form.username.trim(),
+      email: form.email.trim(),
       contactNumber: form.contactNumber.trim(),
-      password:      form.password,
+      password: form.password,
       hashKey,
     }));
     if (registerUser.fulfilled.match(res)) {
@@ -123,7 +124,7 @@ export default function RegisterScreen() {
       if (user?.token) {
         await AsyncStorageHelper.saveUserSession(user);
         toast.success('Welcome!', { message: `Account created for ${user.username}` });
-        navigation.replace('Main');
+        navigation.replace('CreateMpin');
       } else if (user?.message) {
         // backend returned a conflict message (e.g. contact/email already exists)
         toast.warning('Registration Issue', { message: user.message });
@@ -137,56 +138,58 @@ export default function RegisterScreen() {
   };
 
   return (
-    <ScreenWrapper scroll paddingHorizontal={SIZES.padding.xl} paddingTop={SIZES.lg} paddingBottom={32}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
+    <ScrollView contentContainerStyle={{ paddingHorizontal: SIZES.padding.xl, paddingTop: SIZES.lg, paddingBottom: 32 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
 
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.title}>Create Account</Text>
-          <Text style={styles.subtitle}>Join Dhanapal DigiGold today</Text>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.title}>Create Account</Text>
+        <Text style={styles.subtitle}>Join Dhanapal DigiGold today</Text>
+      </View>
+
+      {/* Form Card */}
+      <View style={styles.card}>
+        <AppInput label="Username" placeholder="Enter username" leftIcon="person-outline" value={form.username} onChangeText={(v) => set('username', v)} error={errors.username} required size="sm" />
+        <AppInput label="Email" placeholder="Enter email" leftIcon="mail-outline" keyboardType="email-address" autoCapitalize="none" value={form.email} onChangeText={(v) => set('email', v)} error={errors.email} required size="sm" />
+        <AppInput label="Mobile Number" placeholder="Enter 10-digit mobile" leftIcon="call-outline" keyboardType="phone-pad" maxLength={10} value={form.contactNumber} onChangeText={(v) => set('contactNumber', v)} error={errors.contactNumber} required size="sm" />
+        <AppInput label="Password" placeholder="Enter password" leftIcon="lock-closed-outline" isPassword value={form.password} onChangeText={(v) => set('password', v)} error={errors.password} required size="sm" />
+        <AppInput label="Confirm Password" placeholder="Re-enter password" leftIcon="lock-closed-outline" isPassword value={form.confirmPassword} onChangeText={(v) => set('confirmPassword', v)} error={errors.confirmPassword} required size="sm" />
+
+        <View style={{ marginTop: SIZES.md }}>
+          <AppButton label="Register" onPress={handleRegister} loading={loading} size="lg" />
         </View>
+      </View>
 
-        {/* Form Card */}
-        <View style={styles.card}>
-          <AppInput label="Username" placeholder="Enter username" leftIcon="person-outline" value={form.username} onChangeText={(v) => set('username', v)} error={errors.username} required />
-          <AppInput label="Email" placeholder="Enter email" leftIcon="mail-outline" keyboardType="email-address" autoCapitalize="none" value={form.email} onChangeText={(v) => set('email', v)} error={errors.email} required />
-          <AppInput label="Mobile Number" placeholder="Enter 10-digit mobile" leftIcon="call-outline" keyboardType="phone-pad" maxLength={10} value={form.contactNumber} onChangeText={(v) => set('contactNumber', v)} error={errors.contactNumber} required />
-          <AppInput label="Password" placeholder="Enter password" leftIcon="lock-closed-outline" isPassword value={form.password} onChangeText={(v) => set('password', v)} error={errors.password} required />
-          <AppInput label="Confirm Password" placeholder="Re-enter password" leftIcon="lock-closed-outline" isPassword value={form.confirmPassword} onChangeText={(v) => set('confirmPassword', v)} error={errors.confirmPassword} required />
+      {/* Divider */}
+      <View style={styles.dividerRow}>
+        <View style={styles.dividerLine} />
+        <Text style={styles.dividerText}>or continue with</Text>
+        <View style={styles.dividerLine} />
+      </View>
 
-          <View style={{ marginTop: SIZES.md }}>
-            <AppButton label="Register" onPress={handleRegister} loading={loading} size="lg" />
-          </View>
-        </View>
+      {/* Google Sign In */}
+      <TouchableOpacity
+        style={styles.googleBtn}
+        onPress={handleGoogleSignIn}
+        activeOpacity={0.85}
+        disabled={googleLoading}
+      >
+        <Ionicons name="logo-google" size={20} color={COLORS.error} />
+        <Text style={styles.googleText}>
+          {googleLoading ? 'Signing in...' : 'Continue with Google'}
+        </Text>
+      </TouchableOpacity>
 
-        {/* Divider */}
-              <View style={styles.dividerRow}>
-                <View style={styles.dividerLine} />
-                <Text style={styles.dividerText}>or continue with</Text>
-                <View style={styles.dividerLine} />
-              </View>
+      {/* Footer */}
+      <TouchableOpacity onPress={() => navigation.navigate('Login')} activeOpacity={0.7}>
+        <Text style={styles.footerText}>
+          Already have an account?{'  '}
+          <Text style={styles.footerLink}>Sign In</Text>
+        </Text>
+      </TouchableOpacity>
 
-        {/* Google Sign In */}
-        <TouchableOpacity
-          style={styles.googleBtn}
-          onPress={handleGoogleSignIn}
-          activeOpacity={0.85}
-          disabled={googleLoading}
-        >
-          <Ionicons name="logo-google" size={20} color={COLORS.error} />
-          <Text style={styles.googleText}>
-            {googleLoading ? 'Signing in...' : 'Continue with Google'}
-          </Text>
-        </TouchableOpacity>
-
-        {/* Footer */}
-        <TouchableOpacity onPress={() => navigation.navigate('Login')} activeOpacity={0.7}>
-          <Text style={styles.footerText}>
-            Already have an account?{'  '}
-            <Text style={styles.footerLink}>Sign In</Text>
-          </Text>
-        </TouchableOpacity>
-
-    </ScreenWrapper>
+    </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -213,11 +216,11 @@ const styles = StyleSheet.create({
   },
   apiError: {
     fontFamily: FONTS.family.regular,
-    fontSize: SIZES.font.sm,
+    fontSize: SIZES.font.md,
     color: COLORS.error,
     textAlign: 'center',
   },
-    dividerRow: {
+  dividerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: SIZES.sm,
@@ -230,12 +233,12 @@ const styles = StyleSheet.create({
   },
   dividerText: {
     fontFamily: FONTS.family.regular,
-    fontSize: SIZES.font.sm,
+    fontSize: SIZES.font.md,
     color: COLORS.textTertiary,
   },
   footerText: {
     fontFamily: FONTS.family.regular,
-    fontSize: SIZES.font.sm,
+    fontSize: SIZES.font.md,
     color: COLORS.textTertiary,
     textAlign: 'center',
   },
@@ -252,8 +255,9 @@ const styles = StyleSheet.create({
     borderRadius: SIZES.radius.lg,
     borderWidth: 1.5,
     borderColor: COLORS.border,
-    height: SIZES.button.height.lg,
+    height: SIZES.button.height.md,
     ...SHADOWS.sm,
+    marginBottom: SIZES.sm,
   },
   googleText: {
     fontFamily: FONTS.family.semiBold,

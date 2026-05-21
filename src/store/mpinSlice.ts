@@ -25,7 +25,11 @@ export const createMpin = createAsyncThunk(
       const res = await mpinService.create(mpin);
       await AsyncStorageHelper.setMpinSet(true);
       return res;
-    } catch (err: any) { return rejectWithValue(err.message); }
+    } catch (err: any) {
+      // 409 = MPIN already exists on server → still mark as set locally
+      if (err?.statusCode === 409) await AsyncStorageHelper.setMpinSet(true);
+      return rejectWithValue(err.message);
+    }
   }
 );
 

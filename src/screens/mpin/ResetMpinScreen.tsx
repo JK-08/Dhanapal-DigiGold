@@ -1,7 +1,7 @@
 // src/screens/mpin/ResetMpinScreen.tsx
 
 import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { COLORS, FONTS, SIZES, SHADOWS } from '../../theme/theme';
@@ -11,7 +11,6 @@ import { RootStackParamList } from '../../navigation/RootNavigator';
 import AppPinInput, { AppPinInputRef } from '../../components/ui/appcomponents/AppPinInput';
 import AppButton from '../../components/ui/appcomponents/AppButton';
 import AppHeader from '../../components/ui/appcomponents/AppHeader';
-import ScreenWrapper from '../../components/ui/appcomponents/ScreenWrapper';
 import { useToast } from '../../components/ui/Toast';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
@@ -52,9 +51,9 @@ export default function ResetMpinScreen() {
   };
 
   return (
-    <ScreenWrapper scroll edges={['bottom']} paddingHorizontal={SIZES.padding.xl} paddingTop={SIZES.lg} paddingBottom={32}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
       <AppHeader title="Change MPIN" showBack variant="white" />
-
+      <ScrollView contentContainerStyle={{ paddingHorizontal: SIZES.padding.xl, paddingTop: SIZES.lg, paddingBottom: 32 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.title}>Change Your MPIN</Text>
@@ -102,7 +101,8 @@ export default function ResetMpinScreen() {
           size="lg"
         />
       </View>
-    </ScreenWrapper>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

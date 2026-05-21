@@ -1,18 +1,19 @@
 // src/screens/login/LoginScreen.tsx
 
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { COLORS, FONTS, SIZES, SHADOWS } from '../../theme/theme';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { loginUser } from '../../store/authSlice';
+import { loginUser, googleLogin } from '../../store/authSlice';
 import { AsyncStorageHelper } from '../../utils/AsyncStorageHelper';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 import AppInput from '../../components/ui/appcomponents/AppInput';
 import AppButton from '../../components/ui/appcomponents/AppButton';
 import { useToast } from '../../components/ui/Toast';
-import ScreenWrapper from '../../components/ui/appcomponents/ScreenWrapper';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
@@ -24,6 +25,46 @@ export default function LoginScreen() {
 
   const [form, setForm] = useState({ contactOrEmailOrUsername: '', password: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: '1038057958960-gg9fji7abv6php2ahfi6kf3ttmu33nea.apps.googleusercontent.com',
+      scopes: ['profile', 'email'],
+      offlineAccess: true,
+    });
+  }, []);
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setGoogleLoading(true);
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      const idToken  = userInfo.data?.idToken;
+      if (!idToken) { toast.error('Google Sign-In Failed', { message: 'No ID token received' }); return; }
+      const res = await dispatch(googleLogin({ idToken }));
+      if (googleLogin.fulfilled.match(res)) {
+        const user = res.payload;
+        await AsyncStorageHelper.saveUserSession(user);
+        if (!user.contactNumber && user.id) {
+          toast.info('One more step!', { message: 'Please add your mobile number' });
+          navigation.navigate('GoogleContactUpdate', { userId: user.id });
+        } else {
+          toast.success('Welcome back!', { message: `Signed in as ${user.username ?? user.email}` });
+          const mpinSet = await AsyncStorageHelper.isMpinSet();
+          navigation.replace(mpinSet ? 'MpinLogin' : 'CreateMpin');
+        }
+      } else {
+        toast.error('Google Sign-In Failed', { message: res.payload as string });
+      }
+    } catch (error: any) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) return;
+      if (error.code === statusCodes.IN_PROGRESS) return;
+      toast.error('Google Sign-In Failed', { message: error.message ?? 'Something went wrong' });
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
 
   const set = (key: string, val: string) => {
     setForm((p) => ({ ...p, [key]: val }));
@@ -56,7 +97,8 @@ export default function LoginScreen() {
   };
 
   return (
-    <ScreenWrapper scroll paddingHorizontal={SIZES.padding.xl} paddingTop={SIZES.xxxl} paddingBottom={32}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
+    <ScrollView contentContainerStyle={{ paddingHorizontal: SIZES.padding.xl, paddingTop: SIZES.xxxl, paddingBottom: 32 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
 
       {/* Header */}
       <View style={styles.header}>
@@ -109,9 +151,22 @@ export default function LoginScreen() {
       {/* Divider */}
       <View style={styles.dividerRow}>
         <View style={styles.dividerLine} />
-        <Text style={styles.dividerText}>or</Text>
+        <Text style={styles.dividerText}>or continue with</Text>
         <View style={styles.dividerLine} />
       </View>
+
+      {/* Google Sign In */}
+      <TouchableOpacity
+        style={styles.googleBtn}
+        onPress={handleGoogleSignIn}
+        activeOpacity={0.85}
+        disabled={googleLoading}
+      >
+        <Ionicons name="logo-google" size={20} color={COLORS.error} />
+        <Text style={styles.googleText}>
+          {googleLoading ? 'Signing in...' : 'Continue with Google'}
+        </Text>
+      </TouchableOpacity>
 
       {/* Register */}
       <TouchableOpacity
@@ -125,7 +180,8 @@ export default function LoginScreen() {
         </Text>
       </TouchableOpacity>
 
-    </ScreenWrapper>
+    </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -196,5 +252,22 @@ const styles = StyleSheet.create({
   registerLink: {
     fontFamily: FONTS.family.semiBold,
     color: COLORS.primary,
+  },
+  googleBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: SIZES.sm,
+    backgroundColor: COLORS.white,
+    borderRadius: SIZES.radius.lg,
+    borderWidth: 1.5,
+    borderColor: COLORS.border,
+    height: SIZES.button.height.lg,
+    ...SHADOWS.sm,
+  },
+  googleText: {
+    fontFamily: FONTS.family.semiBold,
+    fontSize: SIZES.font.md,
+    color: COLORS.textPrimary,
   },
 });

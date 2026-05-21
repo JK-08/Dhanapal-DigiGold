@@ -247,11 +247,11 @@ const QuickAction = ({ icon, label, onPress }: { icon: string; label: string; on
 
 const PortfolioStat = ({ label, value, isPositive }: { label: string; value: string; isPositive?: boolean }) => {
   const { COLORS, FONTS } = useTheme();
-  const valueColor = isPositive && value.includes('+') ? COLORS.success : COLORS.text;
+  const valueColor = isPositive && value.includes('+') ? COLORS.success : COLORS.textPrimary;
   return (
     <View style={{ alignItems: 'center' }}>
       <AppText variant="caption" style={{ color: COLORS.textSecondary }}>{label}</AppText>
-      <AppText variant="bodyMedium" style={{ fontWeight: FONTS.weight.semiBold, color: valueColor, marginTop: 4 }}>
+      <AppText variant="bodyMedium" style={{ fontWeight: FONTS.weight.semiBold as '600', color: valueColor, marginTop: 4 }}>
         {value}
       </AppText>
     </View>

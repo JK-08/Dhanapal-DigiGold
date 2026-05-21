@@ -43,13 +43,17 @@
         "android.permission.VIBRATE",
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE",
-        "android.permission.POST_NOTIFICATIONS"
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_MEDIA_VISUAL_USER_SELECTED",
+        "android.permission.WAKE_LOCK"
       ]
     },
     "web": {
       "favicon": "./assets/logo.png"
     },
     "plugins": [
+      "./plugins/withFirebaseNotificationChannel",
       "expo-font",
       [
         "expo-camera",
@@ -84,7 +88,8 @@
         {
           "color": "#FF971D",
           "defaultChannel": "default",
-          "sounds": []
+          "sounds": [],
+          "mode": "production"
         }
       ],
       [
@@ -121,14 +126,16 @@
       ],
       "@react-native-community/datetimepicker",
       "expo-asset",
-      "@react-native-google-signin/google-signin"
+      "@react-native-google-signin/google-signin",
+      "@react-native-firebase/app",
+      "@react-native-firebase/messaging"
     ],
     "extra": {
       "apiBaseUrl": "https://scheme.dhanapaljewellery.com/api/v1",
       "eas": {
-        "projectId": "42cff07f-ad84-427a-9a37-7689c1dc45b3"
+        "projectId": "0217705d-6a64-4e1d-8ca1-0e45194d4c44"
       }
     },
-    "owner": "kiruba08"
+    "owner": "jk_08"
   }
 }
