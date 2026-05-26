@@ -80,7 +80,7 @@ export default function RegisterOTPVerifyScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <AppHeader title="Verify OTP" showBack variant="white" />
+      <AppHeader title="Verify OTP" showBack  />
       <View style={styles.content}>
         {/* Header */}
         <View style={styles.header}>

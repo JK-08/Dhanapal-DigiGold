@@ -13,7 +13,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet,
-  Animated, Dimensions,
+  Animated, Dimensions, ViewStyle,
 } from 'react-native';
 import Svg, { Polyline, Defs, LinearGradient, Stop, Polygon } from 'react-native-svg';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -35,10 +35,12 @@ export type AppGoldPriceCardProps = {
   updatedAt?: string;
   /** Loading skeleton state */
   loading?: boolean;
+  showActions?: boolean;
   onBuy?: (karat: GoldKarat) => void;
   onSell?: (karat: GoldKarat) => void;
   /** Called when user taps the refresh icon */
   onRefresh?: () => void;
+  style?: ViewStyle;
 };
 
 const KARATS: GoldKarat[] = ['24K', '22K', '18K'];
@@ -116,9 +118,9 @@ function Shimmer({ width, height, borderRadius = 6 }: { width: number | `${numbe
 // Main Component
 // ─────────────────────────────────────────────────────────────────
 export default function AppGoldPriceCard({
-  rates, change, sparkline,
+  rates, change, sparkline, showActions = true,
   updatedAt, loading = false,
-  onBuy, onSell, onRefresh,
+  onBuy, onSell, onRefresh, style,
 }: AppGoldPriceCardProps) {
   const { COLORS, FONTS, SIZES, SHADOWS, moderateScale } = useTheme();
   const [activeKarat, setActiveKarat] = useState<GoldKarat>('24K');
@@ -161,7 +163,7 @@ export default function AppGoldPriceCard({
   const changeColor = isUp ? upColor : downColor;
 
   return (
-    <View style={[styles.card, { backgroundColor: COLORS.card, ...SHADOWS.gold }]}>
+    <View style={[styles.card, { backgroundColor: COLORS.card, ...SHADOWS.gold }, style]}>
 
       {/* ── Top bar: title + refresh ── */}
       <View style={styles.topBar}>
@@ -281,33 +283,80 @@ export default function AppGoldPriceCard({
         </View>
       )}
 
-      {/* ── Divider ── */}
-      <View style={[styles.divider, { backgroundColor: COLORS.border }]} />
+      {showActions && (
+  <>
+    <View
+      style={[
+        styles.divider,
+        { backgroundColor: COLORS.border },
+      ]}
+    />
 
-      {/* ── Buy / Sell buttons ── */}
-      <View style={styles.actions}>
-        <TouchableOpacity
-          style={[styles.actionBtn, styles.sellBtn, { borderColor: downColor + '60', backgroundColor: downColor + '0D' }]}
-          onPress={() => onSell?.(activeKarat)}
-          activeOpacity={0.75}
+    <View style={styles.actions}>
+      <TouchableOpacity
+        style={[
+          styles.actionBtn,
+          styles.sellBtn,
+          {
+            borderColor: downColor + '60',
+            backgroundColor: downColor + '0D',
+          },
+        ]}
+        onPress={() => onSell?.(activeKarat)}
+        activeOpacity={0.75}
+      >
+        <Ionicons
+          name="arrow-up-circle-outline"
+          size={moderateScale(16)}
+          color={downColor}
+        />
+        <Text
+          style={[
+            styles.actionText,
+            {
+              fontFamily: FONTS.family.semiBold,
+              fontSize: SIZES.font.sm,
+              color: downColor,
+            },
+          ]}
         >
-          <Ionicons name="arrow-up-circle-outline" size={moderateScale(16)} color={downColor} />
-          <Text style={[styles.actionText, { fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.sm, color: downColor }]}>
-            Sell {activeKarat}
-          </Text>
-        </TouchableOpacity>
+          Sell {activeKarat}
+        </Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.actionBtn, styles.buyBtn, { backgroundColor: accentColor, ...SHADOWS.gold }]}
-          onPress={() => onBuy?.(activeKarat)}
-          activeOpacity={0.8}
+      <TouchableOpacity
+        style={[
+          styles.actionBtn,
+          styles.buyBtn,
+          {
+            backgroundColor: accentColor,
+            ...SHADOWS.gold,
+          },
+        ]}
+        onPress={() => onBuy?.(activeKarat)}
+        activeOpacity={0.8}
+      >
+        <Ionicons
+          name="add-circle-outline"
+          size={moderateScale(16)}
+          color={COLORS.white}
+        />
+        <Text
+          style={[
+            styles.actionText,
+            {
+              fontFamily: FONTS.family.semiBold,
+              fontSize: SIZES.font.sm,
+              color: COLORS.white,
+            },
+          ]}
         >
-          <Ionicons name="add-circle-outline" size={moderateScale(16)} color={COLORS.white} />
-          <Text style={[styles.actionText, { fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.sm, color: COLORS.white }]}>
-            Buy {activeKarat}
-          </Text>
-        </TouchableOpacity>
-      </View>
+          Buy {activeKarat}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  </>
+)}
     </View>
   );
 }

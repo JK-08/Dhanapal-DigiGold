@@ -45,6 +45,7 @@ export const COLORS = {
   accent: "#C9B15D",           // Rich Gold
   accentLight: "#EFE5BC",      // Champagne Gold
   accentDark: "#A8922C",       // Dark Gold
+  bottomGlow:"rgb(139, 114, 32)",
 
   // ===== NEUTRAL COLORS =====
   white: "#FFFFFF",
@@ -187,6 +188,7 @@ export const COLORS = {
     orangeLight: ["#FFB14D", "#FFD39A"],     // Light orange gradient
     orangeVivid: ["#FF7A00", "#FFB14D"],     // Vivid to soft orange
     orangeToWhite: ["#FF971D", "#FFFFFF"],   // Orange to white
+    orangeToRed: ["#dd9038", "#ffcb5cd5"],   // Orange to white
 
     // Gold gradients
     goldLight: ["#C9B15D", "#D9C77F"],       // Gold gradient
@@ -233,7 +235,7 @@ export const SIZES = {
     xl: moderateScale(20),
     xxl: moderateScale(24),
     xxxl: moderateScale(32),
-    container: moderateScale(20), // Standard container padding
+    container: moderateScale(5), // Standard container padding
   },
 
   margin: {

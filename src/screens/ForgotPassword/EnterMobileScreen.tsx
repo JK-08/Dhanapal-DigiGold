@@ -54,7 +54,7 @@ export default function EnterMobileScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
-      <AppHeader title="Forgot Password" showBack variant="white" />
+      <AppHeader title="Forgot Password" showBack />
       <View style={[styles.content, { paddingHorizontal: SIZES.padding.xl }]}>
         <View style={styles.header}>
           <Text style={styles.title}>Reset Password</Text>

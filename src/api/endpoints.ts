@@ -29,3 +29,12 @@ export const DEVICE = {
   LOGOUT:      '/device/logout',
   DELETE:      '/device/delete',
 };
+
+// src/api/endpoints.ts
+
+export const SCHEME_SLIDER = {
+  ALL: '/schemeslider/all',
+  UPLOAD: '/schemeslider/upload',
+  UPDATE: '/schemeslider/update',
+  DELETE: '/schemeslider/delete',
+};

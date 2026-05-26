@@ -20,14 +20,15 @@ export type RootStackParamList = {
   Login:                   undefined;
   ForgotPassword:          undefined;
   ForgotVerifyOTP:         { contactNumber: string };
-  GoogleContactUpdate:     { userId: number };
-  GoogleContactVerifyOTP:  { newContactNumber: string };
+  GoogleContactUpdate:     { userId: number; picture?: string };
+  GoogleContactVerifyOTP:  { newContactNumber: string; picture?: string; userId: number };
   CreateMpin:              undefined;
   MpinLogin:               undefined;
   ForgotMpin:              undefined;
   ResetMpin:               undefined;
   ComponentsUsage:         undefined;
   Main:                    undefined;
+  WebView:                 { url: string; title?: string };
 };
 
 type InitialRoute = 'Onboarding' | 'Register' | 'Login' | 'CreateMpin' | 'MpinLogin' | 'Main';
@@ -41,6 +42,7 @@ export default function RootNavigator() {
 
   useEffect(() => {
     (async () => {
+      AsyncStorageHelper.clearAll(); // --- IGNORE --- TEMP: Clear storage on every app start for testing
       const onboarded = await AsyncStorageHelper.isOnboarded();
       const token     = await AsyncStorageHelper.getToken();
 
@@ -102,6 +104,7 @@ export default function RootNavigator() {
         <Stack.Screen name="ResetMpin"               component={Screens.ResetMpinScreen} />
         <Stack.Screen name="ComponentsUsage"         component={Screens.ComponentsUsageScreen} />
         <Stack.Screen name="Main"                    component={Screens.BottomTabNavigator} />
+        <Stack.Screen name="WebView"                 component={Screens.WebViewComponent} />
       </Stack.Navigator>
     </NavigationContainer>
   );

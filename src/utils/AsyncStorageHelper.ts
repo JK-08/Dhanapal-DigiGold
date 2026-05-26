@@ -19,6 +19,8 @@ const KEYS = {
   MPIN_SET:       '@mpin_set',
   ONBOARDED:      '@onboarding_complete',
   FCM_TOKEN:      '@fcm_token',
+  SOCIAL_MEDIA:   '@social_media',
+  PICTURE:        '@picture',
   DEVICE_ID:      '@device_id',
 } as const;
 
@@ -37,6 +39,11 @@ const saveUserSession = async (user: UserData): Promise<void> => {
   if (user.playStoreLink)      pairs.push([KEYS.PLAYSTORE_LINK, user.playStoreLink]);
   if (user.whatsappLink)       pairs.push([KEYS.WHATSAPP_LINK,  user.whatsappLink]);
   if (user.used_referral_code) pairs.push([KEYS.USED_REFERRAL,  user.used_referral_code]);
+  if (user.picture) {
+    const existing = await AsyncStorage.getItem(KEYS.PICTURE);
+    if (!existing) pairs.push([KEYS.PICTURE, user.picture]);
+  }
+  if (user.socialMedia)        pairs.push([KEYS.SOCIAL_MEDIA,   user.socialMedia]);
   await AsyncStorage.multiSet(pairs);
 };
 
@@ -64,8 +71,10 @@ const setMpinSet    = (val: boolean) => AsyncStorage.setItem(KEYS.MPIN_SET,  Str
 const setOnboarded  = ()             => AsyncStorage.setItem(KEYS.ONBOARDED, 'true');
 const setFcmToken   = (token: string) => AsyncStorage.setItem(KEYS.FCM_TOKEN, token);
 const getFcmToken   = () => AsyncStorage.getItem(KEYS.FCM_TOKEN);
-const setDeviceId   = (id: string) => AsyncStorage.setItem(KEYS.DEVICE_ID, id);
-const getDeviceId   = () => AsyncStorage.getItem(KEYS.DEVICE_ID);
+const getPicture      = () => AsyncStorage.getItem(KEYS.PICTURE);
+const getSocialMedia  = () => AsyncStorage.getItem(KEYS.SOCIAL_MEDIA);
+const setDeviceId     = (id: string) => AsyncStorage.setItem(KEYS.DEVICE_ID, id);
+const getDeviceId     = () => AsyncStorage.getItem(KEYS.DEVICE_ID);
 
 // ── Clear session (logout) ────────────────────────────────────────
 const clearSession = () =>
@@ -81,6 +90,8 @@ const clearSession = () =>
     KEYS.PLAYSTORE_LINK,
     KEYS.WHATSAPP_LINK,
     KEYS.USED_REFERRAL,
+    KEYS.PICTURE,
+    KEYS.SOCIAL_MEDIA,
     // MPIN_SET intentionally kept — MPIN persists across logout/login
   ]);
 
@@ -108,6 +119,8 @@ export const AsyncStorageHelper = {
   getFcmToken,
   setDeviceId,
   getDeviceId,
+  getPicture,
+  getSocialMedia,
   clearSession,
   clearAll,
 };

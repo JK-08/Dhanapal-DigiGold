@@ -48,7 +48,7 @@ export default function LoginScreen() {
         await AsyncStorageHelper.saveUserSession(user);
         if (!user.contactNumber && user.id) {
           toast.info('One more step!', { message: 'Please add your mobile number' });
-          navigation.navigate('GoogleContactUpdate', { userId: user.id });
+          navigation.navigate('GoogleContactUpdate', { userId: user.id, picture: user.picture });
         } else {
           toast.success('Welcome back!', { message: `Signed in as ${user.username ?? user.email}` });
           const mpinSet = await AsyncStorageHelper.isMpinSet();
@@ -98,14 +98,20 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
-    <ScrollView contentContainerStyle={{ paddingHorizontal: SIZES.padding.xl, paddingTop: SIZES.xxxl, paddingBottom: 32 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+    <ScrollView contentContainerStyle={{ paddingBottom: 32 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
 
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.brand}>✦ DigiGold</Text>
-        <Text style={styles.title}>Welcome Back</Text>
-        <Text style={styles.subtitle}>Sign in to your account</Text>
+      {/* Branded Header */}
+      <View style={styles.headerBg}>
+        <View style={styles.headerInner}>
+          <View style={styles.logoCircle}>
+            <Ionicons name="shield-checkmark" size={32} color={COLORS.white} />
+          </View>
+          <Text style={styles.title}>Welcome Back</Text>
+          <Text style={styles.subtitle}>Sign in to your account</Text>
+        </View>
       </View>
+
+      <View style={{ paddingHorizontal: SIZES.padding.xl, paddingTop: SIZES.lg }}>
 
       {/* Form Card */}
       <View style={styles.card}>
@@ -180,16 +186,34 @@ export default function LoginScreen() {
         </Text>
       </TouchableOpacity>
 
+      </View>
     </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
+  headerBg: {
+    backgroundColor: COLORS.primary,
+    paddingTop: SIZES.md,
+    paddingBottom: SIZES.lg,
+    paddingHorizontal: SIZES.padding.xl,
+    borderBottomLeftRadius: 32,
+    borderBottomRightRadius: 32,
+    ...SHADOWS.orange,
+  },
+  headerInner: {
     alignItems: 'center',
-    gap: 6,
-    marginBottom: SIZES.lg,
+    gap: SIZES.sm,
+  },
+  logoCircle: {
+    width: 64,
+    height: 64,
+    borderRadius: 20,
+    backgroundColor: COLORS.primaryDark,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: SIZES.xs,
   },
   brand: {
     fontFamily: FONTS.family.bold,
@@ -200,28 +224,30 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: FONTS.family.bold,
-    fontSize: SIZES.heading.h2,
-    color: COLORS.textPrimary,
+    fontSize: SIZES.heading.h3,
+    color: COLORS.white,
     letterSpacing: -0.3,
   },
   subtitle: {
     fontFamily: FONTS.family.regular,
-    fontSize: SIZES.font.sm,
-    color: COLORS.textSecondary,
+    fontSize: SIZES.font.md,
+    color: COLORS.whiteOpacity70,
+    marginBottom: SIZES.xs,
   },
   card: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.background,
     borderRadius: SIZES.radius.xl,
     padding: SIZES.padding.xl,
     gap: SIZES.md,
-    ...SHADOWS.md,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
   forgotRow: {
     alignSelf: 'flex-end',
     marginTop: -SIZES.xs,
   },
   forgotText: {
-    fontFamily: FONTS.family.medium,
+    fontFamily: FONTS.family.semiBold,
     fontSize: SIZES.font.sm,
     color: COLORS.primary,
   },
@@ -243,10 +269,11 @@ const styles = StyleSheet.create({
   },
   registerBtn: {
     alignItems: 'center',
+    marginTop: SIZES.md,
   },
   registerText: {
     fontFamily: FONTS.family.regular,
-    fontSize: SIZES.font.sm,
+    fontSize: SIZES.font.md,
     color: COLORS.textTertiary,
   },
   registerLink: {

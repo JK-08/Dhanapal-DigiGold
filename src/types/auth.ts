@@ -70,6 +70,8 @@ export interface UserData {
   aadhaarVerified?: boolean;
   kycVerified?: boolean;
   used_referral_code?: string;
+  picture?: string;
+  socialMedia?: string;
 }
 
 export interface AuthState {

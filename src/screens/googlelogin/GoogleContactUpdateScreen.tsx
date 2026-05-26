@@ -21,7 +21,7 @@ export default function GoogleContactUpdateScreen() {
   const route      = useRoute<Route>();
   const toast      = useToast();
 
-  const { userId } = route.params;
+  const { userId, picture } = route.params;
 
   const [mobile, setMobile]             = useState('');
   const [referralCode, setReferralCode] = useState('');
@@ -58,7 +58,11 @@ export default function GoogleContactUpdateScreen() {
         hashKey:          hashKey || undefined,
       });
       toast.success('OTP Sent!', { message: `Code sent to ${mobile.trim()}` });
-      navigation.navigate('GoogleContactVerifyOTP', { newContactNumber: mobile.trim() });
+      navigation.navigate('GoogleContactVerifyOTP', {
+        newContactNumber: mobile.trim(),
+        picture,
+        userId,
+      });
     } catch (err: any) {
       toast.error('Failed', { message: err.message ?? 'Something went wrong' });
     } finally {

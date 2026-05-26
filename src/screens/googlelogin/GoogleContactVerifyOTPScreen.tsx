@@ -22,7 +22,7 @@ export default function GoogleContactVerifyOTPScreen() {
   const route      = useRoute<Route>();
   const toast      = useToast();
 
-  const { newContactNumber } = route.params;
+  const { newContactNumber, picture, userId } = route.params;
 
   const otpRef          = useRef<AppOTPInputRef>(null);
   const verifyCalledRef = useRef(false);
@@ -70,9 +70,14 @@ export default function GoogleContactVerifyOTPScreen() {
         newContactNumber,
         otp: otpCode,
       });
-      await AsyncStorageHelper.saveUserSession(res);
+      // merge picture & id from google login (not returned by OTP verify)
+      await AsyncStorageHelper.saveUserSession({
+        ...res,
+        picture: picture ?? res.picture,
+        id:      res.id ?? userId,
+      });
       toast.success('Mobile Linked!', { message: 'Your account is ready' });
-      navigation.replace('Main');
+      navigation.replace('CreateMpin');
     } catch (err: any) {
       verifyCalledRef.current = false;
       setOtpError(true);

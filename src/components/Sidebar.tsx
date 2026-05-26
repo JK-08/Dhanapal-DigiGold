@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
+  Image,
   TouchableOpacity,
   Animated,
   TouchableWithoutFeedback,
@@ -20,6 +21,7 @@ import { RootStackParamList } from '../navigation/RootNavigator';
 import { useTheme } from '../theme';
 import { useLanguage } from '../providers/LanguageProvider';
 import AppLanguagePicker, { LanguageCode, INDIAN_LANGUAGES } from './ui/appcomponents/AppLanguage';
+import { useAppSelector } from '../store/hooks';
 
 const SIDEBAR_WIDTH = Dimensions.get('window').width * 0.75;
 
@@ -32,6 +34,7 @@ export default function Sidebar({ visible, onClose }: Props) {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { COLORS, FONTS, SIZES, SHADOWS, isDark, toggleTheme } = useTheme();
   const { language, setLanguage, t } = useLanguage();
+  const user = useAppSelector((s) => s.auth.user);
   const [langSheetVisible, setLangSheetVisible] = useState(false);
 
   const selectedLang = INDIAN_LANGUAGES.find(l => l.code === language);
@@ -129,33 +132,28 @@ export default function Sidebar({ visible, onClose }: Props) {
             alignItems: 'center', justifyContent: 'center',
             backgroundColor: COLORS.whiteOpacity20,
             marginBottom: SIZES.margin.sm,
+            overflow: 'hidden',
           }}>
-            <Text style={{ fontSize: 28 }}>👤</Text>
+            {user?.picture ? (
+              <Image
+                source={{ uri: user.picture }}
+                style={{ width: '100%', height: '100%' }}
+                resizeMode="cover"
+              />
+            ) : (
+              <Text style={{ fontSize: 28 }}>👤</Text>
+            )}
           </View>
 
-          <Text style={[FONTS.h5, { color: COLORS.white }]}>Dhanapal DigiGold</Text>
+          <Text style={[FONTS.h5, { color: COLORS.white }]}>{user?.username ?? 'DigiGold User'}</Text>
           <Text style={[FONTS.caption, { color: COLORS.whiteOpacity70, marginBottom: SIZES.margin.md }]}>
-            user@digigold.com
+            {user?.email ?? ''}
           </Text>
 
-          {/* Balance chip */}
-          <View style={{
-            flexDirection: 'row', alignItems: 'center', gap: 6,
-            borderWidth: 1, borderColor: COLORS.whiteOpacity30,
-            backgroundColor: COLORS.whiteOpacity10,
-            borderRadius: SIZES.radius.full,
-            paddingHorizontal: SIZES.padding.md,
-            paddingVertical: SIZES.padding.xs,
-            alignSelf: 'flex-start',
-          }}>
-            <Text style={[FONTS.caption, { color: COLORS.secondaryLight }]}>✦ 2.4g Gold</Text>
-            <View style={{ width: 1, height: 12, backgroundColor: COLORS.whiteOpacity30 }} />
-            <Text style={[FONTS.captionBold, { color: COLORS.white }]}>₹18,240</Text>
-          </View>
         </View>
 
-        {/* Menu Items */}
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingVertical: SIZES.padding.sm }} showsVerticalScrollIndicator={false}>
+        {/* Menu Items + Footer — all scrollable */}
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingVertical: SIZES.padding.sm, paddingBottom: SIZES.padding.xxl }} showsVerticalScrollIndicator={false}>
           {menuItems.map((item, i) => {
             const isActive = i === 0;
             return (
@@ -182,7 +180,6 @@ export default function Sidebar({ visible, onClose }: Props) {
                     gap: 12,
                   }}
                 >
-                  {/* Icon box */}
                   <View style={{
                     width: 40, height: 40,
                     borderRadius: SIZES.radius.md,
@@ -191,8 +188,6 @@ export default function Sidebar({ visible, onClose }: Props) {
                   }}>
                     <Text style={{ fontSize: 18 }}>{item.icon}</Text>
                   </View>
-
-                  {/* Text */}
                   <View style={{ flex: 1 }}>
                     <Text style={[
                       isActive ? FONTS.bodyBold : FONTS.bodyMedium,
@@ -204,8 +199,6 @@ export default function Sidebar({ visible, onClose }: Props) {
                       {item.description}
                     </Text>
                   </View>
-
-                  {/* Badge */}
                   {item.badge && (
                     <View style={{
                       paddingHorizontal: 7, paddingVertical: 3,
@@ -217,87 +210,85 @@ export default function Sidebar({ visible, onClose }: Props) {
                       </Text>
                     </View>
                   )}
-
                   <Text style={{ fontSize: 20, color: COLORS.gray300 }}>›</Text>
                 </TouchableOpacity>
               </Animated.View>
             );
           })}
-        </ScrollView>
 
-        {/* Footer */}
-        <View style={{
-          paddingHorizontal: SIZES.padding.xl,
-          paddingTop: SIZES.padding.md,
-          paddingBottom: SIZES.padding.xxl,
-          borderTopWidth: StyleSheet.hairlineWidth,
-          borderTopColor: COLORS.border,
-          backgroundColor: COLORS.backgroundSecondary,
-          gap: SIZES.sm,
-        }}>
-          {/* Theme Toggle */}
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: SIZES.sm }}>
-            <View style={{
-              width: 36, height: 36,
-              borderRadius: SIZES.radius.sm,
-              alignItems: 'center', justifyContent: 'center',
-              backgroundColor: isDark ? COLORS.gray800 : COLORS.gray200,
-            }}>
-              <Text style={{ fontSize: 16 }}>{isDark ? '🌙' : '☀️'}</Text>
-            </View>
-            <Text style={[FONTS.bodyMedium, { flex: 1, color: COLORS.textPrimary }]}>
-              {isDark ? t('darkMode') : t('lightMode')}
-            </Text>
-            <Switch
-              value={isDark}
-              onValueChange={toggleTheme}
-              trackColor={{ false: COLORS.border, true: COLORS.primary }}
-              thumbColor={isDark ? COLORS.secondary : COLORS.white}
-            />
-          </View>
-
-          <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: COLORS.border, marginVertical: 4 }} />
-
-          {/* Language Picker */}
-          <TouchableOpacity
-            onPress={() => setLangSheetVisible(true)}
-            style={{ flexDirection: 'row', alignItems: 'center', gap: SIZES.sm, paddingVertical: SIZES.padding.xs }}
-          >
-            <View style={{
-              width: 36, height: 36,
-              borderRadius: SIZES.radius.sm,
-              alignItems: 'center', justifyContent: 'center',
-              backgroundColor: isDark ? COLORS.gray800 : COLORS.gray200,
-            }}>
-              <Text style={{ fontSize: 16 }}>🌐</Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={[FONTS.bodyMedium, { color: COLORS.textPrimary }]}>{t('language')}</Text>
-              <Text style={[FONTS.caption, { color: COLORS.textTertiary }]}>
-                {selectedLang ? `${selectedLang.flag}  ${selectedLang.name}` : language.toUpperCase()}
-              </Text>
-            </View>
-            <Text style={{ fontSize: 18, color: COLORS.gray300 }}>›</Text>
-          </TouchableOpacity>
-
-          <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: COLORS.border, marginVertical: 4 }} />
-
-          {/* Sign Out */}
-          <TouchableOpacity style={{
-            flexDirection: 'row', alignItems: 'center', gap: SIZES.sm,
-            paddingVertical: SIZES.padding.sm,
-            paddingHorizontal: SIZES.padding.md,
-            borderRadius: SIZES.radius.md,
-            backgroundColor: 'rgba(220,38,38,0.08)',
+          {/* Footer inside scroll */}
+          <View style={{
+            paddingHorizontal: SIZES.padding.xl,
+            paddingTop: SIZES.padding.lg,
+            marginTop: SIZES.margin.md,
+            borderTopWidth: StyleSheet.hairlineWidth,
+            borderTopColor: COLORS.border,
+            gap: SIZES.sm,
           }}>
-            <Text style={{ fontSize: 16 }}>🚪</Text>
-            <Text style={[FONTS.bodyMedium, { color: COLORS.error }]}>{t('signOut')}</Text>
-          </TouchableOpacity>
+            {/* Theme Toggle */}
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: SIZES.sm }}>
+              <View style={{
+                width: 36, height: 36,
+                borderRadius: SIZES.radius.sm,
+                alignItems: 'center', justifyContent: 'center',
+                backgroundColor: isDark ? COLORS.gray800 : COLORS.gray200,
+              }}>
+                <Text style={{ fontSize: 16 }}>{isDark ? '🌙' : '☀️'}</Text>
+              </View>
+              <Text style={[FONTS.bodyMedium, { flex: 1, color: COLORS.textPrimary }]}>
+                {isDark ? t('darkMode') : t('lightMode')}
+              </Text>
+              <Switch
+                value={isDark}
+                onValueChange={toggleTheme}
+                trackColor={{ false: COLORS.border, true: COLORS.primary }}
+                thumbColor={isDark ? COLORS.secondary : COLORS.white}
+              />
+            </View>
 
-          <Text style={[FONTS.caption, { color: COLORS.textDisabled, textAlign: 'center', marginTop: 4 }]}>
-            DigiGold v1.0.0
-          </Text>
-        </View>
+            <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: COLORS.border, marginVertical: 4 }} />
+
+            {/* Language Picker */}
+            <TouchableOpacity
+              onPress={() => setLangSheetVisible(true)}
+              style={{ flexDirection: 'row', alignItems: 'center', gap: SIZES.sm, paddingVertical: SIZES.padding.xs }}
+            >
+              <View style={{
+                width: 36, height: 36,
+                borderRadius: SIZES.radius.sm,
+                alignItems: 'center', justifyContent: 'center',
+                backgroundColor: isDark ? COLORS.gray800 : COLORS.gray200,
+              }}>
+                <Text style={{ fontSize: 16 }}>🌐</Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={[FONTS.bodyMedium, { color: COLORS.textPrimary }]}>{t('language')}</Text>
+                <Text style={[FONTS.caption, { color: COLORS.textTertiary }]}>
+                  {selectedLang ? `${selectedLang.flag}  ${selectedLang.name}` : language.toUpperCase()}
+                </Text>
+              </View>
+              <Text style={{ fontSize: 18, color: COLORS.gray300 }}>›</Text>
+            </TouchableOpacity>
+
+            <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: COLORS.border, marginVertical: 4 }} />
+
+            {/* Sign Out */}
+            <TouchableOpacity style={{
+              flexDirection: 'row', alignItems: 'center', gap: SIZES.sm,
+              paddingVertical: SIZES.padding.sm,
+              paddingHorizontal: SIZES.padding.md,
+              borderRadius: SIZES.radius.md,
+              backgroundColor: 'rgba(220,38,38,0.08)',
+            }}>
+              <Text style={{ fontSize: 16 }}>🚪</Text>
+              <Text style={[FONTS.bodyMedium, { color: COLORS.error }]}>{t('signOut')}</Text>
+            </TouchableOpacity>
+
+            <Text style={[FONTS.caption, { color: COLORS.textDisabled, textAlign: 'center', marginTop: 4 }]}>
+              DigiGold v1.0.0
+            </Text>
+          </View>
+        </ScrollView>
       </Animated.View>
 
       {/* Language Picker Sheet */}

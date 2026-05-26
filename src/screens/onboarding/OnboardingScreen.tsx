@@ -7,216 +7,344 @@ import {
   Dimensions,
   FlatList,
   StatusBar,
-  Image,
-  ActivityIndicator,
+  ImageBackground,
   Platform,
+  SafeAreaView,
+  ActivityIndicator,
+  Image,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { RootStackParamList } from '../../navigation/RootNavigator';
-import { COLORS, SIZES, FONTS, SHADOWS } from '../../theme/theme';
+
+const { width, height } = Dimensions.get('window');
 import { useOnboardingBanners } from '../../api/hooks/Onboard/useOnboardingBanners';
 import { Banner } from '../../types/onboarding';
+import { FONTS, SIZES, COLORS } from '../../theme/theme';
 
-const ONBOARDING_KEY = '@onboarding_complete';
-const { width, height } = Dimensions.get('window');
+const TITLES = ['ViserGold', 'Trust and Security', 'Invest in Gold for the Future'];
+const DESCRIPTIONS = [
+  'Smart & Secure Digital Gold Platform',
+  'Your gold investments are fully secure. Trade with confidence, knowing your assets are protected.',
+  'Gold is a timeless investment that grows with you. Start building your wealth today with smart and secure gold trading.',
+];
 
-const OnboardingScreen: React.FC = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+const OnboardingScreen = ({ navigation }: any) => {
+  const flatListRef = useRef<FlatList>(null);
   const { banners, loading, getImageUrl } = useOnboardingBanners();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const flatListRef = useRef<FlatList>(null);
+
+  const slides = banners.map((item: Banner, index: number) => ({
+    id: String(item.BannerId),
+    image: { uri: getImageUrl(item.image_path) },
+    title: TITLES[index] ?? item.title,
+    description: DESCRIPTIONS[index] ?? '',
+    isIntro: index === 0,
+  }));
+
+  const isLast = currentIndex === slides.length - 1;
 
   const handleNext = () => {
-    if (currentIndex < banners.length - 1) {
-      flatListRef.current?.scrollToIndex({ index: currentIndex + 1 });
-      setCurrentIndex((prev) => prev + 1);
+    if (currentIndex < slides.length - 1) {
+      flatListRef.current?.scrollToIndex({
+        index: currentIndex + 1,
+        animated: true,
+      });
+    } else {
+      navigation.navigate('Register');
     }
   };
 
   const handleSkip = () => {
-    const last = banners.length - 1;
-    flatListRef.current?.scrollToIndex({ index: last });
-    setCurrentIndex(last);
+    navigation.navigate('Register');
   };
-
-  const handleGetStarted = async () => {
-    await AsyncStorage.setItem(ONBOARDING_KEY, 'true');
-    navigation.replace('Register');
-  };
-
-  const isLast = currentIndex === banners.length - 1;
-
   if (loading) {
     return (
-      <View style={styles.loader}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#000',
+        }}
+      >
+        <ActivityIndicator size="large" color="#FFCA28" />
       </View>
     );
   }
 
+  const renderItem = ({ item }: any) => {
+    return (
+      <View style={styles.slide}>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="light-content"
+        />
+
+        {/* Background Image */}
+        <ImageBackground
+          source={item.image}
+          style={styles.imageBackground}
+          imageStyle={styles.imageStyle}
+        >
+          {/* Dark Overlay */}
+          <View style={styles.overlay} />
+
+          {/* Golden Gradient */}
+          {!item.isIntro && <View style={styles.bottomGlow} />}
+
+          <View style={styles.safeArea}>
+            {/* Progress Bar */}
+            <View style={styles.progressContainer}>
+              {slides.map((_: unknown, index: number) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.progressBar,
+                    index <= currentIndex && styles.activeProgressBar,
+                  ]}
+                />
+              ))}
+            </View>
+
+            {/* Intro Screen */}
+            {item.isIntro ? (
+              <View style={styles.introContainer}>
+                <TouchableOpacity
+                  style={styles.primaryButton}
+                  onPress={handleNext}
+                  activeOpacity={0.9}
+                >
+                  <Text style={styles.primaryButtonText}>Next</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={styles.contentWrapper}>
+                {/* Image Card */}
+                <View style={styles.imageCard}>
+                  <Image
+                    source={item.image}
+                    style={styles.cardImage}
+                  />
+                </View>
+
+                {/* Text Section */}
+                <View style={styles.textContainer}>
+                  <Text style={styles.title}>
+                    {item.title}
+                  </Text>
+
+                  <Text style={styles.description}>
+                    {item.description}
+                  </Text>
+                </View>
+
+                {/* Buttons */}
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.primaryButton}
+                    onPress={handleNext}
+                    activeOpacity={0.9}
+                  >
+                    <Text style={styles.primaryButtonText}>
+                      {isLast ? 'Get Started' : 'Next'}
+                    </Text>
+                  </TouchableOpacity>
+
+                  {!isLast && (
+                    <TouchableOpacity
+                      onPress={handleSkip}
+                      activeOpacity={0.8}
+                    >
+                      <Text style={styles.skipText}>
+                        Skip
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </View>
+            )}
+          </View>
+        </ImageBackground>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
-
-      {/* Full screen slides */}
       <FlatList
         ref={flatListRef}
-        data={banners}
-        keyExtractor={(item: Banner) => String(item.BannerId)}
+        data={slides}
+        keyExtractor={item => item.id}
+        renderItem={renderItem}
         horizontal
         pagingEnabled
-        scrollEnabled={false}
+        bounces={false}
         showsHorizontalScrollIndicator={false}
-        renderItem={({ item }: { item: Banner }) => (
-          <Image
-            source={{ uri: getImageUrl(item.image_path) }}
-            style={styles.image}
-            resizeMode="cover"
-          />
-        )}
+        onMomentumScrollEnd={event => {
+          const index = Math.round(
+            event.nativeEvent.contentOffset.x / width,
+          );
+
+          setCurrentIndex(index);
+        }}
       />
-
-      {/* Skip button — top right */}
-      {!isLast && (
-        <TouchableOpacity style={styles.skipBtn} onPress={handleSkip} activeOpacity={0.8}>
-          <Text style={styles.skipText}>Skip</Text>
-        </TouchableOpacity>
-      )}
-
-      {/* Bottom controls */}
-      <View style={styles.bottom}>
-        {/* Dots */}
-        <View style={styles.dotsRow}>
-          {banners.map((_, i) => (
-            <View
-              key={i}
-              style={[
-                styles.dot,
-                i === currentIndex && styles.dotActive,
-                i < currentIndex && styles.dotDone,
-              ]}
-            />
-          ))}
-        </View>
-
-        {/* Button */}
-        {!isLast ? (
-          <TouchableOpacity style={styles.btnNext} onPress={handleNext} activeOpacity={0.85}>
-            <Text style={styles.btnText}>Next  →</Text>
-          </TouchableOpacity>
-        ) : (
-          <>
-            <TouchableOpacity style={styles.btnGetStarted} onPress={handleGetStarted} activeOpacity={0.85}>
-              <Text style={styles.btnText}>✦  Get Started</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.replace('Login')} activeOpacity={0.7}>
-              <Text style={styles.signInText}>
-                Already a member?{'  '}
-                <Text style={styles.signInLink}>Sign In</Text>
-              </Text>
-            </TouchableOpacity>
-          </>
-        )}
-      </View>
     </View>
   );
 };
+
+export default OnboardingScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.black,
   },
-  loader: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.background,
-  },
-  image: {
+
+  slide: {
     width,
     height,
+    backgroundColor: COLORS.black,
   },
-  skipBtn: {
-    position: 'absolute',
-    top: Platform.OS === 'ios' ? 56 : 40,
-    right: SIZES.padding.xl,
-    backgroundColor: COLORS.blackOpacity40,
-    borderRadius: SIZES.radius.full,
-    paddingHorizontal: 16,
-    paddingVertical: 7,
+
+  imageBackground: {
+    flex: 1,
+    justifyContent: 'flex-end',
   },
-  skipText: {
-    fontFamily: FONTS.family.medium,
-    fontSize: SIZES.font.sm,
-    color: COLORS.white,
+
+  imageStyle: {
+    resizeMode: 'cover',
   },
-  bottom: {
+
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+
+  },
+
+  bottomGlow: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    paddingHorizontal: SIZES.padding.xl,
-    paddingBottom: Platform.OS === 'ios' ? 44 : 28,
-    paddingTop: SIZES.lg,
-    backgroundColor: COLORS.blackOpacity40,
-    gap: SIZES.md,
-    alignItems: 'center',
+    height: 300,
+    backgroundColor: COLORS.bottomGlow,
   },
-  dotsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 7,
+
+  safeArea: {
+    flex: 1,
+    paddingHorizontal: 22,
+    paddingTop: Platform.OS === 'ios' ? 10 : 20,
+    paddingBottom: 25,
   },
-  dot: {
-    width: 7,
-    height: 7,
-    borderRadius: 4,
-    backgroundColor: COLORS.whiteOpacity30,
+
+  /* ================= INTRO ================= */
+
+  introContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    paddingBottom: 10,
   },
-  dotActive: {
-    width: 22,
-    backgroundColor: COLORS.white,
-    borderRadius: 4,
-  },
-  dotDone: {
-    backgroundColor: COLORS.whiteOpacity70,
-  },
-  btnNext: {
+
+
+
+  introBottom: {
     width: '100%',
-    height: SIZES.button.height.lg,
-    borderRadius: SIZES.radius.lg,
+  },
+
+  /* ================= PROGRESS ================= */
+
+  progressContainer: {
+    flexDirection: 'row',
+    gap: 6,
+    marginTop: 8,
+  },
+
+  progressBar: {
+    flex: 1,
+    height: 5,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.18)',
+  },
+
+  activeProgressBar: {
+    backgroundColor: COLORS.primary,
+  },
+
+  /* ================= CONTENT ================= */
+
+  contentWrapper: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    paddingBottom: 10,
+  },
+
+  imageCard: {
+    width: '100%',
+    height: height * 0.62,
+    borderRadius: 28,
+    overflow: 'hidden',
+    backgroundColor: '#111',
+    shadowColor: '#FFC928',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 25,
+    elevation: 10,
+  },
+
+  cardImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+
+  textContainer: {
+    marginTop: 12,
+    marginBottom: 8,
+  },
+
+  title: {
+    fontFamily: FONTS.family.extraBold,
+    fontSize: SIZES.heading.h3,
+    color: '#fff',
+    marginBottom: 10,
+  },
+
+  description: {
+    fontFamily: FONTS.family.regular,
+    fontSize: SIZES.font.lg,
+    lineHeight: SIZES.font.lg * 1.6,
+    color: 'rgba(255,255,255,0.72)',
+  },
+
+  /* ================= BUTTONS ================= */
+
+  buttonContainer: {
+    marginTop: 12,
+  },
+
+  primaryButton: {
+    width: '100%',
+    height: 58,
+    borderRadius: 16,
     backgroundColor: COLORS.primary,
     alignItems: 'center',
     justifyContent: 'center',
-    ...SHADOWS.orange,
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.45,
+    shadowRadius: 18,
+    elevation: 10,
   },
-  btnGetStarted: {
-    width: '100%',
-    height: SIZES.button.height.lg,
-    borderRadius: SIZES.radius.lg,
-    backgroundColor: COLORS.secondary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...SHADOWS.gold,
-  },
-  btnText: {
-    fontFamily: FONTS.family.semiBold,
+
+  primaryButtonText: {
+    fontFamily: FONTS.family.bold,
     fontSize: SIZES.font.lg,
     color: COLORS.white,
-    letterSpacing: 0.4,
   },
-  signInText: {
-    fontFamily: FONTS.family.regular,
-    fontSize: SIZES.font.xs,
-    color: COLORS.whiteOpacity70,
-  },
-  signInLink: {
+
+  skipText: {
     fontFamily: FONTS.family.semiBold,
-    color: COLORS.white,
+    fontSize: SIZES.font.md,
+    marginTop: 18,
+    textAlign: 'center',
+    color: COLORS.primary,
   },
 });
-
-export default OnboardingScreen;

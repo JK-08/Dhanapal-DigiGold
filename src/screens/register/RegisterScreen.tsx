@@ -139,13 +139,20 @@ export default function RegisterScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
-    <ScrollView contentContainerStyle={{ paddingHorizontal: SIZES.padding.xl, paddingTop: SIZES.lg, paddingBottom: 32 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+    <ScrollView contentContainerStyle={{ paddingBottom: 32 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
 
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.title}>Create Account</Text>
-        <Text style={styles.subtitle}>Join Dhanapal DigiGold today</Text>
+      {/* Branded Header */}
+      <View style={styles.headerBg}>
+        <View style={styles.headerInner}>
+          <View style={styles.logoCircle}>
+            <Ionicons name="shield-checkmark" size={32} color={COLORS.white} />
+          </View>
+          <Text style={styles.title}>Create Account</Text>
+          <Text style={styles.subtitle}>Join Dhanapal DigiGold today</Text>
+        </View>
       </View>
+
+      <View style={{ paddingHorizontal: SIZES.padding.xl, paddingTop: SIZES.lg }}>
 
       {/* Form Card */}
       <View style={styles.card}>
@@ -188,6 +195,7 @@ export default function RegisterScreen() {
         </Text>
       </TouchableOpacity>
 
+      </View>
     </ScrollView>
     </SafeAreaView>
   );
@@ -195,24 +203,47 @@ export default function RegisterScreen() {
 
 const styles = StyleSheet.create({
   header: { gap: 6 },
+  headerBg: {
+    backgroundColor: COLORS.primary,
+    paddingTop: SIZES.xs,
+    paddingBottom: SIZES.xs,
+    paddingHorizontal: SIZES.padding.xl,
+    borderBottomLeftRadius: 32,
+    borderBottomRightRadius: 32,
+    ...SHADOWS.orange,
+  },
+  headerInner: {
+    alignItems: 'center',
+    gap: SIZES.sm,
+  },
+  logoCircle: {
+    width: 64,
+    height: 64,
+    borderRadius: 20,
+    backgroundColor: COLORS.primaryDark,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: SIZES.xs,
+  },
   title: {
     fontFamily: FONTS.family.bold,
     fontSize: SIZES.heading.h3,
-    color: COLORS.textPrimary,
+    color: COLORS.white,
     letterSpacing: -0.3,
   },
   subtitle: {
     fontFamily: FONTS.family.regular,
     fontSize: SIZES.font.md,
-    color: COLORS.textSecondary,
+    color: COLORS.whiteOpacity70,
     marginBottom: SIZES.sm,
   },
   card: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.background,
     borderRadius: SIZES.radius.xl,
-    padding: SIZES.padding.xl,
-    gap: SIZES.md,
-    ...SHADOWS.md,
+    padding: SIZES.padding.md,
+    gap: SIZES.xs,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
   apiError: {
     fontFamily: FONTS.family.regular,

@@ -12,3 +12,4 @@ export { default as ForgotAndVerifyMpinScreen }    from '../screens/mpin/ForgotA
 export { default as ResetMpinScreen }              from '../screens/mpin/ResetMpinScreen';
 export { default as ComponentsUsageScreen }        from '../screens/ComponentsUsage/ComponentsUsageScreen';
 export { default as BottomTabNavigator }           from './BottomTabNavigator';
+export { default as WebViewComponent }             from '../components/WebViewComponent';
