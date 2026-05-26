@@ -48,12 +48,12 @@ const OnboardingScreen = ({ navigation }: any) => {
         animated: true,
       });
     } else {
-      navigation.navigate('Register');
+      navigation.replace('Register');
     }
   };
 
   const handleSkip = () => {
-    navigation.navigate('Register');
+    navigation.replace('Register');
   };
   if (loading) {
     return (
