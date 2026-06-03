@@ -38,3 +38,36 @@ export const SCHEME_SLIDER = {
   UPDATE: '/schemeslider/update',
   DELETE: '/schemeslider/delete',
 };
+
+export const NOTIFICATIONS = {
+  // Templates
+  SAVE_MESSAGE:           '/notifications/saveMessage',
+  UPDATE_MESSAGE:         (id: number) => `/notifications/updateMessage/${id}`,
+  DELETE_MESSAGE:         (id: number) => `/notifications/deleteMessage/${id}`,
+  GET_TEMPLATE:           (id: number) => `/notifications/templates/${id}`,
+  GET_ALL_TEMPLATES:      '/notifications/templates',
+  GET_BY_SCHEME:          (schemeId: number) => `/notifications/scheme/${schemeId}`,
+
+  // Send
+  SEND:                   '/notifications/send',
+  SEND_ALL:               '/notifications/sendAll',
+  SEND_MESSAGE_TO_USER:   (messageId: number, userId: number) => `/notifications/sendMessage/${messageId}/user/${userId}`,
+  SEND_MESSAGE_SCHEME:    (messageId: number, userId: number, schemeId: number) => `/notifications/sendMessage/${messageId}/user/${userId}/scheme/${schemeId}`,
+  SEND_ALL_MESSAGE:       (messageId: number) => `/notifications/sendAll/${messageId}`,
+  SEND_ALL_SCHEME:        (messageId: number, schemeId: number) => `/notifications/sendAll/${messageId}/scheme/${schemeId}`,
+
+  // User notifications
+  GET_USER:               (userId: number) => `/notifications/user/${userId}`,
+  GET_ALL:                '/notifications/all',
+  DELETE_BY_USER:         (userId: number) => `/notifications/user/${userId}`,
+  DELETE_ONE:             (id: number) => `/notifications/notification/${id}`,
+
+  // Read
+  UNREAD_COUNT:           (userId: number) => `/notifications/user/${userId}/unread-count`,
+  MARK_READ:              (notificationId: number, userId: number) => `/notifications/read/${notificationId}/user/${userId}`,
+  MARK_ALL_READ:          (userId: number) => `/notifications/read/all/${userId}`,
+
+  // Test
+  TEST_BIRTHDAY:          (userId: number) => `/notifications/test/birthday/${userId}`,
+  TEST_ANNIVERSARY:       (userId: number) => `/notifications/test/anniversary/${userId}`,
+};

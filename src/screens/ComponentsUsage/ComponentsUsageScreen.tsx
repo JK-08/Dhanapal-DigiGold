@@ -35,6 +35,7 @@ import AppExportSheet, { ExportData, ExportBranding } from '../../components/ui/
 import AppLanguagePicker, { LanguageCode } from '../../components/ui/appcomponents/AppLanguage';
 import { Asset } from 'expo-asset';
 import * as LegacyFS from 'expo-file-system/legacy';
+import { useSendNotification, useNotificationTemplates } from '../../api/hooks/Notifications/useNotifications';
 
 // ── Other Components ─────────────────────────────────────────────
 import Sidebar from '../../components/Sidebar';
@@ -87,6 +88,18 @@ export default function ComponentsUsage() {
   const [swBiometric, setSwBiometric]   = useState(false);
   const [swAutoSIP, setSwAutoSIP]       = useState(true);
   const [swDarkMode, setSwDarkMode]     = useState(false);
+
+  // ── Send Notification states ──────────────────────────────────
+  const [notifUserId, setNotifUserId]           = useState('');
+  const [notifTitle, setNotifTitle]             = useState('');
+  const [notifMessage, setNotifMessage]         = useState('');
+  const [notifSchedule, setNotifSchedule]       = useState('');
+  const [notifTemplateId, setNotifTemplateId]   = useState('');
+  const [notifSchemeId, setNotifSchemeId]       = useState('');
+  const [notifSendType, setNotifSendType]       = useState<'user' | 'all'>('user');
+  const [notifMode, setNotifMode]               = useState<'inline' | 'template'>('inline');
+  const { sending, sendToUser, sendToAll } = useSendNotification();
+  const { templates } = useNotificationTemplates();
 
   // ── AppLanguagePicker states ──────────────────────────────────
   const [langSheet, setLangSheet]   = useState(false);
@@ -1195,6 +1208,143 @@ export default function ComponentsUsage() {
             leftIcon="language-outline"
             onPress={() => setLangSheet(true)}
           />
+        </AppCard>
+
+        {/* ══ Send Notification ══════════════════════════════════ */}
+        <AppText variant="h5" style={S.section}>29. Send Notification (Test)</AppText>
+        <AppCard variant="outlined" padding="md">
+
+          {/* Send type toggle */}
+          <AppText variant="caption" style={{ marginBottom: 6 }}>Send to:</AppText>
+          <View style={[S.row, { marginBottom: 12 }]}>
+            {(['user', 'all'] as const).map(t => (
+              <AppButton
+                key={t}
+                label={t === 'user' ? '👤 Specific User' : '👥 All Users'}
+                size="sm"
+                variant={notifSendType === t ? 'primary' : 'outline'}
+                onPress={() => setNotifSendType(t)}
+              />
+            ))}
+          </View>
+
+          {/* Mode toggle */}
+          <AppText variant="caption" style={{ marginBottom: 6 }}>Mode:</AppText>
+          <View style={[S.row, { marginBottom: 12 }]}>
+            {(['inline', 'template'] as const).map(m => (
+              <AppButton
+                key={m}
+                label={m === 'inline' ? '✏️ Inline Content' : '📋 Saved Template'}
+                size="sm"
+                variant={notifMode === m ? 'primary' : 'outline'}
+                onPress={() => setNotifMode(m)}
+              />
+            ))}
+          </View>
+
+          <AppDivider marginVertical={8} />
+
+          {/* User ID — only for specific user */}
+          {notifSendType === 'user' && (
+            <AppInput
+              label="User ID"
+              placeholder="e.g. 42"
+              leftIcon="person-outline"
+              keyboardType="numeric"
+              value={notifUserId}
+              onChangeText={setNotifUserId}
+              required
+            />
+          )}
+
+          {notifMode === 'inline' ? (
+            <>
+              <View style={S.spacer} />
+              <AppInput
+                label="Title"
+                placeholder="Notification title"
+                leftIcon="megaphone-outline"
+                value={notifTitle}
+                onChangeText={setNotifTitle}
+                required
+              />
+              <View style={S.spacer} />
+              <AppInput
+                label="Message"
+                placeholder="Notification message"
+                leftIcon="chatbox-ellipses-outline"
+                value={notifMessage}
+                onChangeText={setNotifMessage}
+                required
+              />
+            </>
+          ) : (
+            <>
+              <View style={S.spacer} />
+              <AppInput
+                label="Template ID"
+                placeholder="e.g. 1"
+                leftIcon="document-text-outline"
+                keyboardType="numeric"
+                value={notifTemplateId}
+                onChangeText={setNotifTemplateId}
+                required
+                hint={templates.length > 0 ? `Available: ${templates.map(t => `${t.id} — ${t.title}`).join(', ')}` : 'No templates loaded'}
+              />
+            </>
+          )}
+
+          <View style={S.spacer} />
+          <AppInput
+            label="Scheduled Time (optional)"
+            placeholder="2025-12-18T10:30:00"
+            leftIcon="time-outline"
+            value={notifSchedule}
+            onChangeText={setNotifSchedule}
+            hint="Leave blank to send immediately"
+          />
+
+          <View style={{ marginTop: 16 }}>
+            <AppButton
+              label={sending ? 'Sending…' : notifSendType === 'user' ? '📤 Send to User' : '📢 Send to All'}
+              variant={notifSendType === 'user' ? 'primary' : 'gold'}
+              loading={sending}
+              onPress={async () => {
+                try {
+                  const schedule = notifSchedule.trim() || undefined;
+                  if (notifMode === 'inline') {
+                    if (!notifTitle.trim() || !notifMessage.trim()) {
+                      toast.error('Missing fields', { message: 'Title and message are required.' });
+                      return;
+                    }
+                    const req = {
+                      ...(notifSendType === 'user' && notifUserId ? { userId: Number(notifUserId) } : {}),
+                      title: notifTitle.trim(),
+                      message: notifMessage.trim(),
+                      ...(schedule ? { scheduledTime: schedule } : {}),
+                    };
+                    notifSendType === 'user' ? await sendToUser(req) : await sendToAll(req);
+                  } else {
+                    if (!notifTemplateId.trim()) {
+                      toast.error('Missing Template ID');
+                      return;
+                    }
+                    const req2 = {
+                      ...(notifSendType === 'user' && notifUserId ? { userId: Number(notifUserId) } : {}),
+                      ...(schedule ? { scheduledTime: schedule } : {}),
+                    };
+                    notifSendType === 'user' ? await sendToUser({ ...req2, title: `Template:${notifTemplateId}` }) : await sendToAll(req2);
+                  }
+                  toast.success('Notification Sent!', {
+                    message: schedule ? `Scheduled for ${schedule}` : 'Delivered immediately',
+                  });
+                  setNotifTitle(''); setNotifMessage(''); setNotifSchedule(''); setNotifTemplateId('');
+                } catch (e: any) {
+                  toast.error('Send Failed', { message: e?.message ?? 'Something went wrong' });
+                }
+              }}
+            />
+          </View>
         </AppCard>
 
         {/* ══ AppSchemeCard ══════════════════════════════════════ */}

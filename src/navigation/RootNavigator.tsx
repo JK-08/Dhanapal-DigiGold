@@ -29,6 +29,7 @@ export type RootStackParamList = {
   ComponentsUsage:         undefined;
   Main:                    undefined;
   WebView:                 { url: string; title?: string };
+  Notifications:           undefined;
 };
 
 type InitialRoute = 'Onboarding' | 'Register' | 'Login' | 'CreateMpin' | 'MpinLogin' | 'Main';
@@ -50,8 +51,10 @@ export default function RootNavigator() {
       else if (!token) setInitialRoute('Login');
       else             setInitialRoute('MpinLogin');
 
-      // Init notifications only when logged in
-      if (token) await initNotifications();
+      // Init notifications + in-app messaging only when logged in
+      if (token) {
+        await initNotifications();
+      }
     })();
   }, []);
 
@@ -105,6 +108,7 @@ export default function RootNavigator() {
         <Stack.Screen name="ComponentsUsage"         component={Screens.ComponentsUsageScreen} />
         <Stack.Screen name="Main"                    component={Screens.BottomTabNavigator} />
         <Stack.Screen name="WebView"                 component={Screens.WebViewComponent} />
+        <Stack.Screen name="Notifications"            component={Screens.NotificationScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

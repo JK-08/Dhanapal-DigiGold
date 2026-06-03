@@ -47,6 +47,15 @@ export const callApi = async <T, R>({
         console.log('📨 Response   :', JSON.stringify(response.data, null, 2));
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
+        if ((response.data as any)?.status === 'error') {
+            throw {
+                status: 'error',
+                message: (response.data as any).message ?? 'Something went wrong',
+                errors: (response.data as any).errors,
+                statusCode: response.status,
+            } as ApiError;
+        }
+
         return response.data;
     } catch (error: any) {
         const status   = error?.response?.status;

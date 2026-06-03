@@ -15,6 +15,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../../theme';
 import { useAppSelector } from '../../store/hooks';
+import { useUnreadCount } from '../../api/hooks/Notifications/useUnreadCount';
 import LOGO from '../../assets/company/logo.png';
 
 type Props = {
@@ -26,6 +27,7 @@ export default function MainHeader({ onMenuPress, onNotificationPress }: Props) 
   const { COLORS, FONTS, SIZES, moderateScale, verticalScale } = useTheme();
   const user = useAppSelector((s) => s.auth.user);
   const firstName = user?.username ?? 'User';
+  const { unreadCount } = useUnreadCount();
 
   const slideY = useRef(new Animated.Value(-40)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -55,7 +57,7 @@ export default function MainHeader({ onMenuPress, onNotificationPress }: Props) 
               styles.container,
               {
                 paddingHorizontal: SIZES.padding.container,
-                paddingVertical: SIZES.padding.md,
+                paddingVertical: SIZES.padding.xs,
                 minHeight: verticalScale(70),
                 transform: [{ translateY: slideY }],
                 opacity: fadeAnim,
@@ -84,18 +86,27 @@ export default function MainHeader({ onMenuPress, onNotificationPress }: Props) 
             </View>
 
             {/* RIGHT: notification */}
-            <AnimatedIconButton onPress={onNotificationPress} bg={COLORS.whiteOpacity20} size={moderateScale(42)}>
-              <Ionicons name="notifications-outline" size={moderateScale(22)} color={COLORS.white} />
-            </AnimatedIconButton>
+            <View style={{ position: 'relative' }}>
+              <AnimatedIconButton onPress={onNotificationPress} bg={COLORS.whiteOpacity20} size={moderateScale(42)}>
+                <Ionicons name="notifications-outline" size={moderateScale(22)} color={COLORS.white} />
+              </AnimatedIconButton>
+              {unreadCount > 0 && (
+                <View style={[
+                  styles.badge,
+                  { backgroundColor: COLORS.error },
+                ]}>
+                  <Text style={{
+                    fontFamily: FONTS.family.bold,
+                    fontSize: moderateScale(9),
+                    color: COLORS.white,
+                    lineHeight: moderateScale(13),
+                  }}>
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </Text>
+                </View>
+              )}
+            </View>
           </Animated.View>
-
-          {/* GREETING STRIP */}
-          {/* <View style={[styles.greetingStrip, { backgroundColor: COLORS.blackOpacity20, paddingHorizontal: SIZES.padding.container }]}>
-            <Text style={{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.whiteOpacity80 }}>
-              👋 Welcome back,{' '}
-              <Text style={{ fontFamily: FONTS.family.trajanBold, color: COLORS.white }}>{firstName}</Text>
-            </Text>
-          </View> */}
         </SafeAreaView>
       </LinearGradient>
     </>
@@ -133,4 +144,15 @@ const styles = StyleSheet.create({
   greetingStrip: { paddingVertical: 6 },
   circle1: { position: 'absolute', width: 140, height: 140, borderRadius: 100, top: -50, right: -30 },
   circle2: { position: 'absolute', width: 80, height: 80, borderRadius: 40, top: 20, right: 80 },
+  badge: {
+    position: 'absolute',
+    top: -3, right: -3,
+    minWidth: 16, height: 16,
+    borderRadius: 99,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 3,
+    borderWidth: 1.5,
+    borderColor: '#FF971D',
+  },
 });

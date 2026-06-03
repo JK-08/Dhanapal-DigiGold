@@ -2,6 +2,9 @@
 
 import React, { useState } from "react";
 import { ScrollView, View, TouchableOpacity } from "react-native";
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../navigation/RootNavigator';
 import { useTheme } from "../../theme";
 
 import MainHeader from "../../components/ui/MainHeader";
@@ -11,33 +14,34 @@ import AppIcon from "../../components/ui/appcomponents/AppIcons";
 import { useToast } from "../../components/ui/Toast";
 import Sidebar from "../../components/Sidebar";
 import HomeBanner from "../../components/HomeBanner";
+import InAppMessageModal from '../../components/InAppMessageModal';
 
 export default function HomeScreen() {
   const { COLORS, SIZES } = useTheme();
   const toast = useToast();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.background }}>
       <MainHeader
         onMenuPress={() => setSidebarOpen(true)}
-        onNotificationPress={() => toast.info("No new notifications")}
+        onNotificationPress={() => navigation.navigate('Notifications')}
       />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingHorizontal: SIZES.padding.container,
-          paddingBottom: 40,
+         
           gap: 24,
         }}
       >
-        {/* Home Banner */}
-        <HomeBanner />
+       
 
         {/* Gold Price Card */}
         <AppGoldPriceCard
-          style={{ marginTop: 16 }}
+          style={{ marginTop: 5 }}
           rates={{ "24K": 6325, "22K": 5798, "18K": 4744 }}
           change={{ "24K": 1.2, "22K": -0.4, "18K": 0.9 }}
           sparkline={{
@@ -61,6 +65,9 @@ export default function HomeScreen() {
           }}
           showActions={false}
         />
+
+        {/* Home Banner */}
+        <HomeBanner />
 
         {/* Referral / Offer Banner */}
         <TouchableOpacity
@@ -94,6 +101,7 @@ export default function HomeScreen() {
       </ScrollView>
 
       <Sidebar visible={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <InAppMessageModal />
     </View>
   );
 }

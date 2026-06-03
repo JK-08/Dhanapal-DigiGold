@@ -13,3 +13,4 @@ export { default as ResetMpinScreen }              from '../screens/mpin/ResetMp
 export { default as ComponentsUsageScreen }        from '../screens/ComponentsUsage/ComponentsUsageScreen';
 export { default as BottomTabNavigator }           from './BottomTabNavigator';
 export { default as WebViewComponent }             from '../components/WebViewComponent';
+export { default as NotificationScreen }           from '../screens/notification/NotificationScreen';

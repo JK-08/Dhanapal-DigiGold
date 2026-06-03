@@ -85,7 +85,7 @@ export default function LoginScreen() {
       contactOrEmailOrUsername: form.contactOrEmailOrUsername.trim(),
       password: form.password,
     }));
-    if (loginUser.fulfilled.match(res)) {
+    if (loginUser.fulfilled.match(res) && res.payload?.token) {
       const user = res.payload;
       await AsyncStorageHelper.saveUserSession(user);
       toast.success('Welcome back!', { message: `Hello, ${user.username ?? 'User'}` });

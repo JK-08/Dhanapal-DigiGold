@@ -22,6 +22,8 @@ import { useTheme } from '../theme';
 import { useLanguage } from '../providers/LanguageProvider';
 import AppLanguagePicker, { LanguageCode, INDIAN_LANGUAGES } from './ui/appcomponents/AppLanguage';
 import { useAppSelector } from '../store/hooks';
+import { AsyncStorageHelper } from "../utils/AsyncStorageHelper";
+import CustomAlert from './ui/CustomAlert';
 
 const SIDEBAR_WIDTH = Dimensions.get('window').width * 0.75;
 
@@ -36,6 +38,7 @@ export default function Sidebar({ visible, onClose }: Props) {
   const { language, setLanguage, t } = useLanguage();
   const user = useAppSelector((s) => s.auth.user);
   const [langSheetVisible, setLangSheetVisible] = useState(false);
+  const [logoutAlert, setLogoutAlert] = useState(false);
 
   const selectedLang = INDIAN_LANGUAGES.find(l => l.code === language);
 
@@ -273,13 +276,15 @@ export default function Sidebar({ visible, onClose }: Props) {
             <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: COLORS.border, marginVertical: 4 }} />
 
             {/* Sign Out */}
-            <TouchableOpacity style={{
-              flexDirection: 'row', alignItems: 'center', gap: SIZES.sm,
-              paddingVertical: SIZES.padding.sm,
-              paddingHorizontal: SIZES.padding.md,
-              borderRadius: SIZES.radius.md,
-              backgroundColor: 'rgba(220,38,38,0.08)',
-            }}>
+            <TouchableOpacity
+              onPress={() => setLogoutAlert(true)}
+              style={{
+                flexDirection: 'row', alignItems: 'center', gap: SIZES.sm,
+                paddingVertical: SIZES.padding.sm,
+                paddingHorizontal: SIZES.padding.md,
+                borderRadius: SIZES.radius.md,
+                backgroundColor: 'rgba(220,38,38,0.08)',
+              }}>
               <Text style={{ fontSize: 16 }}>🚪</Text>
               <Text style={[FONTS.bodyMedium, { color: COLORS.error }]}>{t('signOut')}</Text>
             </TouchableOpacity>
@@ -290,6 +295,26 @@ export default function Sidebar({ visible, onClose }: Props) {
           </View>
         </ScrollView>
       </Animated.View>
+
+      {/* Logout Confirm Alert */}
+      <CustomAlert
+        visible={logoutAlert}
+        type="confirm"
+        title="Sign Out"
+        message="Are you sure you want to sign out?"
+        buttons={[
+          { label: 'Cancel', style: 'secondary', onPress: () => setLogoutAlert(false) },
+          {
+            label: 'Sign Out', style: 'danger',
+            onPress: () => {
+              setLogoutAlert(false);
+              AsyncStorageHelper.clearAll();
+              navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+            },
+          },
+        ]}
+        onDismiss={() => setLogoutAlert(false)}
+      />
 
       {/* Language Picker Sheet */}
       <AppLanguagePicker

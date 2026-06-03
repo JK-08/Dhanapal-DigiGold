@@ -17,6 +17,7 @@ import {
 const { width, height } = Dimensions.get('window');
 import { useOnboardingBanners } from '../../api/hooks/Onboard/useOnboardingBanners';
 import { Banner } from '../../types/onboarding';
+import { AsyncStorageHelper } from '../../utils/AsyncStorageHelper';
 import { FONTS, SIZES, COLORS } from '../../theme/theme';
 
 const TITLES = ['ViserGold', 'Trust and Security', 'Invest in Gold for the Future'];
@@ -48,11 +49,13 @@ const OnboardingScreen = ({ navigation }: any) => {
         animated: true,
       });
     } else {
+      AsyncStorageHelper.setOnboarded();
       navigation.replace('Register');
     }
   };
 
   const handleSkip = () => {
+    AsyncStorageHelper.setOnboarded();
     navigation.replace('Register');
   };
   if (loading) {
