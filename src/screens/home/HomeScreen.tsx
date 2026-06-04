@@ -26,7 +26,7 @@ export default function HomeScreen() {
     <View style={{ flex: 1, backgroundColor: COLORS.background }}>
       <MainHeader
         onMenuPress={() => setSidebarOpen(true)}
-        onNotificationPress={() => navigation.navigate('Notifications')}
+        onProfilePress={() => navigation.navigate('ProfileScreen' as any)}
       />
 
       <ScrollView

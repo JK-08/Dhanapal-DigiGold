@@ -10,6 +10,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   BackHandler,
+  Modal,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTheme } from '../../theme';
@@ -243,9 +244,14 @@ export default function CustomAlert({
   }, [dismissible, loading, onDismiss]);
 
   if (!visible) return null;
-
-  return (
-    <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+return (
+  <Modal
+    visible={visible}
+    transparent
+    animationType="fade"
+    statusBarTranslucent
+    onRequestClose={onDismiss}
+  >
       {/* Backdrop */}
       <TouchableWithoutFeedback onPress={handleBackdrop}>
         <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: COLORS.overlayDark, zIndex: 50, opacity: backdropOp }]} />
@@ -301,6 +307,6 @@ export default function CustomAlert({
           )}
         </Animated.View>
       </View>
-    </View>
+    </Modal>
   );
 }

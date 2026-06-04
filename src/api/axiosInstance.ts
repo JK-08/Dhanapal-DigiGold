@@ -17,10 +17,10 @@ axiosInstance.interceptors.request.use(async (config) => {
   const token = await AsyncStorage.getItem('@auth_token');
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
-    // console.log('[Axios] Token attached:', token.slice(0, 30) + '...');
   } else {
     console.log('[Axios] No token found in storage');
   }
+  // console.log(`[Axios] ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
   return config;
 });
 

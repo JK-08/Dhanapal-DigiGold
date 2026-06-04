@@ -30,6 +30,7 @@ export type RootStackParamList = {
   Main:                    undefined;
   WebView:                 { url: string; title?: string };
   Notifications:           undefined;
+  ProfileScreen:             undefined;
 };
 
 type InitialRoute = 'Onboarding' | 'Register' | 'Login' | 'CreateMpin' | 'MpinLogin' | 'Main';
@@ -109,6 +110,7 @@ export default function RootNavigator() {
         <Stack.Screen name="Main"                    component={Screens.BottomTabNavigator} />
         <Stack.Screen name="WebView"                 component={Screens.WebViewComponent} />
         <Stack.Screen name="Notifications"            component={Screens.NotificationScreen} />
+        <Stack.Screen name="ProfileScreen"            component={Screens.ProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

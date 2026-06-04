@@ -15,13 +15,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { useTheme } from '../theme';
+import { useUnreadCount } from '../api/hooks/Notifications/useUnreadCount';
 
 // ── Screens ─────────────────────────────────────────────────────
 import HomeScreen from '../screens/home/HomeScreen';
 import PortfolioScreen from '../screens/portfolio/PortfolioScreen';
 import TransactionsScreen from '../screens/transactions/TransactionsScreen';
 import BuyGoldScreen from '../screens/buygold/BuyGoldScreen';
-import ProfileScreen from '../screens/profile/ProfileScreen';
+import NotificationScreen from '../screens/notification/NotificationScreen';
 
 const Tab = createBottomTabNavigator();
 const { width } = Dimensions.get('window');
@@ -36,11 +37,11 @@ type TabItem = {
 };
 
 const TABS: TabItem[] = [
-  { name: 'Portfolio',    label: 'Portfolio', icon: 'bar-chart-outline', iconActive: 'bar-chart',   component: PortfolioScreen },
-  { name: 'Transactions', label: 'History',   icon: 'receipt-outline',   iconActive: 'receipt',     badge: 3, component: TransactionsScreen },
-  { name: 'Home',         label: 'Home',      icon: 'home-outline',      iconActive: 'home',        component: HomeScreen },
-  { name: 'BuyGold',      label: 'Buy Gold',  icon: 'add-circle-outline',iconActive: 'add-circle',  component: BuyGoldScreen },
-  { name: 'Profile',      label: 'Profile',   icon: 'person-outline',    iconActive: 'person',      component: ProfileScreen },
+  { name: 'Portfolio',     label: 'Portfolio', icon: 'bar-chart-outline',     iconActive: 'bar-chart',        component: PortfolioScreen },
+  { name: 'Transactions',  label: 'History',   icon: 'receipt-outline',        iconActive: 'receipt',          component: TransactionsScreen },
+  { name: 'Home',          label: 'Home',      icon: 'home-outline',           iconActive: 'home',             component: HomeScreen },
+  { name: 'BuyGold',       label: 'Buy Gold',  icon: 'add-circle-outline',     iconActive: 'add-circle',       component: BuyGoldScreen },
+  { name: 'Notifications', label: 'Alerts',    icon: 'notifications-outline',  iconActive: 'notifications',    component: NotificationScreen },
 ];
 
 // ── Badge dot ────────────────────────────────────────────────────
@@ -146,6 +147,7 @@ function RegularTab({ item, isActive, onPress }: { item: TabItem; isActive: bool
 // ── Custom tab bar ───────────────────────────────────────────────
 function CustomTabBar({ state, navigation }: any) {
   const { COLORS, SIZES, SHADOWS, verticalScale } = useTheme();
+  const { unreadCount } = useUnreadCount();
   const TAB_BAR_H = Platform.OS === 'ios' ? verticalScale(64) : verticalScale(62);
 
   return (
@@ -172,8 +174,10 @@ function CustomTabBar({ state, navigation }: any) {
             if (!isActive && !event.defaultPrevented) navigation.navigate(route.name);
           };
 
+          const badgeCount = tab.name === 'Notifications' ? unreadCount : (tab.badge ?? 0);
+
           if (isCenter) return <CenterTab key={route.key} item={tab} isActive={isActive} onPress={onPress} />;
-          return <RegularTab key={route.key} item={tab} isActive={isActive} onPress={onPress} />;
+          return <RegularTab key={route.key} item={{ ...tab, badge: badgeCount }} isActive={isActive} onPress={onPress} />;
         })}
       </View>
     </SafeAreaView>

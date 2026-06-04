@@ -39,6 +39,14 @@ export const SCHEME_SLIDER = {
   DELETE: '/schemeslider/delete',
 };
 
+export const USER_PROFILE = {
+  GET:          (userId: number) => `/user/${userId}`,
+  UPDATE:       (userId: number) => `/${userId}/update`,
+  UPDATE_PHOTO: (userId: string) => `/photo/${userId}`,
+  DELETE_PHOTO: (userId: string) => `/photo/${userId}`,
+  DELETE_USER:  (userId: number) => `/user/delete/${userId}`,
+};
+
 export const NOTIFICATIONS = {
   // Templates
   SAVE_MESSAGE:           '/notifications/saveMessage',

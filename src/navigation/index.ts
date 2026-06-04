@@ -14,3 +14,4 @@ export { default as ComponentsUsageScreen }        from '../screens/ComponentsUs
 export { default as BottomTabNavigator }           from './BottomTabNavigator';
 export { default as WebViewComponent }             from '../components/WebViewComponent';
 export { default as NotificationScreen }           from '../screens/notification/NotificationScreen';
+export { default as ProfileScreen }                from '../screens/profile/ProfileScreen';
