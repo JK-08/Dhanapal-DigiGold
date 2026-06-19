@@ -37,7 +37,7 @@ export default function HomeScreen() {
           gap: 24,
         }}
       >
-       
+       <HomeBanner />
 
         {/* Gold Price Card */}
         <AppGoldPriceCard
@@ -67,7 +67,7 @@ export default function HomeScreen() {
         />
 
         {/* Home Banner */}
-        <HomeBanner />
+        
 
         {/* Referral / Offer Banner */}
         <TouchableOpacity

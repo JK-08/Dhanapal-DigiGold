@@ -1,3 +1,4 @@
+
 // theme.js
 import { Dimensions, PixelRatio, Platform } from "react-native";
 
