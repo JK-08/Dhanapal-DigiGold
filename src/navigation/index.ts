@@ -15,3 +15,8 @@ export { default as BottomTabNavigator }           from './BottomTabNavigator';
 export { default as WebViewComponent }             from '../components/WebViewComponent';
 export { default as NotificationScreen }           from '../screens/notification/NotificationScreen';
 export { default as ProfileScreen }                from '../screens/profile/ProfileScreen';
+export { default as SchemeTermsScreen }            from '../screens/scheme/SchemeTermsScreen';
+export { default as SchemeJoinScreen }             from '../screens/scheme/SchemeJoinScreen';
+export { default as PayInstallmentScreen }         from '../screens/payment/PayInstallmentScreen';
+export { default as RatesScreen } from '../screens/rates/RatesScreen';
+export { default as LoginLog } from '../screens/login/LoginLogs';

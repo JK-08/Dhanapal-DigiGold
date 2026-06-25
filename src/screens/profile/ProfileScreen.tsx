@@ -19,6 +19,25 @@ import { useUserProfile } from '../../api/hooks/UserProfile/useUserProfile';
 import { AsyncStorageHelper } from '../../utils/AsyncStorageHelper';
 import { getPincodeDetails } from '../../api/services/pinCodeService';
 import { Dropdown } from 'react-native-element-dropdown';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
+// ── DOB / gender helpers ──────────────────────────────────────────
+const GENDER_OPTIONS = [
+  { label: 'Male',   value: 'Male'   },
+  { label: 'Female', value: 'Female' },
+  { label: 'Other',  value: 'Other'  },
+];
+const pad2 = (n: number) => String(n).padStart(2, '0');
+const fmtDobISO = (d: Date) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+const parseDob = (s?: string): Date | null => {
+  if (!s) return null;
+  const iso = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(s);
+  if (iso) return new Date(+iso[1], +iso[2] - 1, +iso[3]);
+  const dmy = /^(\d{1,2})[-/](\d{1,2})[-/](\d{4})/.exec(s);
+  if (dmy) return new Date(+dmy[3], +dmy[2] - 1, +dmy[1]);
+  const d = new Date(s);
+  return isNaN(d.getTime()) ? null : d;
+};
 
 import ScreenWrapper from '../../components/ui/appcomponents/ScreenWrapper';
 import AppHeader     from '../../components/ui/appcomponents/AppHeader';
@@ -106,11 +125,13 @@ function EditPersonalModal({ visible, initial, onClose, onSave, saving }: {
   onSave: (data: { username: string; email: string; gender: string; dateOfBirth: string }) => void;
   saving: boolean;
 }) {
-  const { COLORS, SIZES } = useTheme();
+  const { COLORS, FONTS, SIZES } = useTheme();
   const [username, setUsername]       = useState(initial.username);
   const [email, setEmail]             = useState(initial.email);
   const [gender, setGender]           = useState(initial.gender);
   const [dateOfBirth, setDateOfBirth] = useState(initial.dateOfBirth);
+  const [showDob, setShowDob]         = useState(false);
+  const [tempDob, setTempDob]         = useState<Date>(new Date(2000, 0, 1));
 
   useEffect(() => {
     if (visible) {
@@ -118,8 +139,23 @@ function EditPersonalModal({ visible, initial, onClose, onSave, saving }: {
       setEmail(initial.email);
       setGender(initial.gender);
       setDateOfBirth(initial.dateOfBirth);
+      setShowDob(false);
     }
   }, [visible]);
+
+  const openDob = () => {
+    setTempDob(parseDob(dateOfBirth) ?? new Date(2000, 0, 1));
+    setShowDob(true);
+  };
+  const onDobChange = (event: any, selected?: Date) => {
+    if (Platform.OS === 'android') {
+      setShowDob(false);
+      if (event?.type === 'set' && selected) setDateOfBirth(fmtDobISO(selected));
+    } else if (selected) {
+      setTempDob(selected);
+      setDateOfBirth(fmtDobISO(selected));
+    }
+  };
 
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
@@ -136,8 +172,60 @@ function EditPersonalModal({ visible, initial, onClose, onSave, saving }: {
             <ScrollView contentContainerStyle={{ padding: SIZES.padding.md, gap: 12 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
               <Field label="Full Name" icon="person-outline" value={username} onChangeText={setUsername} />
               <Field label="Email" icon="mail-outline" value={email} onChangeText={setEmail} keyboardType="email-address" />
-              <Field label="Gender" icon="male-female-outline" value={gender} onChangeText={setGender} />
-              <Field label="Date of Birth" icon="calendar-outline" value={dateOfBirth} onChangeText={setDateOfBirth} placeholder="DD-MM-YYYY" />
+
+              {/* Gender — dropdown */}
+              <View style={{ marginBottom: 4 }}>
+                <Text style={{ fontFamily: FONTS.family.medium, fontSize: SIZES.font.sm, color: COLORS.textSecondary, marginBottom: 6 }}>
+                  Gender
+                </Text>
+                <View style={[styles.fieldRow, { borderColor: COLORS.border, backgroundColor: COLORS.inputBackground ?? COLORS.card }]}>
+                  <Ionicons name="male-female-outline" size={17} color={COLORS.textTertiary} style={{ marginRight: 10 }} />
+                  <Dropdown
+                    style={{ flex: 1 }}
+                    data={GENDER_OPTIONS}
+                    labelField="label"
+                    valueField="value"
+                    placeholder="Select gender"
+                    value={gender}
+                    onChange={(item) => setGender(item.value)}
+                    placeholderStyle={{ color: COLORS.textTertiary, fontFamily: FONTS.family.regular, fontSize: SIZES.font.md }}
+                    selectedTextStyle={{ color: COLORS.textPrimary, fontFamily: FONTS.family.regular, fontSize: SIZES.font.md }}
+                    itemTextStyle={{ color: COLORS.textPrimary, fontFamily: FONTS.family.regular, fontSize: SIZES.font.md }}
+                  />
+                </View>
+              </View>
+
+              {/* Date of Birth — native picker */}
+              <View style={{ marginBottom: 4 }}>
+                <Text style={{ fontFamily: FONTS.family.medium, fontSize: SIZES.font.sm, color: COLORS.textSecondary, marginBottom: 6 }}>
+                  Date of Birth
+                </Text>
+                <TouchableOpacity
+                  style={[styles.fieldRow, { borderColor: COLORS.border, backgroundColor: COLORS.inputBackground ?? COLORS.card }]}
+                  onPress={openDob}
+                  activeOpacity={0.8}
+                >
+                  <Ionicons name="calendar-outline" size={17} color={COLORS.textTertiary} style={{ marginRight: 10 }} />
+                  <Text style={{ flex: 1, fontFamily: FONTS.family.regular, fontSize: SIZES.font.md, color: dateOfBirth ? COLORS.textPrimary : COLORS.textTertiary }}>
+                    {dateOfBirth || 'Select date of birth'}
+                  </Text>
+                  <Ionicons name="chevron-down" size={16} color={COLORS.textTertiary} />
+                </TouchableOpacity>
+
+                {showDob && (
+                  <DateTimePicker
+                    value={tempDob}
+                    mode="date"
+                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                    maximumDate={new Date()}
+                    onChange={onDobChange}
+                  />
+                )}
+                {Platform.OS === 'ios' && showDob && (
+                  <AppButton label="Done" variant="outline" onPress={() => setShowDob(false)} />
+                )}
+              </View>
+
               <View style={{ marginTop: 8, gap: 10 }}>
                 <AppButton label="Save Changes" onPress={() => onSave({ username, email, gender, dateOfBirth })} loading={saving} />
                 <AppButton label="Cancel" variant="outline" onPress={onClose} />
@@ -405,7 +493,7 @@ export default function ProfileScreen() {
       paddingHorizontal={0}
       paddingTop={0}
       paddingBottom={40}
-      header={<AppHeader title="My Profile" variant="primary" showBack={false} />}
+      header={<AppHeader title="My Profile" variant="primary" showBack onBackPress={() => navigation.navigate('Home' as any)} />}
     >
       {/* ── HERO BANNER ─────────────────────────────────────────── */}
       <LinearGradient
@@ -430,18 +518,18 @@ export default function ProfileScreen() {
             <AppText variant="bodySmall" color="rgba(255,255,255,0.75)">
               {reduxUser?.email || '—'}
             </AppText>
-            {reduxUser?.referralCode && (
+            {/* {reduxUser?.referralCode && (
               <View style={[styles.tierBadge, { backgroundColor: 'rgba(201,177,93,0.25)' }]}>
                 <AppText variant="caption" color="#C9B15D" style={{ fontWeight: '700' }}>
                   🎁 {reduxUser.referralCode}
                 </AppText>
               </View>
-            )}
+            )} */}
           </View>
         </View>
 
         {/* Meta strip */}
-        <View style={styles.heroMeta}>
+        {/* <View style={styles.heroMeta}>
           <View style={styles.heroMetaItem}>
             <AppText variant="caption" color="rgba(255,255,255,0.6)">Wallet</AppText>
             <AppText variant="bodySmall" color="#fff" style={{ fontWeight: '700' }}>
@@ -462,7 +550,7 @@ export default function ProfileScreen() {
               {reduxUser?.aadhaarVerified ? '✓ Done' : 'Pending'}
             </AppText>
           </View>
-        </View>
+        </View> */}
 
         {!!reduxUser?.picture && (
           <TouchableOpacity
@@ -553,16 +641,29 @@ export default function ProfileScreen() {
           <SectionHeader icon="settings-outline" title="Account & Security" />
           <ActionRow icon="lock-closed-outline" label="Change MPIN"
             onPress={() => navigation.navigate('ResetMpin')} />
+
+            <ActionRow icon="lock-closed-outline" label="Login Logs"
+            onPress={() => navigation.navigate('LoginLog')} />
+
+
           <AppDivider marginVertical={0} />
           <ActionRow icon="log-out-outline" label="Logout" danger
             onPress={() => showAlert('Logout', 'Are you sure you want to logout?',
-              () => dispatch(logoutUser()), false)} />
+              async () => {
+                await dispatch(logoutUser());
+                navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+              }, false)} />
+              
           <AppDivider marginVertical={0} />
           <ActionRow icon="trash-outline" label="Delete Account" danger
             onPress={() => showAlert(
               'Delete Account',
               'This will permanently delete your account and all data. This cannot be undone.',
-              async () => { if (userId) { await deleteUser(userId); dispatch(logoutUser()); } },
+              async () => {
+                if (userId) { await deleteUser(userId); }
+                await dispatch(logoutUser());
+                navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+              },
               true
             )} />
         </AppCard>

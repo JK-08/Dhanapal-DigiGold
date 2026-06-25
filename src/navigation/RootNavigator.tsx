@@ -12,6 +12,11 @@ import {
   handleInitialNotification,
   handleBackgroundOpenedApp,
 } from '../utils/NotificationHandler';
+import { ApiScheme } from '../types/Scheme/Scheme';
+import { PPData } from '../types/Account/PhoneDetails';
+
+// SchemeItem = the real API shape (used as nav param for T&C + Join screens)
+export type SchemeItem = ApiScheme;
 
 export type RootStackParamList = {
   Onboarding:              undefined;
@@ -26,11 +31,16 @@ export type RootStackParamList = {
   MpinLogin:               undefined;
   ForgotMpin:              undefined;
   ResetMpin:               undefined;
+  LoginLog:undefined;
   ComponentsUsage:         undefined;
   Main:                    undefined;
   WebView:                 { url: string; title?: string };
   Notifications:           undefined;
-  ProfileScreen:             undefined;
+  ProfileScreen:           undefined;
+  SchemeTerms:             { scheme: SchemeItem };
+  SchemeJoin:              { scheme: SchemeItem };
+  PayInstallment:          { ppData: PPData };
+  Rates:                   { metal?: 'Gold' | 'Silver' };
 };
 
 type InitialRoute = 'Onboarding' | 'Register' | 'Login' | 'CreateMpin' | 'MpinLogin' | 'Main';
@@ -47,10 +57,12 @@ export default function RootNavigator() {
       // AsyncStorageHelper.clearAll(); // --- IGNORE --- TEMP: Clear storage on every app start for testing
       const onboarded = await AsyncStorageHelper.isOnboarded();
       const token     = await AsyncStorageHelper.getToken();
+      const mpinSet   = await AsyncStorageHelper.isMpinSet();
 
-      if (!onboarded)  setInitialRoute('Onboarding');
-      else if (!token) setInitialRoute('Login');
-      else             setInitialRoute('MpinLogin');
+      if (!onboarded)         setInitialRoute('Onboarding');
+      else if (!token)        setInitialRoute('Login');
+      else if (!mpinSet)      setInitialRoute('CreateMpin');   // logged in but MPIN not yet created
+      else                    setInitialRoute('MpinLogin');
 
       // Init notifications + in-app messaging only when logged in
       if (token) {
@@ -111,6 +123,11 @@ export default function RootNavigator() {
         <Stack.Screen name="WebView"                 component={Screens.WebViewComponent} />
         <Stack.Screen name="Notifications"            component={Screens.NotificationScreen} />
         <Stack.Screen name="ProfileScreen"            component={Screens.ProfileScreen} />
+        <Stack.Screen name="SchemeTerms"      component={Screens.SchemeTermsScreen}      options={{ animation: 'slide_from_right' }} />
+        <Stack.Screen name="SchemeJoin"       component={Screens.SchemeJoinScreen}       options={{ animation: 'slide_from_right' }} />
+        <Stack.Screen name="PayInstallment"   component={Screens.PayInstallmentScreen}   options={{ animation: 'slide_from_right' }} />
+        <Stack.Screen name="Rates"            component={Screens.RatesScreen}            options={{ animation: 'slide_from_bottom', headerShown: false }} />
+        <Stack.Screen name="LoginLog"            component={Screens.LoginLog} />
       </Stack.Navigator>
     </NavigationContainer>
   );

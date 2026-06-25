@@ -37,7 +37,11 @@ export const verifyMpin = createAsyncThunk(
   'mpin/verify',
   async (enteredMpin: string, { rejectWithValue }: any) => {
     try {
-      return await mpinService.verify(enteredMpin);
+    const res= await mpinService.verify(enteredMpin);
+    console.log("DataFromMpin",res,"DataFromMpinEnd")
+      return res
+
+      
     } catch (err: any) { return rejectWithValue(err.message); }
   }
 );

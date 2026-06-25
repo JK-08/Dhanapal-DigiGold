@@ -75,6 +75,7 @@ export default function EnterMobileScreen() {
             error={error}
             required
             autoFocus
+            indicator="required"
           />
           <AppButton
             label="Send OTP"

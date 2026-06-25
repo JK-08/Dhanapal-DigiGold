@@ -101,7 +101,6 @@ export default HomeBannerScreen;
 const styles = StyleSheet.create({
     container: {
         height: ITEM_HEIGHT + 25,
-        backgroundColor: '#fff',
         marginTop: 8,
     },
 

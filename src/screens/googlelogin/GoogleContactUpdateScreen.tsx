@@ -93,6 +93,7 @@ export default function GoogleContactUpdateScreen() {
             error={error}
             required
             autoFocus
+            indicator="required"
           />
           <AppInput
             label="Referral Code (Optional)"
@@ -101,6 +102,7 @@ export default function GoogleContactUpdateScreen() {
             autoCapitalize="characters"
             value={referralCode}
             onChangeText={setReferralCode}
+            indicator="optional"
           />
           <AppButton label="Send OTP" onPress={handleSendOtp} loading={loading} size="lg" />
         </View>

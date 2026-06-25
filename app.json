@@ -3,7 +3,7 @@
     "name": "Dhanapal DigiGold",
     "slug": "dhanapal-scheme",
     "scheme": "dhanapal-scheme",
-    "version": "1.0.8",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
@@ -17,7 +17,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.brightech.dhanapaldigigold",
+      "bundleIdentifier": "com.brightechsoftware.dhanapaldigigold",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan barcodes and capture images.",
         "NSPhotoLibraryUsageDescription": "This app accesses your photo library to upload images.",
@@ -28,8 +28,7 @@
       }
     },
     "android": {
-      "package": "com.brightech.dhanapaldigigold",
-      "versionCode": 7,
+      "package": "com.brightechsoftware.dhanapaldigigold",
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
@@ -41,8 +40,10 @@
         "android.permission.POST_NOTIFICATIONS",
         "android.permission.INTERNET",
         "android.permission.VIBRATE",
-        "android.permission.RECEIVE_BOOT_COMPLETED"
-      ]
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/logo.png"
@@ -106,9 +107,9 @@
     "extra": {
       "apiBaseUrl": "https://scheme.dhanapaljewellery.com/api/v1",
       "eas": {
-        "projectId": "0217705d-6a64-4e1d-8ca1-0e45194d4c44"
+        "projectId": "0383de91-6f52-4175-8871-37df2fd7e83e"
       }
     },
-    "owner": "jk_08"
+    "owner": "sugibalan"
   }
 }

@@ -23,7 +23,7 @@ type Props = {
   location?: string;
 };
 
-export default function MainHeader({ onMenuPress, onProfilePress, location = 'Chennai' }: Props) {
+export default function MainHeader({ onMenuPress, onProfilePress}: Props) {
   const { COLORS, FONTS, SIZES, moderateScale, verticalScale } = useTheme();
   const user = useAppSelector((s) => s.auth.user);
   const firstName = user?.username ?? 'User';
@@ -81,12 +81,8 @@ export default function MainHeader({ onMenuPress, onProfilePress, location = 'Ch
               },
             ]}
           >
-            {/* LEFT: menu + logo + brand */}
+            {/* LEFT: logo + brand */}
             <View style={styles.leftContainer}>
-              <AnimatedIconButton onPress={onMenuPress} bg={COLORS.whiteOpacity20} size={moderateScale(42)}>
-                <Ionicons name="menu-outline" size={moderateScale(22)} color={COLORS.white} />
-              </AnimatedIconButton>
-
               <View style={styles.brandContainer}>
                 <View style={styles.logoWrapper}>
                   <Image source={LOGO} resizeMode="cover" style={styles.logo} />
@@ -113,7 +109,7 @@ export default function MainHeader({ onMenuPress, onProfilePress, location = 'Ch
               </View>
             </View>
 
-            {/* RIGHT: profile avatar */}
+            {/* RIGHT: profile avatar → Profile tab (Google picture, else name initial) */}
             <AnimatedIconButton onPress={onProfilePress} bg={COLORS.whiteOpacity20} size={moderateScale(42)}>
               {profilePic ? (
                 <Image
@@ -121,7 +117,13 @@ export default function MainHeader({ onMenuPress, onProfilePress, location = 'Ch
                   style={{ width: moderateScale(32), height: moderateScale(32), borderRadius: moderateScale(16) }}
                 />
               ) : (
-                <Ionicons name="person-outline" size={moderateScale(22)} color={COLORS.white} />
+                <Text style={{
+                  fontFamily: FONTS.family.bold,
+                  fontSize: moderateScale(18),
+                  color: COLORS.white,
+                }}>
+                  {(firstName?.[0] ?? 'U').toUpperCase()}
+                </Text>
               )}
             </AnimatedIconButton>
           </Animated.View>
@@ -138,20 +140,7 @@ export default function MainHeader({ onMenuPress, onProfilePress, location = 'Ch
               },
             ]}
           >
-            {/* Location row */}
-            <View style={styles.locationRow}>
-              <Ionicons name="location-sharp" size={moderateScale(12)} color={COLORS.primaryPale} />
-              <Text style={[styles.locationText, {
-                fontFamily: FONTS.family.regular,
-                fontSize: SIZES.font.xs,
-                color: COLORS.primaryPale,
-                marginLeft: 3,
-              }]}>
-                {location}
-              </Text>
-            </View>
-
-            {/* Greeting row */}
+            {/* Locatiing row */}
             <View style={styles.greetingRow}>
               <Text style={{
                 fontFamily: FONTS.family.semiBold ?? FONTS.family.bold,

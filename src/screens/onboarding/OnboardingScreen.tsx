@@ -7,172 +7,136 @@ import {
   Dimensions,
   FlatList,
   StatusBar,
-  ImageBackground,
   Platform,
-  SafeAreaView,
+  Animated,
   ActivityIndicator,
   Image,
 } from 'react-native';
-
-const { width, height } = Dimensions.get('window');
 import { useOnboardingBanners } from '../../api/hooks/Onboard/useOnboardingBanners';
 import { Banner } from '../../types/onboarding';
 import { AsyncStorageHelper } from '../../utils/AsyncStorageHelper';
 import { FONTS, SIZES, COLORS } from '../../theme/theme';
 
-const TITLES = ['ViserGold', 'Trust and Security', 'Invest in Gold for the Future'];
+const { width, height } = Dimensions.get('window');
+
+const TITLES = [
+  'DigiGold',
+  'Trust & Security',
+  'Invest in Gold',
+];
 const DESCRIPTIONS = [
-  'Smart & Secure Digital Gold Platform',
+  'Smart & Secure Digital Gold Platform for every Indian household.',
   'Your gold investments are fully secure. Trade with confidence, knowing your assets are protected.',
-  'Gold is a timeless investment that grows with you. Start building your wealth today with smart and secure gold trading.',
+  'Gold is a timeless investment that grows with you. Start building your wealth today.',
 ];
 
+// Animated dot indicators
+function Dots({ count, current }: { count: number; current: number }) {
+  return (
+    <View style={dot.row}>
+      {Array.from({ length: count }).map((_, i) => (
+        <View
+          key={i}
+          style={[dot.base, i === current ? dot.active : dot.inactive]}
+        />
+      ))}
+    </View>
+  );
+}
+const dot = StyleSheet.create({
+  row:      { flexDirection: 'row', alignItems: 'center', gap: 7, marginBottom: 24 },
+  base:     { height: 8, borderRadius: 4 },
+  active:   { width: 28, backgroundColor: COLORS.primary },
+  inactive: { width: 8,  backgroundColor: 'rgba(255,255,255,0.35)' },
+});
+
 const OnboardingScreen = ({ navigation }: any) => {
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef  = useRef<FlatList>(null);
   const { banners, loading, getImageUrl } = useOnboardingBanners();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
   const slides = banners.map((item: Banner, index: number) => ({
-    id: String(item.BannerId),
-    image: { uri: getImageUrl(item.image_path) },
-    title: TITLES[index] ?? item.title,
+    id:          String(item.BannerId),
+    uri:         getImageUrl(item.image_path),
+    title:       TITLES[index]       ?? item.title ?? 'DigiGold',
     description: DESCRIPTIONS[index] ?? '',
-    isIntro: index === 0,
   }));
 
   const isLast = currentIndex === slides.length - 1;
 
-  const handleNext = () => {
-    if (currentIndex < slides.length - 1) {
-      flatListRef.current?.scrollToIndex({
-        index: currentIndex + 1,
-        animated: true,
-      });
-    } else {
-      AsyncStorageHelper.setOnboarded();
-      navigation.replace('Register');
-    }
+  const goTo = (index: number) => {
+    Animated.sequence([
+      Animated.timing(fadeAnim, { toValue: 0.6, duration: 100, useNativeDriver: true }),
+      Animated.timing(fadeAnim, { toValue: 1,   duration: 200, useNativeDriver: true }),
+    ]).start();
+    flatListRef.current?.scrollToIndex({ index, animated: true });
   };
 
-  const handleSkip = () => {
-    AsyncStorageHelper.setOnboarded();
-    navigation.replace('Register');
+  const handleNext = () => {
+    if (currentIndex < slides.length - 1) { goTo(currentIndex + 1); }
+    else { AsyncStorageHelper.setOnboarded(); navigation.replace('Register'); }
   };
+  const handleSkip   = () => { AsyncStorageHelper.setOnboarded(); navigation.replace('Register'); };
+  const handleSignIn = () => { AsyncStorageHelper.setOnboarded(); navigation.replace('Login'); };
+
   if (loading) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#000',
-        }}
-      >
-        <ActivityIndicator size="large" color="#FFCA28" />
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
     );
   }
 
-  const renderItem = ({ item }: any) => {
-    return (
-      <View style={styles.slide}>
-        <StatusBar
-          translucent
-          backgroundColor="transparent"
-          barStyle="light-content"
-        />
+  const renderItem = ({ item }: any) => (
+    <View style={styles.slide}>
+      {/* Full-screen background image */}
+      <Image source={{ uri: item.uri }} style={StyleSheet.absoluteFill} resizeMode="cover" />
 
-        {/* Background Image */}
-        <ImageBackground
-          source={item.image}
-          style={styles.imageBackground}
-          imageStyle={styles.imageStyle}
-        >
-          {/* Dark Overlay */}
-          <View style={styles.overlay} />
+      {/* Top fade overlay */}
+      <View style={styles.overlayTop} />
+      {/* Bottom dark overlay */}
+      <View style={styles.overlayBottom} />
 
-          {/* Golden Gradient */}
-          {!item.isIntro && <View style={styles.bottomGlow} />}
-
-          <View style={styles.safeArea}>
-            {/* Progress Bar */}
-            <View style={styles.progressContainer}>
-              {slides.map((_: unknown, index: number) => (
-                <View
-                  key={index}
-                  style={[
-                    styles.progressBar,
-                    index <= currentIndex && styles.activeProgressBar,
-                  ]}
-                />
-              ))}
-            </View>
-
-            {/* Intro Screen */}
-            {item.isIntro ? (
-              <View style={styles.introContainer}>
-                <TouchableOpacity
-                  style={styles.primaryButton}
-                  onPress={handleNext}
-                  activeOpacity={0.9}
-                >
-                  <Text style={styles.primaryButtonText}>Next</Text>
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <View style={styles.contentWrapper}>
-                {/* Image Card */}
-                <View style={styles.imageCard}>
-                  <Image
-                    source={item.image}
-                    style={styles.cardImage}
-                  />
-                </View>
-
-                {/* Text Section */}
-                <View style={styles.textContainer}>
-                  <Text style={styles.title}>
-                    {item.title}
-                  </Text>
-
-                  <Text style={styles.description}>
-                    {item.description}
-                  </Text>
-                </View>
-
-                {/* Buttons */}
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity
-                    style={styles.primaryButton}
-                    onPress={handleNext}
-                    activeOpacity={0.9}
-                  >
-                    <Text style={styles.primaryButtonText}>
-                      {isLast ? 'Get Started' : 'Next'}
-                    </Text>
-                  </TouchableOpacity>
-
-                  {!isLast && (
-                    <TouchableOpacity
-                      onPress={handleSkip}
-                      activeOpacity={0.8}
-                    >
-                      <Text style={styles.skipText}>
-                        Skip
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-              </View>
-            )}
-          </View>
-        </ImageBackground>
+      {/* Brand badge */}
+      <View style={styles.brandBadge}>
+        <Text style={styles.brandText}>✦ DigiGold</Text>
       </View>
-    );
-  };
+
+      {/* Bottom content */}
+      <Animated.View style={[styles.bottomContent, { opacity: fadeAnim }]}>
+        <Dots count={slides.length} current={currentIndex} />
+
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.description}>{item.description}</Text>
+
+        <View style={styles.buttonGroup}>
+          <TouchableOpacity style={styles.primaryBtn} onPress={handleNext} activeOpacity={0.88}>
+            <Text style={styles.primaryBtnText}>
+              {isLast ? 'Get Started' : 'Next  →'}
+            </Text>
+          </TouchableOpacity>
+
+          {isLast ? (
+            <TouchableOpacity onPress={handleSignIn} activeOpacity={0.8}>
+              <Text style={styles.secondaryText}>
+                Already have an account?{'  '}
+                <Text style={styles.signInLink}>Sign In</Text>
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={handleSkip} activeOpacity={0.8}>
+              <Text style={styles.secondaryText}>Skip</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </Animated.View>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
+      <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
       <FlatList
         ref={flatListRef}
         data={slides}
@@ -182,14 +146,30 @@ const OnboardingScreen = ({ navigation }: any) => {
         pagingEnabled
         bounces={false}
         showsHorizontalScrollIndicator={false}
-        onMomentumScrollEnd={event => {
-          const index = Math.round(
-            event.nativeEvent.contentOffset.x / width,
-          );
-
-          setCurrentIndex(index);
+        scrollEventThrottle={16}
+        getItemLayout={(_, index) => ({ length: width, offset: width * index, index })}
+        onMomentumScrollEnd={e => {
+          const idx = Math.round(e.nativeEvent.contentOffset.x / width);
+          setCurrentIndex(idx);
         }}
       />
+
+      {/* Tap left half to go back */}
+      {currentIndex > 0 && (
+        <TouchableOpacity
+          style={styles.tapLeft}
+          activeOpacity={1}
+          onPress={() => goTo(currentIndex - 1)}
+        />
+      )}
+      {/* Tap right half to go forward (only when not on last) */}
+      {!isLast && (
+        <TouchableOpacity
+          style={styles.tapRight}
+          activeOpacity={1}
+          onPress={() => goTo(currentIndex + 1)}
+        />
+      )}
     </View>
   );
 };
@@ -197,157 +177,94 @@ const OnboardingScreen = ({ navigation }: any) => {
 export default OnboardingScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.black,
-  },
+  container: { flex: 1, backgroundColor: '#0a0a0a' },
+  loader:    { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#0a0a0a' },
 
-  slide: {
-    width,
-    height,
-    backgroundColor: COLORS.black,
-  },
+  slide: { width, height },
 
-  imageBackground: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-
-  imageStyle: {
-    resizeMode: 'cover',
-  },
-
-  overlay: {
+  overlayTop: {
     ...StyleSheet.absoluteFillObject,
-
+    height: height * 0.4,
+    top: 0,
+    backgroundColor: 'rgba(0,0,0,0.45)',
   },
-
-  bottomGlow: {
+  overlayBottom: {
     position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 300,
-    backgroundColor: COLORS.bottomGlow,
+    bottom: 0, left: 0, right: 0,
+    height: height * 0.58,
+    backgroundColor: 'rgba(8,8,8,0.84)',
   },
 
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: 22,
-    paddingTop: Platform.OS === 'ios' ? 10 : 20,
-    paddingBottom: 25,
-  },
-
-  /* ================= INTRO ================= */
-
-  introContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    paddingBottom: 10,
-  },
-
-
-
-  introBottom: {
-    width: '100%',
-  },
-
-  /* ================= PROGRESS ================= */
-
-  progressContainer: {
-    flexDirection: 'row',
-    gap: 6,
-    marginTop: 8,
-  },
-
-  progressBar: {
-    flex: 1,
-    height: 5,
+  brandBadge: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 58 : 42,
+    left: 24,
+    backgroundColor: 'rgba(0,0,0,0.45)',
     borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.18)',
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: COLORS.primary + '55',
+  },
+  brandText: {
+    fontFamily: FONTS.family.bold,
+    fontSize:   14,
+    color:      COLORS.primary,
+    letterSpacing: 0.8,
   },
 
-  activeProgressBar: {
-    backgroundColor: COLORS.primary,
-  },
-
-  /* ================= CONTENT ================= */
-
-  contentWrapper: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    paddingBottom: 10,
-  },
-
-  imageCard: {
-    width: '100%',
-    height: height * 0.62,
-    borderRadius: 28,
-    overflow: 'hidden',
-    backgroundColor: '#111',
-    shadowColor: '#FFC928',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
-    shadowRadius: 25,
-    elevation: 10,
-  },
-
-  cardImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-
-  textContainer: {
-    marginTop: 12,
-    marginBottom: 8,
+  bottomContent: {
+    position: 'absolute',
+    bottom: 0, left: 0, right: 0,
+    paddingHorizontal: 24,
+    paddingBottom: Platform.OS === 'ios' ? 44 : 32,
   },
 
   title: {
     fontFamily: FONTS.family.extraBold,
-    fontSize: SIZES.heading.h3,
-    color: '#fff',
+    fontSize:   30,
+    color:      '#FFFFFF',
     marginBottom: 10,
+    letterSpacing: -0.5,
   },
-
   description: {
     fontFamily: FONTS.family.regular,
-    fontSize: SIZES.font.lg,
-    lineHeight: SIZES.font.lg * 1.6,
-    color: 'rgba(255,255,255,0.72)',
+    fontSize:   SIZES.font.md,
+    lineHeight: SIZES.font.md * 1.65,
+    color:      'rgba(255,255,255,0.65)',
+    marginBottom: 30,
   },
 
-  /* ================= BUTTONS ================= */
-
-  buttonContainer: {
-    marginTop: 12,
-  },
-
-  primaryButton: {
-    width: '100%',
-    height: 58,
-    borderRadius: 16,
+  buttonGroup: { gap: 16 },
+  primaryBtn: {
     backgroundColor: COLORS.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: COLORS.primary,
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.45,
-    shadowRadius: 18,
-    elevation: 10,
+    height:          56,
+    borderRadius:    16,
+    alignItems:      'center',
+    justifyContent:  'center',
+    shadowColor:     COLORS.primary,
+    shadowOffset:    { width: 0, height: 8 },
+    shadowOpacity:   0.55,
+    shadowRadius:    18,
+    elevation:       10,
   },
-
-  primaryButtonText: {
+  primaryBtnText: {
     fontFamily: FONTS.family.bold,
-    fontSize: SIZES.font.lg,
-    color: COLORS.white,
+    fontSize:   SIZES.font.lg,
+    color:      '#0a0a0a',
+    letterSpacing: 0.2,
+  },
+  secondaryText: {
+    fontFamily: FONTS.family.regular,
+    fontSize:   SIZES.font.sm,
+    color:      'rgba(255,255,255,0.5)',
+    textAlign:  'center',
+  },
+  signInLink: {
+    fontFamily: FONTS.family.bold,
+    color:      COLORS.primary,
   },
 
-  skipText: {
-    fontFamily: FONTS.family.semiBold,
-    fontSize: SIZES.font.md,
-    marginTop: 18,
-    textAlign: 'center',
-    color: COLORS.primary,
-  },
+  tapLeft:  { position: 'absolute', top: 0, bottom: 220, left: 0,          width: width * 0.25 },
+  tapRight: { position: 'absolute', top: 0, bottom: 220, right: 0,         width: width * 0.25 },
 });

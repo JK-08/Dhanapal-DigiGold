@@ -156,11 +156,11 @@ export default function RegisterScreen() {
 
       {/* Form Card */}
       <View style={styles.card}>
-        <AppInput label="Username" placeholder="Enter username" leftIcon="person-outline" value={form.username} onChangeText={(v) => set('username', v)} error={errors.username} required size="sm" />
-        <AppInput label="Email" placeholder="Enter email" leftIcon="mail-outline" keyboardType="email-address" autoCapitalize="none" value={form.email} onChangeText={(v) => set('email', v)} error={errors.email} required size="sm" />
-        <AppInput label="Mobile Number" placeholder="Enter 10-digit mobile" leftIcon="call-outline" keyboardType="phone-pad" maxLength={10} value={form.contactNumber} onChangeText={(v) => set('contactNumber', v)} error={errors.contactNumber} required size="sm" />
-        <AppInput label="Password" placeholder="Enter password" leftIcon="lock-closed-outline" isPassword value={form.password} onChangeText={(v) => set('password', v)} error={errors.password} required size="sm" />
-        <AppInput label="Confirm Password" placeholder="Re-enter password" leftIcon="lock-closed-outline" isPassword value={form.confirmPassword} onChangeText={(v) => set('confirmPassword', v)} error={errors.confirmPassword} required size="sm" />
+        <AppInput label="Username" placeholder="Enter username" leftIcon="person-outline" value={form.username} onChangeText={(v) => set('username', v)} error={errors.username} required size="sm" indicator="required" />
+        <AppInput label="Email" placeholder="Enter email" leftIcon="mail-outline" keyboardType="email-address" autoCapitalize="none" value={form.email} onChangeText={(v) => set('email', v)} error={errors.email} required size="sm" indicator="required" />
+        <AppInput label="Mobile Number" placeholder="Enter 10-digit mobile" leftIcon="call-outline" keyboardType="phone-pad" maxLength={10} value={form.contactNumber} onChangeText={(v) => set('contactNumber', v)} error={errors.contactNumber} required size="sm" indicator="required" />
+        <AppInput label="Password" placeholder="Enter password" leftIcon="lock-closed-outline" isPassword value={form.password} onChangeText={(v) => set('password', v)} error={errors.password} required size="sm" indicator="required" />
+        <AppInput label="Confirm Password" placeholder="Re-enter password" leftIcon="lock-closed-outline" isPassword value={form.confirmPassword} onChangeText={(v) => set('confirmPassword', v)} error={errors.confirmPassword} required size="sm" indicator="required" />
 
         <View style={{ marginTop: SIZES.md }}>
           <AppButton label="Register" onPress={handleRegister} loading={loading} size="lg" />

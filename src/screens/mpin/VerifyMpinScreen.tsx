@@ -13,6 +13,7 @@ import AppPinInput, { AppPinInputRef } from '../../components/ui/appcomponents/A
 import AppLoader from '../../components/ui/appcomponents/AppLoader';
 import { useToast } from '../../components/ui/Toast';
 import { initNotifications } from '../../utils/NotificationService';
+import { loginCheckService } from '../../api/services/loginCheckService';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
@@ -30,13 +31,23 @@ export default function VerifyMpinScreen() {
   const handleComplete = async (value: string) => {
     const res = await dispatch(verifyMpin(value));
     if (verifyMpin.fulfilled.match(res)) {
-      toast.success('Welcome!', { message: `Hello, ${user?.username ?? 'User'}` });
+      toast.success('Welcome back!', { message: `Hello, ${user?.username ?? 'User'} 👋`, position: 'top' });
+      // Record login-check entry (fire-and-forget; never blocks login)
+      if (user?.username && user?.contactNumber) {
+        loginCheckService
+          .register({ username: user.username, mobileNumber: user.contactNumber })
+          .catch(() => { /* ignore — non-critical */ });
+      }
       await initNotifications();
       navigation.replace('Main');
     } else {
+      const msg = (typeof res.payload === 'string' && res.payload.trim())
+        ? res.payload
+        : 'Incorrect MPIN. Please try again.';
       setPinError(true);
-      setPinErrMsg(res.payload as string);
+      setPinErrMsg(msg);
       pinRef.current?.clear();
+      toast.error('Incorrect MPIN', { message: msg, position: 'top', duration: 3500 });
     }
   };
 
@@ -78,9 +89,9 @@ export default function VerifyMpinScreen() {
           <TouchableOpacity onPress={() => navigation.navigate('ForgotMpin')} activeOpacity={0.7}>
             <Text style={styles.forgotText}>Forgot MPIN?</Text>
           </TouchableOpacity>
-          {/* <TouchableOpacity onPress={() => navigation.navigate('Login')} activeOpacity={0.7}>
-            <Text style={styles.loginText}>Use Password Login</Text>
-          </TouchableOpacity> */}
+          <TouchableOpacity onPress={() => navigation.replace('Login')} activeOpacity={0.7}>
+            <Text style={styles.loginText}>Use Password / Switch Account</Text>
+          </TouchableOpacity>
         </View>
 
       </View>

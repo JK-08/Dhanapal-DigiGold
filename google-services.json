@@ -7,17 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1038057958960:android:230edd0efd3dd05ed147f5",
+        "mobilesdk_app_id": "1:1038057958960:android:8a6647d085496a19d147f5",
         "android_client_info": {
-          "package_name": "com.brightech.dhanapaldigigold"
+          "package_name": "com.brightechsoftware.dhanapaldigigold"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1038057958960-1ae1p45rpk0e120v8ad5lk1geshehqag.apps.googleusercontent.com",
+          "client_id": "1038057958960-f3et0uetg2j3lseg05mtclduvfm2dtv0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.brightech.dhanapaldigigold",
+            "package_name": "com.brightechsoftware.dhanapaldigigold",
             "certificate_hash": "82bd0e3749819c34ae847cd37cee9f5f07e2adec"
           }
         },

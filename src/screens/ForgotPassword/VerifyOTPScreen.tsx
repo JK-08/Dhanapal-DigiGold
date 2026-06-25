@@ -153,6 +153,7 @@ export default function VerifyOTPScreen() {
             onChangeText={(v) => { setNewPassword(v); setPassErrors((p) => ({ ...p, newPassword: '' })); }}
             error={passErrors.newPassword}
             required
+            indicator="required"
           />
           <AppInput
             label="Confirm Password"
@@ -163,6 +164,7 @@ export default function VerifyOTPScreen() {
             onChangeText={(v) => { setConfirmPassword(v); setPassErrors((p) => ({ ...p, confirmPassword: '' })); }}
             error={passErrors.confirmPassword}
             required
+            indicator="required"
           />
 
           <AppButton

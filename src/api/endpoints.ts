@@ -39,6 +39,39 @@ export const SCHEME_SLIDER = {
   DELETE: '/schemeslider/delete',
 };
 
+export const SCHEMES = {
+  ALL: '/schemes/all',
+};
+
+export const MEMBER = {
+  BY_SCHEME: '/member/schemeid',
+  CREATE:    '/member/create',
+};
+
+export const ACCOUNT = {
+  PHONE_DETAILS: '/account/phone_details',
+  INSERT:        '/account/insert',
+  TODAY_RATE:    '/account/todayrate',
+  RATE_HISTORY:  '/account/rate/history',
+};
+
+export const COMPANY = {
+  ALL: '/company/all',
+};
+
+export const LOGIN_CHECK = {
+  REGISTER: '/logincheck/register',
+  LIST:     '/logincheck/list',
+};
+
+export const RAZORPAY = {
+  CREATE_ORDER:    '/razorpay/create-order',
+  VERIFY_PAYMENT:  '/razorpay/verify-payment',
+  PAYMENT_FAILED:  '/razorpay/payment-failed',
+  REFUND:          '/razorpay/refund',
+  RECEIPT:         (receipt: string) => `/razorpay/payment/receipt/${receipt}`,
+};
+
 export const USER_PROFILE = {
   GET:          (userId: number) => `/user/${userId}`,
   UPDATE:       (userId: number) => `/${userId}/update`,
@@ -64,7 +97,7 @@ export const NOTIFICATIONS = {
   SEND_ALL_MESSAGE:       (messageId: number) => `/notifications/sendAll/${messageId}`,
   SEND_ALL_SCHEME:        (messageId: number, schemeId: number) => `/notifications/sendAll/${messageId}/scheme/${schemeId}`,
 
-  // User notifications
+  // User notificationssugo
   GET_USER:               (userId: number) => `/notifications/user/${userId}`,
   GET_ALL:                '/notifications/all',
   DELETE_BY_USER:         (userId: number) => `/notifications/user/${userId}`,
