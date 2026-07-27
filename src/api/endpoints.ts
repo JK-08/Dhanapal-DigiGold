@@ -59,6 +59,12 @@ export const COMPANY = {
   ALL: '/company/all',
 };
 
+// AppContent stores HTML/JSON blobs keyed by id — e.g. id = SchemeId for a
+// scheme's Terms & Conditions, or id = "FAQ" for the FAQ page on Contact.
+export const APP_CONTENT = {
+  BY_ID: (id: string | number) => `/app-content/${id}`,
+};
+
 export const LOGIN_CHECK = {
   REGISTER: '/logincheck/register',
   LIST:     '/logincheck/list',

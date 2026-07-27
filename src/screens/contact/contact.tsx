@@ -210,7 +210,7 @@ export default function ContactScreen() {
           </View>
 
           {/* Working hours */}
-          <View style={[s.branchCard, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
+          {/* <View style={[s.branchCard, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
             <View style={s.branchHead}>
               <View style={[s.branchIcon, { backgroundColor: COLORS.primary + '15' }]}>
                 <Ionicons name="time-outline" size={20} color={COLORS.primary} />
@@ -220,7 +220,7 @@ export default function ContactScreen() {
             <Text style={[s.cardValue, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
               Mon – Sat: 9 AM – 7 PM{'\n'}
             </Text>
-          </View>
+          </View> */}
 
           {/* Social / store links (only those present in the API) */}
           {socialLinks.length > 0 && (
@@ -238,7 +238,7 @@ export default function ContactScreen() {
           )}
 
           {/* Contact form */}
-          <View style={[s.formBox, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
+          {/* <View style={[s.formBox, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
             <View style={s.formHead}>
               <View style={[s.formHeadIcon, { backgroundColor: COLORS.primary + '15' }]}>
                 <Ionicons name="chatbubble-ellipses-outline" size={20} color={COLORS.primary} />
@@ -274,10 +274,14 @@ export default function ContactScreen() {
                 </TouchableOpacity>
               </>
             )}
-          </View>
+          </View> */}
 
           {/* FAQ teaser */}
-          <TouchableOpacity style={[s.faqCard, { backgroundColor: COLORS.primary + '08', borderColor: COLORS.primary + '25' }]}>
+          <TouchableOpacity
+            style={[s.faqCard, { backgroundColor: COLORS.primary + '08', borderColor: COLORS.primary + '25' }]}
+            onPress={() => navigation.navigate('Faq')}
+            activeOpacity={0.8}
+          >
             <Ionicons name="help-circle-outline" size={28} color={COLORS.primary} />
             <View style={{ flex: 1 }}>
               <Text style={[s.faqTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>Have more questions?</Text>

@@ -20,3 +20,4 @@ export { default as SchemeJoinScreen }             from '../screens/scheme/Schem
 export { default as PayInstallmentScreen }         from '../screens/payment/PayInstallmentScreen';
 export { default as RatesScreen } from '../screens/rates/RatesScreen';
 export { default as LoginLog } from '../screens/login/LoginLogs';
+export { default as FaqScreen } from '../screens/faq/FaqScreen';

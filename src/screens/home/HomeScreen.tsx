@@ -564,8 +564,7 @@ export default function HomeScreen() {
           )}
         </View>
 
-        {/* ── Referral Banner ── */}
-        <View style={{ paddingHorizontal: SIZES.padding.container }}>
+{/*        <View style={{ paddingHorizontal: SIZES.padding.container }}>
           <TouchableOpacity
             onPress={() => toast.success('Refer & Earn', { message: 'Share code GOLD2026 and get 1g free!' })}
             style={[pageS.referBanner, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}
@@ -577,7 +576,7 @@ export default function HomeScreen() {
             </View>
             <AppIcon name="chevron-forward-outline" variant="ghost" />
           </TouchableOpacity>
-        </View>
+        </View>*/}
 
         <PoweredByFooter />
       </ScrollView>

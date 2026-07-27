@@ -5,7 +5,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
   Platform,
   Animated,
@@ -19,25 +18,11 @@ import { useTheme } from '../../theme';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 import { METAL_LABEL, METAL_COLOR } from '../../types/Scheme/Scheme';
 import SubPageHeader from '../../components/ui/SubPageHeader';
+import AppContentHtml from '../../components/ui/AppContentHtml';
+import { useAppContent } from '../../api/hooks/AppContent/useAppContent';
 
 type RouteProps = RouteProp<RootStackParamList, 'SchemeTerms'>;
 type NavProps   = NativeStackNavigationProp<RootStackParamList, 'SchemeTerms'>;
-
-// ── Common T&C ───────────────────────────────────────────────────
-const COMMON_TERMS = [
-  'All investments are subject to market risks. Please read all scheme-related documents carefully before investing.',
-  'Dhanapal DigiGold is regulated under applicable laws and guidelines for gold savings schemes.',
-  'Investors must complete KYC verification before joining any scheme. PAN card and Aadhaar details are mandatory.',
-  'The company reserves the right to modify scheme terms with 30 days prior notice to enrolled members.',
-  'In case of default or late payment, a penalty of 2% per month on the outstanding amount will be levied.',
-  'Disputes arising from scheme participation shall be subject to the jurisdiction of courts in Chennai, Tamil Nadu.',
-  'Any misrepresentation of personal information may lead to immediate cancellation of scheme membership without refund.',
-  'Metal purity and weight will be certified by a government-approved hallmarking centre at the time of redemption.',
-  'The scheme maturity value is calculated based on prevailing metal rates on the date of redemption.',
-  'Nominee details must be provided at the time of enrolment and can be updated only once per scheme tenure.',
-  'Digital receipts will be issued for every installment payment. Physical receipts are available on request.',
-  'The company will not be held liable for losses arising due to force majeure events including natural calamities, war, or government directives.',
-];
 
 export default function SchemeTermsScreen() {
   const { COLORS, FONTS, SIZES, SHADOWS, moderateScale } = useTheme();
@@ -47,6 +32,10 @@ export default function SchemeTermsScreen() {
 
   const [accepted, setAccepted] = useState(false);
   const checkScale = useRef(new Animated.Value(1)).current;
+
+  // Fetch Terms & Conditions HTML for this scheme: id = SchemeId.
+  const { html: termsHtml, loading: termsLoading, error: termsError, refetch: refetchTerms } =
+    useAppContent(scheme.SchemeSName);
 
   const toggleAccept = () => {
     Animated.sequence([
@@ -70,106 +59,49 @@ export default function SchemeTermsScreen() {
       {/* ── Header ── */}
       <SubPageHeader title="Terms & Conditions" subtitle={scheme.schemeName} />
 
-      {/* ── Scrollable Body ── */}
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-
-        {/* Scheme Summary Banner */}
-        <View style={[styles.schemeBanner, { backgroundColor: mColor + '12', borderColor: mColor + '30' }]}>
-          <View style={[styles.schemeIconWrap, { backgroundColor: mColor + '20' }]}>
-            <Ionicons name="diamond-outline" size={moderateScale(28)} color={mColor} />
-          </View>
-          <View style={styles.schemeBannerInfo}>
-            <Text style={[styles.schemeBannerTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
-              {scheme.schemeName}
-            </Text>
-            <Text style={[styles.schemeBannerSub, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
-              Code: {scheme.SchemeSName}
-            </Text>
-            <View style={styles.schemeBannerRow}>
-              <View style={[styles.chip, { backgroundColor: mColor + '18' }]}>
-                <Ionicons name="layers-outline" size={12} color={mColor} />
-                <Text style={[styles.chipText, { color: mColor, fontFamily: FONTS.family.semiBold }]}>
-                  {scheme.Instalment} Instalments
-                </Text>
-              </View>
-              <View style={[styles.chip, { backgroundColor: COLORS.success + '15' }]}>
-                <Ionicons name="cash-outline" size={12} color={COLORS.success} />
-                <Text style={[styles.chipText, { color: COLORS.success, fontFamily: FONTS.family.semiBold }]}>
-                  {isFixed ? 'Fixed Amount' : 'Flexible Amount'}
-                </Text>
-              </View>
-              <View style={[styles.chip, { backgroundColor: mColor + '18' }]}>
-                <Text style={[styles.chipText, { color: mColor, fontFamily: FONTS.family.semiBold }]}>
-                  {mLabel}
-                </Text>
-              </View>
-            </View>
-          </View>
+      {/* Scheme Summary Banner */}
+      <View style={[styles.schemeBanner, { backgroundColor: mColor + '12', borderColor: mColor + '30', marginHorizontal: 16 }]}>
+        <View style={[styles.schemeIconWrap, { backgroundColor: mColor + '20' }]}>
+          <Ionicons name="diamond-outline" size={moderateScale(28)} color={mColor} />
         </View>
-
-        {/* Scheme-Specific Terms */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <View style={[styles.sectionIcon, { backgroundColor: mColor + '18' }]}>
-              <Ionicons name="document-text-outline" size={16} color={mColor} />
-            </View>
-            <Text style={[styles.sectionTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
-              Scheme Specific Terms
-            </Text>
-          </View>
-          {[
-            `This scheme covers ${scheme.Instalment} instalments for ${mLabel} savings.`,
-            `Instalment type: ${isFixed ? 'Fixed – the same amount is paid each month.' : 'Flexible – amount may vary each month.'}`,
-            `Metal type: ${mLabel}. Only ${mLabel.toLowerCase()} purchases are eligible under this scheme.`,
-            `Scheme type: ${scheme.SCHEMETYPE === 'A' ? 'Amount-based – investment is tracked by value.' : scheme.SCHEMETYPE}.`,
-            scheme.WeightLedger === 'Y'
-              ? 'Weight ledger is maintained – metal weight is tracked alongside the amount.'
-              : 'Amount-only ledger – only the investment value is tracked.',
-            `New member enrolment: ${scheme.ADDNEWMEMBER === 'Y' ? 'Open – new members can join this scheme.' : 'Closed – this scheme is not accepting new members.'}`,
-            'Early exit before completing all instalments will result in forfeiture of bonus and may attract a processing fee.',
-          ].map((term, idx) => (
-            <View key={idx} style={styles.termRow}>
-              <View style={[styles.bullet, { backgroundColor: mColor }]} />
-              <Text style={[styles.termText, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
-                {term}
+        <View style={styles.schemeBannerInfo}>
+          <Text style={[styles.schemeBannerTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+            {scheme.schemeName}
+          </Text>
+          <Text style={[styles.schemeBannerSub, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+            Code: {scheme.SchemeSName}
+          </Text>
+          <View style={styles.schemeBannerRow}>
+            <View style={[styles.chip, { backgroundColor: mColor + '18' }]}>
+              <Ionicons name="layers-outline" size={12} color={mColor} />
+              <Text style={[styles.chipText, { color: mColor, fontFamily: FONTS.family.semiBold }]}>
+                {scheme.Instalment} Instalments
               </Text>
             </View>
-          ))}
-        </View>
-
-        <View style={[styles.divider, { backgroundColor: COLORS.borderLight }]} />
-
-        {/* General Terms */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <View style={[styles.sectionIcon, { backgroundColor: COLORS.warning + '20' }]}>
-              <Ionicons name="shield-checkmark-outline" size={16} color={COLORS.warning} />
-            </View>
-            <Text style={[styles.sectionTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
-              General Terms & Conditions
-            </Text>
-          </View>
-          {COMMON_TERMS.map((term, idx) => (
-            <View key={idx} style={styles.termRow}>
-              <View style={[styles.bulletNumber, { backgroundColor: COLORS.borderLight }]}>
-                <Text style={[styles.bulletNumberText, { color: COLORS.textTertiary, fontFamily: FONTS.family.semiBold }]}>
-                  {idx + 1}
-                </Text>
-              </View>
-              <Text style={[styles.termText, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
-                {term}
+            <View style={[styles.chip, { backgroundColor: COLORS.success + '15' }]}>
+              <Ionicons name="cash-outline" size={12} color={COLORS.success} />
+              <Text style={[styles.chipText, { color: COLORS.success, fontFamily: FONTS.family.semiBold }]}>
+                {isFixed ? 'Fixed Amount' : 'Flexible Amount'}
               </Text>
             </View>
-          ))}
+            <View style={[styles.chip, { backgroundColor: mColor + '18' }]}>
+              <Text style={[styles.chipText, { color: mColor, fontFamily: FONTS.family.semiBold }]}>
+                {mLabel}
+              </Text>
+            </View>
+          </View>
         </View>
+      </View>
 
-        <View style={[styles.divider, { backgroundColor: COLORS.borderLight }]} />
-
-        {/* Accept Checkbox */}
-
-
-        <View style={{ height: 16 }} />
-      </ScrollView>
+      {/* ── Terms & Conditions HTML (fetched from app-content by SchemeId) ── */}
+      <View style={{ flex: 1, marginTop: 8 }}>
+        <AppContentHtml
+          html={termsHtml}
+          loading={termsLoading}
+          error={termsError}
+          onRetry={refetchTerms}
+        />
+      </View>
 
       {/* ── Fixed Footer ── */}
       <View style={[styles.footer, { backgroundColor: COLORS.background, borderTopColor: COLORS.borderLight, paddingBottom: Platform.OS === 'ios' ? 4 : 16 }]}>

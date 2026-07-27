@@ -41,6 +41,7 @@ export type RootStackParamList = {
   SchemeJoin:              { scheme: SchemeItem };
   PayInstallment:          { ppData: PPData };
   Rates:                   { metal?: 'Gold' | 'Silver' };
+  Faq:                     undefined;
 };
 
 type InitialRoute = 'Onboarding' | 'Register' | 'Login' | 'CreateMpin' | 'MpinLogin' | 'Main';
@@ -128,6 +129,7 @@ export default function RootNavigator() {
         <Stack.Screen name="PayInstallment"   component={Screens.PayInstallmentScreen}   options={{ animation: 'slide_from_right' }} />
         <Stack.Screen name="Rates"            component={Screens.RatesScreen}            options={{ animation: 'slide_from_bottom', headerShown: false }} />
         <Stack.Screen name="LoginLog"            component={Screens.LoginLog} />
+        <Stack.Screen name="Faq"              component={Screens.FaqScreen}              options={{ animation: 'slide_from_right' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
