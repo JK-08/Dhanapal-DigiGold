@@ -31,125 +31,125 @@ const fontScale = (size) => {
 // 🎨 COLOR PALETTE - 
 // ============================================
 export const COLORS = {
-  // ===== PRIMARY BRAND COLORS (WARM BROWN) =====
-  primary: "#7B5E2A",           // Warm Brown (Main Brand)
-  primaryLight: "#A0782E",      // Medium Brown
-  primaryDark: "#5C3F10",       // Deep Brown
-  primaryLighter: "#C9A84C",    // Champagne Gold
-  primaryPale: "#FAF6EE",       // Ivory (very light cream)
+  // ===== PRIMARY BRAND COLORS (CHERRY RED) =====
+  primary: "#C2185B",           // Cherry Red (Main Brand)
+  primaryLight: "#D8467F",      // Medium Cherry Red
+  primaryDark: "#8E0F42",       // Deep Cherry Red
+  primaryLighter: "#F3AFC9",    // Soft Pink
+  primaryPale: "#FFF8F5",       // Soft Cream (very light)
 
-  secondary: "#C9A84C",         // Champagne Gold
-  secondaryLight: "#D4B96A",    // Light Champagne
-  secondaryDark: "#A0782E",     // Dark Champagne
-  secondaryLighter: "#E8D5A3",  // Pale Gold
+  secondary: "#A8CFA8",         // Sage Green
+  secondaryLight: "#C3DFC3",    // Light Sage
+  secondaryDark: "#7FAF7F",     // Dark Sage
+  secondaryLighter: "#E3EFE3",  // Pale Sage
 
-  accent: "#C9A84C",            // Champagne Gold
-  accentLight: "#E8D5A3",       // Pale Gold
-  accentDark: "#A0782E",        // Dark Gold
-  bottomGlow: "rgb(122, 90, 38)",
+  accent: "#A8CFA8",             // Sage Green
+  accentLight: "#E3EFE3",        // Pale Sage
+  accentDark: "#7FAF7F",         // Dark Sage
+  bottomGlow: "rgb(194, 24, 91)",
 
   // ===== NEUTRAL COLORS =====
   white: "#FFFFFF",
   black: "#000000",
-  background: "#FAF6EE",         // Ivory (page background)
-  backgroundSecondary: "#F5EFE0", // Warm cream
-  backgroundTertiary: "#EDE3CC",  // Deeper cream
-  backgroundDark: "#1A1200",      // Very dark brown-black
-  backgroundOrange: "#FAF6EE",    // Reuse ivory
-  backgroundGold: "#F5EFE0",      // Light gold tint
-  surface: "#FAF6EE",
+  background: "#FAFAF8",         // Off White (page background)
+  backgroundSecondary: "#F2F2EE", // Deeper off-white
+  backgroundTertiary: "#E8E8E2",  // Deepest off-white
+  backgroundDark: "#1A1A1A",      // Near-black (dark surfaces)
+  backgroundOrange: "#FAFAF8",    // Reuse off white
+  backgroundGold: "#EDF5ED",      // Light sage tint
+  surface: "#FFFFFF",             // White surface
   card: "#FFFFFF",
-  softCard: "#F5EFE0",
-  overlay: "rgba(123, 94, 42, 0.7)",    // Brown overlay
+  softCard: "#F2F2EE",
+  overlay: "rgba(194, 24, 91, 0.7)",    // Cherry red overlay
   overlayDark: "rgba(0, 0, 0, 0.7)",
-  overlayGold: "rgba(201, 168, 76, 0.1)",
-  overlayOrange: "rgba(123, 94, 42, 0.1)",
+  overlayGold: "rgba(168, 207, 168, 0.1)",
+  overlayOrange: "rgba(194, 24, 91, 0.1)",
 
   // ===== TEXT COLORS =====
-  textPrimary: "#2E1A05",        // Very dark brown (readable)
-  textSecondary: "#6B5740",      // Warm medium brown
-  textTertiary: "#A08060",       // Light warm brown
-  textDisabled: "#D4C5A9",       // Muted warm gray
+  textPrimary: "#2D2D2D",        // Charcoal (readable)
+  textSecondary: "#5C5C5C",      // Medium gray
+  textTertiary: "#8C8C8C",       // Light gray
+  textDisabled: "#C7C7C7",       // Muted gray
   textInverse: "#FFFFFF",        // White on dark
-  textOrange: "#7B5E2A",         // Reuse primary brown
-  textOrangeDark: "#5C3F10",     // Deep brown text
-  textGold: "#C9A84C",           // Champagne gold text
-  textGoldDark: "#A0782E",       // Dark gold text
+  textOrange: "#C2185B",         // Reuse primary cherry red
+  textOrangeDark: "#8E0F42",     // Deep cherry red text
+  textGold: "#A8CFA8",           // Sage green text (secondary)
+  textGoldDark: "#7FAF7F",       // Dark sage text
 
-  // ===== GRAY SCALE (warm-tinted) =====
-  gray50: "#FAF8F5",
-  gray100: "#F2EDE4",
-  gray200: "#E5DBD0",
-  gray300: "#D4C5A9",
-  gray400: "#A08060",
-  gray500: "#6B5740",
-  gray600: "#4E3B25",
-  gray700: "#3A2810",
-  gray800: "#2E1A05",
-  gray900: "#1A0E00",
+  // ===== GRAY SCALE =====
+  gray50: "#FAFAFA",
+  gray100: "#F0F0F0",
+  gray200: "#E0E0E0",
+  gray300: "#C7C7C7",
+  gray400: "#9E9E9E",
+  gray500: "#757575",
+  gray600: "#5C5C5C",
+  gray700: "#424242",
+  gray800: "#2D2D2D",
+  gray900: "#1A1A1A",
 
-  // ===== BROWN VARIATIONS =====
-  orangeLight: "#FAF6EE",         // Ivory
-  orangeMedium: "#C9A84C",        // Champagne
-  orangeDark: "#5C3F10",          // Deep brown
-  orangeVivid: "#A0782E",         // Medium brown vivid
-  orangeIce: "#EDE3CC",           // Cream
-  orangeSoft: "#E8D5A3",          // Pale gold
-  orangeDeep: "#3E2A05",          // Darkest brown
+  // ===== BRAND VARIATIONS =====
+  orangeLight: "#FFF8F5",         // Soft Cream
+  orangeMedium: "#C2185B",        // Cherry Red
+  orangeDark: "#8E0F42",          // Deep Cherry Red
+  orangeVivid: "#D8467F",         // Medium vivid Cherry Red
+  orangeIce: "#FBE0D6",           // Deep Cream
+  orangeSoft: "#F3AFC9",          // Soft Pink
+  orangeDeep: "#6B0930",          // Darkest Cherry Red
 
   // ===== BORDER & DIVIDER =====
-  border: "#E5DBD0",
-  borderLight: "#F2EDE4",
-  borderMedium: "#D4C5A9",
-  borderDark: "#4E3B25",
-  borderOrange: "#7B5E2A",
-  borderGold: "#C9A84C",
-  divider: "#E5DBD0",
+  border: "#E0E0E0",
+  borderLight: "#F0F0F0",
+  borderMedium: "#C7C7C7",
+  borderDark: "#5C5C5C",
+  borderOrange: "#C2185B",
+  borderGold: "#A8CFA8",
+  divider: "#E0E0E0",
 
   // ===== INPUT COLORS =====
-  inputBackground: "#FAF8F5",
-  inputBorder: "#E5DBD0",
-  inputPlaceholder: "rgba(107, 87, 64, 0.5)",
-  inputFocused: "#7B5E2A",        // Brown focus ring
-  inputFocusedAlt: "#C9A84C",     // Gold alternative
+  inputBackground: "#FFFFFF",
+  inputBorder: "#E0E0E0",
+  inputPlaceholder: "rgba(92, 92, 92, 0.5)",
+  inputFocused: "#C2185B",        // Cherry red focus ring
+  inputFocusedAlt: "#A8CFA8",     // Sage green alternative
 
   // ===== STATUS COLORS =====
-  success: "#4E7A34",
-  successLight: "#7BAE3A",
-  successDark: "#3A5A22",
-  error: "#C0392B",
-  errorLight: "#E74C3C",
-  errorDark: "#922B21",
-  warning: "#C9A84C",
-  warningLight: "#D4B96A",
-  warningDark: "#A0782E",
-  info: "#2E6DA4",
-  infoLight: "#5B9BD5",
-  infoDark: "#1A4A7A",
-  disabled: "#F2EDE4",
+  success: "#2E7D32",
+  successLight: "#4CAF50",
+  successDark: "#1B5E20",
+  error: "#C62828",
+  errorLight: "#E53935",
+  errorDark: "#8E0000",
+  warning: "#D97706",
+  warningLight: "#F59E0B",
+  warningDark: "#B45309",
+  info: "#1565C0",
+  infoLight: "#42A5F5",
+  infoDark: "#0D47A1",
+  disabled: "#F0F0F0",
 
-  // ===== GOLD VARIATIONS =====
-  goldPrimary: "#C9A84C",         // Champagne Gold
-  goldSecondary: "#D4B96A",       // Light Champagne
-  goldTertiary: "#E8D5A3",        // Pale Gold
-  goldBronze: "#A0622A",          // Bronze
-  goldRose: "#B87060",            // Rose tint
-  goldLight: "#F5EFE0",           // Very light gold
-  goldMedium: "#C9A84C",          // Medium champagne
-  goldDark: "#A0782E",            // Dark champagne
+  // ===== GOLD VARIATIONS (mapped to secondary sage green) =====
+  goldPrimary: "#A8CFA8",         // Sage Green
+  goldSecondary: "#C3DFC3",       // Light Sage
+  goldTertiary: "#E3EFE3",        // Pale Sage
+  goldBronze: "#5F8F5F",          // Deep Sage
+  goldRose: "#C2185B",            // Rose tint (cherry red)
+  goldLight: "#EDF5ED",           // Very light sage
+  goldMedium: "#A8CFA8",          // Medium sage
+  goldDark: "#7FAF7F",            // Dark sage
 
   // ===== TRANSPARENT COLORS =====
   transparent: "transparent",
-  // Brown (primary) opacity
-  orangeOpacity10: "rgba(123, 94, 42, 0.1)",
-  orangeOpacity20: "rgba(123, 94, 42, 0.2)",
-  orangeOpacity30: "rgba(123, 94, 42, 0.3)",
-  orangeOpacity40: "rgba(123, 94, 42, 0.4)",
-  orangeOpacity50: "rgba(123, 94, 42, 0.5)",
-  orangeOpacity60: "rgba(123, 94, 42, 0.6)",
-  orangeOpacity70: "rgba(123, 94, 42, 0.7)",
-  orangeOpacity80: "rgba(123, 94, 42, 0.8)",
-  orangeOpacity90: "rgba(123, 94, 42, 0.9)",
+  // Cherry red (primary) opacity
+  orangeOpacity10: "rgba(194, 24, 91, 0.1)",
+  orangeOpacity20: "rgba(194, 24, 91, 0.2)",
+  orangeOpacity30: "rgba(194, 24, 91, 0.3)",
+  orangeOpacity40: "rgba(194, 24, 91, 0.4)",
+  orangeOpacity50: "rgba(194, 24, 91, 0.5)",
+  orangeOpacity60: "rgba(194, 24, 91, 0.6)",
+  orangeOpacity70: "rgba(194, 24, 91, 0.7)",
+  orangeOpacity80: "rgba(194, 24, 91, 0.8)",
+  orangeOpacity90: "rgba(194, 24, 91, 0.9)",
   // Black opacity
   blackOpacity10: "rgba(0, 0, 0, 0.1)",
   blackOpacity20: "rgba(0, 0, 0, 0.2)",
@@ -168,46 +168,46 @@ export const COLORS = {
   whiteOpacity70: "rgba(255, 255, 255, 0.7)",
   whiteOpacity80: "rgba(255, 255, 255, 0.8)",
   whiteOpacity90: "rgba(255, 255, 255, 0.9)",
-  // Gold opacity
-  goldOpacity10: "rgba(201, 168, 76, 0.1)",
-  goldOpacity20: "rgba(201, 168, 76, 0.2)",
-  goldOpacity30: "rgba(201, 168, 76, 0.3)",
-  goldOpacity50: "rgba(201, 168, 76, 0.5)",
+  // Gold opacity (sage green)
+  goldOpacity10: "rgba(168, 207, 168, 0.1)",
+  goldOpacity20: "rgba(168, 207, 168, 0.2)",
+  goldOpacity30: "rgba(168, 207, 168, 0.3)",
+  goldOpacity50: "rgba(168, 207, 168, 0.5)",
 
   // ===== SHADOW & EFFECTS =====
-  shadow: "rgba(46, 26, 5, 0.08)",
-  shadowMedium: "rgba(46, 26, 5, 0.15)",
-  shadowStrong: "rgba(46, 26, 5, 0.25)",
-  shadowOrange: "rgba(123, 94, 42, 0.2)",
-  shadowGold: "rgba(201, 168, 76, 0.25)",
+  shadow: "rgba(45, 45, 45, 0.08)",
+  shadowMedium: "rgba(45, 45, 45, 0.15)",
+  shadowStrong: "rgba(45, 45, 45, 0.25)",
+  shadowOrange: "rgba(194, 24, 91, 0.2)",
+  shadowGold: "rgba(168, 207, 168, 0.25)",
 
   // ===== GRADIENT COLORS =====
   gradient: {
-    // Primary brown gradients
-    orangePrimary: ["#7B5E2A", "#A0782E"],      // Brown to medium brown (replaces orange header)
-    orangeDeep: ["#5C3F10", "#7B5E2A"],          // Deep to medium brown
-    orangeLight: ["#A0782E", "#C9A84C"],         // Brown to champagne
-    orangeVivid: ["#5C3F10", "#A0782E"],         // Deep vivid brown
-    orangeToWhite: ["#7B5E2A", "#FAF6EE"],       // Brown to ivory
-    orangeToRed: ["#7B5E2A", "#C9A84CE0"],       // Brown to champagne
+    // Primary cherry red gradients
+    orangePrimary: ["#C2185B", "#D8467F"],       // Cherry red to medium cherry red
+    orangeDeep: ["#8E0F42", "#C2185B"],          // Deep to medium cherry red
+    orangeLight: ["#D8467F", "#F3AFC9"],         // Cherry red to soft pink
+    orangeVivid: ["#8E0F42", "#D8467F"],         // Deep vivid cherry red
+    orangeToWhite: ["#C2185B", "#FAFAF8"],       // Cherry red to off white
+    orangeToRed: ["#C2185B", "#A8CFA8E0"],       // Cherry red to sage green
 
-    // Gold / champagne gradients
-    goldLight: ["#C9A84C", "#D4B96A"],           // Champagne gradient
-    goldDark: ["#A0782E", "#C9A84C"],            // Dark to light champagne
-    luxuryGold: ["#C9A84C", "#D4B96A", "#E8D5A3"], // Full luxury champagne
-    shimmer: ["#C9A84C", "#E8D5A3", "#C9A84C"],    // Shimmer effect
+    // Sage green gradients
+    goldLight: ["#A8CFA8", "#C3DFC3"],           // Sage gradient
+    goldDark: ["#7FAF7F", "#A8CFA8"],            // Dark to light sage
+    luxuryGold: ["#A8CFA8", "#C3DFC3", "#E3EFE3"], // Full sage range
+    shimmer: ["#A8CFA8", "#E3EFE3", "#A8CFA8"],    // Shimmer effect
 
-    // Brown & Gold combinations
-    orangeToGold: ["#7B5E2A", "#C9A84C"],        // Brown to champagne gold
-    goldToOrange: ["#C9A84C", "#7B5E2A"],        // Champagne to brown
-    elegance: ["#5C3F10", "#C9A84C"],            // Deep brown to champagne
-    luxury: ["#7B5E2A", "#C9A84C", "#D4B96A"],  // Full luxury palette
-    premium: ["#5C3F10", "#7B5E2A", "#C9A84C"], // Deep to champagne
+    // Cherry Red & Sage Green combinations
+    orangeToGold: ["#C2185B", "#A8CFA8"],        // Cherry red to sage green
+    goldToOrange: ["#A8CFA8", "#C2185B"],        // Sage green to cherry red
+    elegance: ["#8E0F42", "#A8CFA8"],            // Deep cherry red to sage
+    luxury: ["#C2185B", "#A8CFA8", "#C3DFC3"],   // Full brand palette
+    premium: ["#8E0F42", "#C2185B", "#A8CFA8"],  // Deep to sage
 
     // Neutral surfaces
-    surface: ["#F5EFE0", "#FAF6EE"],             // Warm ivory surface
-    surfaceWarm: ["#EDE3CC", "#FAF6EE"],          // Deeper cream surface
-    darkSurface: ["#1A0E00", "#2E1A05"],          // Dark brown surface
+    surface: ["#F2F2EE", "#FAFAF8"],             // Off-white surface
+    surfaceWarm: ["#E8E8E2", "#FAFAF8"],          // Deeper off-white surface
+    darkSurface: ["#1A1A1A", "#2D2D2D"],          // Dark charcoal surface
   },
 };
 

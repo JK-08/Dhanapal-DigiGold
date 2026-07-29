@@ -40,7 +40,7 @@ function timeAgo(raw: string | null): string {
   return '';
 }
 
-const AVATAR_COLORS = ['#C9A84C', '#7A8FA6', '#7B5EA7', '#2E9E8F', '#C8607A', '#5B82C9'];
+const AVATAR_COLORS = ['#A8CFA8', '#7A8FA6', '#7B5EA7', '#2E9E8F', '#C8607A', '#5B82C9'];
 
 // ── Single log card ───────────────────────────────────────────────
 function LogCard({ item, index }: { item: LoginLog; index: number }) {

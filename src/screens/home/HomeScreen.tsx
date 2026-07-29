@@ -64,7 +64,7 @@ const CYCLE_GRADIENTS: [string, string][] = [
 const STATUS_CLR: Record<string, string> = {
   active: '#4CAF50',
   pending: '#FF9800',
-  completed: '#C9A84C',
+  completed: '#A8CFA8',
 };
 
 // ── My-Scheme Slider Card ─────────────────────────────────────────
@@ -217,7 +217,7 @@ function SectionHeader({ title, subtitle, onViewAll }: { title: string; subtitle
 function DotIndicator({ 
   total, 
   activeIndex, 
-  color = '#C9A84C',
+  color = '#A8CFA8',
   dotSize = 8,
   activeDotSize = 20,
   dotGap = 6,
@@ -357,12 +357,12 @@ export default function HomeScreen() {
           <View style={{ flexDirection: 'row', gap: 12 }}>
             {/* Gold 916 Tile */}
             <TouchableOpacity
-              style={[rateTile.card, { backgroundColor: COLORS.card, borderColor: '#C9A84C40', flex: 1, ...SHADOWS.sm }]}
+              style={[rateTile.card, { backgroundColor: COLORS.card, borderColor: '#A8CFA840', flex: 1, ...SHADOWS.sm }]}
               onPress={() => navigation.navigate('Rates', { metal: 'Gold' })}
               activeOpacity={0.82}
             >
-              <View style={[rateTile.iconWrap, { backgroundColor: '#C9A84C18' }]}>
-                <Ionicons name="diamond-outline" size={18} color="#C9A84C" />
+              <View style={[rateTile.iconWrap, { backgroundColor: '#A8CFA818' }]}>
+                <Ionicons name="diamond-outline" size={18} color="#A8CFA8" />
               </View>
               <Text style={[rateTile.metalLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
                 Gold Rate (91.6%)
@@ -375,8 +375,8 @@ export default function HomeScreen() {
                 <Text style={[rateTile.changeTxt, { color: goldUp ? '#22C55E' : '#EF4444', fontFamily: FONTS.family.medium }]}>{fmtPct(gold?.changePct)}</Text>
               </View>
               <View style={rateTile.footer}>
-                <Text style={[rateTile.viewTxt, { color: '#C9A84C', fontFamily: FONTS.family.semiBold }]}>View chart</Text>
-                <Ionicons name="chevron-forward" size={12} color="#C9A84C" />
+                <Text style={[rateTile.viewTxt, { color: '#A8CFA8', fontFamily: FONTS.family.semiBold }]}>View chart</Text>
+                <Ionicons name="chevron-forward" size={12} color="#A8CFA8" />
               </View>
             </TouchableOpacity>
 
@@ -497,7 +497,7 @@ export default function HomeScreen() {
                 <DotIndicator 
                   total={mySchemes.length} 
                   activeIndex={mySchemesIndex} 
-                  color="#C9A84C"
+                  color="#A8CFA8"
                 />
               )}
             </>

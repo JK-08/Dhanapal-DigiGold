@@ -17,6 +17,7 @@ import { RootStackParamList } from '../navigation/RootNavigator';
 
 import { useSchemeSliders } from '../api/hooks/HomeBanner/useHomeBanner';
 import { SchemeSlider } from '../types/HomeBanner/HomeBanner';
+import { COLORS } from '../theme/theme';
 
 const { width } = Dimensions.get('window');
 const ITEM_HEIGHT = 220;
@@ -39,7 +40,7 @@ const HomeBannerScreen = () => {
     if (loading) {
         return (
             <View style={styles.center}>
-                <ActivityIndicator size="large" color="#D4AF37" />
+                <ActivityIndicator size="large" color={COLORS.secondary} />
             </View>
         );
     }
@@ -133,12 +134,12 @@ const styles = StyleSheet.create({
         width: 6,
         height: 6,
         borderRadius: 3,
-        backgroundColor: '#D4AF3766',
+        backgroundColor: COLORS.secondary + '66',
         marginHorizontal: 4,
     },
 
     dotActive: {
         width: 16,
-        backgroundColor: '#D4AF37',
+        backgroundColor: COLORS.secondary,
     },
 });

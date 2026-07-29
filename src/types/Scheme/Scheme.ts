@@ -32,7 +32,7 @@ export const METAL_LABEL: Record<string, string> = {
 };
 
 export const METAL_COLOR: Record<string, string> = {
-  G: '#C9A84C',
+  G: '#A8CFA8',
   S: '#9E9E9E',
   P: '#78909C',
   D: '#00ACC1',

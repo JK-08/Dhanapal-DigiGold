@@ -208,7 +208,7 @@ export default function RatesScreen() {
   };
 
   const metal: MetalRates | null = rates ? rates[activeMetal === 'Gold' ? 'gold' : 'silver'] : null;
-  const goldColor   = '#C9A84C';
+  const goldColor   = '#A8CFA8';
   const silverColor = '#7A8FA6';
   const activeColor = activeMetal === 'Gold' ? goldColor : silverColor;
   const isUp        = (metal?.changePct ?? 0) >= 0;

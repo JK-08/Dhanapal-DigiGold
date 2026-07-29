@@ -1,7 +1,7 @@
 // src/screens/register/RegisterScreen.tsx
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
 import { getHash } from 'react-native-otp-verify';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -15,6 +15,7 @@ import { RootStackParamList } from '../../navigation/RootNavigator';
 import AppInput from '../../components/ui/appcomponents/AppInput';
 import AppButton from '../../components/ui/appcomponents/AppButton';
 import { useToast } from '../../components/ui/Toast';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 

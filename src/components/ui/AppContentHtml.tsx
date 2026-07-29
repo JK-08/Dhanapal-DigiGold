@@ -9,6 +9,7 @@ import { View, ActivityIndicator, Text, StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTheme } from '../../theme';
+import { COLORS as THEME_COLORS } from '../../theme/theme';
 
 interface Props {
   html: string;
@@ -36,7 +37,7 @@ const wrapHtml = (bodyHtml: string, textColor: string, bgColor: string) => `
         line-height: 1.6;
       }
       img { max-width: 100%; height: auto; }
-      a { color: #C9A84C; }
+      a { color: ${THEME_COLORS.secondaryDark}; }
       table { width: 100%; border-collapse: collapse; }
       td, th { padding: 6px; border: 1px solid rgba(128,128,128,0.3); }
     </style>

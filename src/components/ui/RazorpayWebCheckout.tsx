@@ -196,7 +196,7 @@ const RazorpayWebCheckout = forwardRef<RazorpayWebCheckoutRef>((_, ref) => {
         {/* Loading overlay */}
         {loading && (
           <View style={[s.loadingOverlay, { backgroundColor: COLORS.background }]}>
-            <ActivityIndicator size="large" color="#C9A84C" />
+            <ActivityIndicator size="large" color={COLORS.secondary} />
             <Text style={[s.loadingTxt, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
               Loading payment gateway…
             </Text>

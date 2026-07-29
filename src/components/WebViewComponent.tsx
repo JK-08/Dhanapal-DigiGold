@@ -38,7 +38,7 @@ export default function WebViewComponent() {
 
       {loading && !error && (
         <View style={styles.overlay}>
-          <ActivityIndicator size="large" color="#D4AF37" />
+          <ActivityIndicator size="large" color={COLORS.secondary} />
         </View>
       )}
 
