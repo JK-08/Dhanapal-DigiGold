@@ -219,7 +219,7 @@ export default function RatesScreen() {
   const tabTranslate = tabAnim.interpolate({ inputRange: [0, 1], outputRange: [0, TAB_W] });
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: COLORS.background }]} edges={['top']}>
+    <SafeAreaView style={[s.safe, { backgroundColor: COLORS.background }]} edges={['top', 'bottom']}>
 
       {/* Header */}
       <SubPageHeader

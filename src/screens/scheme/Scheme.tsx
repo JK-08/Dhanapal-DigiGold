@@ -411,7 +411,7 @@ export default function SchemeScreen() {
   const refetch  = activeTab === 'all' ? refetchAll  : refetchMy;
 
   const handleJoin = (scheme: ApiScheme) => {
-    navigation.navigate('SchemeTerms', { scheme });
+    navigation.navigate('SchemeDetails', { scheme });
   };
 
   return (<>

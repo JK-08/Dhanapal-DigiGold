@@ -59,47 +59,27 @@ export default function SchemeTermsScreen() {
       {/* ── Header ── */}
       <SubPageHeader title="Terms & Conditions" subtitle={scheme.schemeName} />
 
-      {/* Scheme Summary Banner */}
-      <View style={[styles.schemeBanner, { backgroundColor: mColor + '12', borderColor: mColor + '30', marginHorizontal: 16 }]}>
-        <View style={[styles.schemeIconWrap, { backgroundColor: mColor + '20' }]}>
-          <Ionicons name="diamond-outline" size={moderateScale(28)} color={mColor} />
-        </View>
-        <View style={styles.schemeBannerInfo}>
-          <Text style={[styles.schemeBannerTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
-            {scheme.schemeName}
-          </Text>
-          <Text style={[styles.schemeBannerSub, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
-            Code: {scheme.SchemeSName}
-          </Text>
-          <View style={styles.schemeBannerRow}>
-            <View style={[styles.chip, { backgroundColor: mColor + '18' }]}>
-              <Ionicons name="layers-outline" size={12} color={mColor} />
-              <Text style={[styles.chipText, { color: mColor, fontFamily: FONTS.family.semiBold }]}>
-                {scheme.Instalment} Instalments
-              </Text>
-            </View>
-            <View style={[styles.chip, { backgroundColor: COLORS.success + '15' }]}>
-              <Ionicons name="cash-outline" size={12} color={COLORS.success} />
-              <Text style={[styles.chipText, { color: COLORS.success, fontFamily: FONTS.family.semiBold }]}>
-                {isFixed ? 'Fixed Amount' : 'Flexible Amount'}
-              </Text>
-            </View>
-            <View style={[styles.chip, { backgroundColor: mColor + '18' }]}>
-              <Text style={[styles.chipText, { color: mColor, fontFamily: FONTS.family.semiBold }]}>
-                {mLabel}
-              </Text>
-            </View>
-          </View>
-        </View>
-      </View>
-
       {/* ── Terms & Conditions HTML (fetched from app-content by SchemeId) ── */}
-      <View style={{ flex: 1, marginTop: 8 }}>
+      <View style={{ flex: 1 }}>
         <AppContentHtml
           html={termsHtml}
           loading={termsLoading}
           error={termsError}
           onRetry={refetchTerms}
+          bannerHtml={`
+            <div style="display:flex;align-items:flex-start;background:${mColor}12;border:1px solid ${mColor}30;border-radius:16px;padding:16px;margin-bottom:20px;gap:14px">
+              <div style="width:52px;height:52px;border-radius:14px;background:${mColor}20;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px">💎</div>
+              <div style="flex:1">
+                <div style="font-size:16px;font-weight:700;margin-bottom:2px">${scheme.schemeName}</div>
+                <div style="font-size:12px;opacity:0.7;margin-bottom:8px">Code: ${scheme.SchemeSName}</div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  <span style="background:${mColor}18;color:${mColor};padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600">${scheme.Instalment} Instalments</span>
+                  <span style="background:${COLORS.success}15;color:${COLORS.success};padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600">${isFixed ? 'Fixed Amount' : 'Flexible Amount'}</span>
+                  <span style="background:${mColor}18;color:${mColor};padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600">${mLabel}</span>
+                </div>
+              </div>
+            </div>
+          `}
         />
       </View>
 

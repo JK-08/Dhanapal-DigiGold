@@ -133,6 +133,16 @@ const Field = React.forwardRef<View, FieldProps>(function Field({ label, icon, v
 // ── Helpers ───────────────────────────────────────────────────────
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
+// One entry from the india-post pincode lookup — a single pincode can cover
+// several localities/post offices, so we keep the fields needed to let the
+// member pick theirs.
+interface PostOffice {
+  Name:     string;
+  District: string;
+  State:    string;
+  Block?:   string;
+}
+
 function daysInMonth(month: number, year: number) {
   return new Date(year, month, 0).getDate();
 }
@@ -297,8 +307,8 @@ function DatePickerModal({ visible, day, month, year, onConfirm, onCancel, color
 }
 
 const dpModal = StyleSheet.create({
-  overlay:    { flex: 1, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'flex-end' },
-  sheet:      { borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 20, paddingBottom: 32 },
+  overlay:    { flex: 1, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'center', paddingHorizontal: 24 },
+  sheet:      { borderRadius: 24, padding: 20, paddingBottom: 32 },
   header:     { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 16, borderBottomWidth: 1, marginBottom: 12 },
   title:      { fontSize: 17 },
   colLabels:  { flexDirection: 'row', marginBottom: 4 },
@@ -362,7 +372,7 @@ const gStyles = StyleSheet.create({
 
 // ── Amount Dropdown ────────────────────────────────────────────────
 function AmountDropdown({
-  groups, selected, onSelect, loading, colors, fonts, shadows,
+  groups, selected, onSelect, loading, colors, fonts, shadows, error,
 }: {
   groups:   MemberSchemeGroup[];
   selected: MemberSchemeGroup | null;
@@ -371,6 +381,7 @@ function AmountDropdown({
   colors:   any;
   fonts:    any;
   shadows:  any;
+  error?:   string;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -385,11 +396,14 @@ function AmountDropdown({
     );
   }
 
+  const borderCol = error ? '#E53935' : selected ? colors.primary : colors.borderLight;
+  const bgCol     = error ? '#FFEBEE' : selected ? colors.primary + '05' : colors.card;
+
   return (
     <>
       {/* Trigger */}
       <TouchableOpacity
-        style={[styles.dropdownBtn, { borderColor: selected ? colors.primary : colors.borderLight, backgroundColor: selected ? colors.primary + '05' : colors.card }]}
+        style={[styles.dropdownBtn, { borderColor: borderCol, backgroundColor: bgCol }]}
         onPress={() => setOpen(true)}
         activeOpacity={0.8}
       >
@@ -597,10 +611,16 @@ export default function SchemeJoinScreen() {
   const [district,    setDistrict]    = useState('');
   const [stateVal,    setStateVal]    = useState('');
   const [pincodeLoading, setPincodeLoading] = useState(false);
+  // A pincode can map to several post offices/localities — hold the full
+  // list so the member can pick the right one instead of us guessing.
+  const [postOffices, setPostOffices] = useState<PostOffice[]>([]);
 
   // Per-field validation errors
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const clearErr = (key: string) => setFieldErrors(p => { const n = { ...p }; delete n[key]; return n; });
+
+  // ── Two-step wizard: 1 = scheme & amount, 2 = your details form ──
+  const [step, setStep] = useState<1 | 2>(1);
 
   // Date of Birth state
   const today = new Date();
@@ -665,25 +685,45 @@ export default function SchemeJoinScreen() {
   }, []);
 
   // ── Pincode → auto-fill area / city / district / state ─────────
+  // NOTE: this previously called `.../pincode/\${pin}` — the escaped `$`
+  // meant the literal string "${pin}" was sent instead of the pincode, so
+  // the lookup silently failed for every user. Fixed below.
   const fetchPincode = async (pin: string) => {
-    if (pin.length !== 6) { setArea(''); setCity(''); setDistrict(''); setStateVal(''); return; }
+    if (pin.length !== 6) {
+      setArea(''); setCity(''); setDistrict(''); setStateVal(''); setPostOffices([]);
+      return;
+    }
     try {
       setPincodeLoading(true);
-      const res  = await fetch(`https://api.postalpincode.in/pincode/\${pin}`);
+      const res  = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
       const json = await res.json();
       const po   = json?.[0];
       if (po?.Status === 'Success' && po.PostOffice?.length > 0) {
-        const first = po.PostOffice[0];
-        setArea(first.Name     ?? '');
-        setCity(first.District ?? '');
-        setDistrict(first.District ?? '');
-        setStateVal(first.State ?? '');
+        const list: PostOffice[] = po.PostOffice;
+        setPostOffices(list);
+        // District/State are the same for every post office under a given
+        // pincode, so those can be filled in right away. "City" maps to the
+        // post office's Block (taluk/town) rather than the wider District.
+        setDistrict(list[0].District ?? '');
+        setStateVal(list[0].State ?? '');
+        if (list.length === 1) {
+          // Only one locality — no need to make the member pick.
+          setArea(list[0].Name ?? '');
+          setCity(list[0].Block ?? list[0].District ?? '');
+        } else {
+          // Multiple localities share this pincode: clear area/city so the
+          // "Select Your Area" dropdown below forces an explicit choice.
+          setArea('');
+          setCity('');
+        }
         clearErr('pincode');
       } else {
-        setFieldErrors(p => ({ ...p, pincode: 'Invalid pincode — no results found' }));
+        setArea(''); setCity(''); setDistrict(''); setStateVal(''); setPostOffices([]);
+        setFieldErrors(p => ({ ...p, pincode: 'Invalid pincode — no matching location found' }));
       }
     } catch {
-      setFieldErrors(p => ({ ...p, pincode: 'Could not fetch pincode data' }));
+      setArea(''); setCity(''); setDistrict(''); setStateVal(''); setPostOffices([]);
+      setFieldErrors(p => ({ ...p, pincode: 'Could not verify pincode. Check your internet connection.' }));
     } finally {
       setPincodeLoading(false);
     }
@@ -756,6 +796,8 @@ export default function SchemeJoinScreen() {
     gender !== '' &&
     doorStreet.trim().length > 3 &&
     pincode.trim().length === 6 &&
+    area.trim().length > 0 &&        // pincode must have actually resolved via the postal API
+    !fieldErrors.pincode &&
     effectiveAmount > 0 &&
     (!isFixed || selectedGroup !== null);
 
@@ -898,7 +940,7 @@ export default function SchemeJoinScreen() {
   const contentRef    = useRef<View>(null);
   const fieldNodeRefs = useRef<Record<string, any>>({});
   const registerField = (key: string) => (node: any) => { fieldNodeRefs.current[key] = node; };
-  const FIELD_ORDER = ['group','amount','name','mobile','email','aadhaar','pan','dob','gender','doorStreet','pincode','nominee','nomMobile'];
+  const FIELD_ORDER = ['group','amount','name','mobile','email','aadhaar','pan','dob','gender','doorStreet','pincode','area','nominee','nomMobile'];
   const scrollToFirstError = (errs: Record<string, string>) => {
     const key = FIELD_ORDER.find(k => errs[k]);
     const node = key ? fieldNodeRefs.current[key] : null;
@@ -911,6 +953,27 @@ export default function SchemeJoinScreen() {
       (_x: number, y: number) => scrollRef.current?.scrollTo({ y: Math.max(y - 28, 0), animated: true }),
       () => scrollRef.current?.scrollTo({ y: 0, animated: true }),
     );
+  };
+
+  // ── Step 1 → Step 2: only the amount/group needs to be valid here ──
+  const handleNextStep = () => {
+    const fe: Record<string, string> = {};
+    if (isFixed && !selectedGroup) fe.group  = 'Select a group';
+    if (effectiveAmount <= 0)      fe.amount = 'Select or enter amount';
+
+    if (Object.keys(fe).length > 0) {
+      setFieldErrors(fe);
+      toast.error('Please select an amount', {
+        message: fe.group ?? fe.amount,
+        position: 'top',
+        duration: 3000,
+      });
+      return;
+    }
+
+    setFieldErrors({});
+    setStep(2);
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
   };
 
   const handleSubmit = async () => {
@@ -927,11 +990,28 @@ export default function SchemeJoinScreen() {
     if (gender === '')                fe.gender   = 'Select gender';
     if (doorStreet.trim().length <= 3) fe.doorStreet = 'Enter door number and street';
     if (pincode.trim().length !== 6)  fe.pincode  = 'Enter a valid 6-digit pincode';
+    else if (pincodeLoading)          fe.pincode  = 'Please wait — verifying pincode…';
+    else if (!area.trim()) {
+      if (postOffices.length > 1)     fe.area     = 'Select your area / locality';
+      else                            fe.pincode  = 'Pincode could not be verified — re-enter it';
+    }
     if (effectiveAmount <= 0)         fe.amount   = 'Select or enter amount';
     if (isFixed && !selectedGroup)    fe.group    = 'Select a group';
 
     setFieldErrors(fe);
     if (Object.keys(fe).length > 0) {
+      // The amount/group fields live on step 1 — jump back there instead of
+      // scrolling to a field that isn't even mounted on step 2.
+      if (fe.group || fe.amount) {
+        setStep(1);
+        toast.error('Select an installment amount', {
+          message: fe.group ?? fe.amount,
+          position: 'top',
+          duration: 3500,
+        });
+        requestAnimationFrame(() => scrollRef.current?.scrollTo({ y: 0, animated: true }));
+        return;
+      }
       toast.error('Please check the form', {
         message: fe[FIELD_ORDER.find(k => fe[k]) ?? ''] ?? 'Some fields need attention.',
         position: 'top',
@@ -1000,6 +1080,47 @@ export default function SchemeJoinScreen() {
         <ScrollView ref={scrollRef} style={styles.scroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
          <View ref={contentRef} collapsable={false}>
 
+          {/* ── Step indicator ── */}
+          <View style={styles.stepIndicatorRow}>
+            <View style={styles.stepIndicatorItem}>
+              <View style={[
+                styles.stepDot,
+                {
+                  backgroundColor: step >= 1 ? COLORS.primary : COLORS.borderLight,
+                  borderColor: step >= 1 ? COLORS.primary : COLORS.borderMedium,
+                },
+              ]}>
+                {step > 1 ? (
+                  <Ionicons name="checkmark" size={13} color={COLORS.white} />
+                ) : (
+                  <Text style={[styles.stepDotText, { color: step === 1 ? COLORS.white : COLORS.textTertiary, fontFamily: FONTS.family.bold }]}>1</Text>
+                )}
+              </View>
+              <Text style={[styles.stepLabel, { color: step === 1 ? COLORS.primary : COLORS.textTertiary, fontFamily: FONTS.family.semiBold }]}>
+                Scheme & Amount
+              </Text>
+            </View>
+
+            <View style={[styles.stepConnector, { backgroundColor: step > 1 ? COLORS.primary : COLORS.borderLight }]} />
+
+            <View style={styles.stepIndicatorItem}>
+              <View style={[
+                styles.stepDot,
+                {
+                  backgroundColor: step === 2 ? COLORS.primary : COLORS.borderLight,
+                  borderColor: step === 2 ? COLORS.primary : COLORS.borderMedium,
+                },
+              ]}>
+                <Text style={[styles.stepDotText, { color: step === 2 ? COLORS.white : COLORS.textTertiary, fontFamily: FONTS.family.bold }]}>2</Text>
+              </View>
+              <Text style={[styles.stepLabel, { color: step === 2 ? COLORS.primary : COLORS.textTertiary, fontFamily: FONTS.family.semiBold }]}>
+                Your Details
+              </Text>
+            </View>
+          </View>
+
+          {step === 1 && (
+          <>
           {/* ── Scheme Summary ── */}
           <View style={[styles.schemeSummary, { backgroundColor: mColor + '0D', borderColor: mColor + '30' }]}>
             <View style={[styles.schemeIconWrap, { backgroundColor: mColor + '20' }]}>
@@ -1031,15 +1152,24 @@ export default function SchemeJoinScreen() {
             </Text>
 
             {isFixed ? (
-              <AmountDropdown
-                groups={groups}
-                selected={selectedGroup}
-                onSelect={setSelectedGroup}
-                loading={groupsLoading}
-                colors={COLORS}
-                fonts={FONTS}
-                shadows={SHADOWS}
-              />
+              <>
+                <AmountDropdown
+                  groups={groups}
+                  selected={selectedGroup}
+                  onSelect={(g) => { setSelectedGroup(g); clearErr('group'); }}
+                  loading={groupsLoading}
+                  colors={COLORS}
+                  fonts={FONTS}
+                  shadows={SHADOWS}
+                  error={fieldErrors.group}
+                />
+                {fieldErrors.group && (
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 6, gap: 4 }}>
+                    <Ionicons name="alert-circle-outline" size={12} color="#E53935" />
+                    <Text style={{ fontSize: 11, color: '#E53935', fontFamily: FONTS.family.regular }}>{fieldErrors.group}</Text>
+                  </View>
+                )}
+              </>
             ) : (
               <Field
                 ref={registerField('amount')}
@@ -1047,16 +1177,19 @@ export default function SchemeJoinScreen() {
                 icon="cash-outline"
                 value={customAmount}
                 placeholder="e.g. 1500"
-                onChangeText={(v) => setCustomAmount(v.replace(/[^0-9]/g, ''))}
+                onChangeText={(v) => { setCustomAmount(v.replace(/[^0-9]/g, '')); clearErr('amount'); }}
                 keyboardType="numeric"
+                error={fieldErrors.amount}
                 colors={COLORS}
                 fonts={FONTS}
               />
             )}
           </View>
+          </>
+          )}
 
-          <View style={[styles.divider, { backgroundColor: COLORS.borderLight }]} />
-
+          {step === 2 && (
+          <>
           {/* ── Customer Details ── */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>Customer Details</Text>
@@ -1197,7 +1330,13 @@ export default function SchemeJoinScreen() {
                 const p = v.replace(/[^0-9]/g,'').slice(0,6);
                 setPincode(p);
                 clearErr('pincode');
-                if (p.length === 6) fetchPincode(p);
+                if (p.length === 6) {
+                  fetchPincode(p);
+                } else {
+                  // Editing an already-resolved pincode — drop the stale
+                  // locality list/values until it's re-verified.
+                  setArea(''); setCity(''); setDistrict(''); setStateVal(''); setPostOffices([]);
+                }
               }}
               keyboardType="numeric"
               maxLength={6}
@@ -1206,6 +1345,48 @@ export default function SchemeJoinScreen() {
               indicator="required"
               colors={COLORS} fonts={FONTS}
             />
+
+            {/* ── Multiple localities share this pincode — make the member pick theirs ── */}
+            {postOffices.length > 1 && (
+              <View ref={registerField('area')} collapsable={false} style={styles.fieldWrap}>
+                <Text style={[styles.fieldLabel, { color: fieldErrors.area ? '#E53935' : COLORS.textSecondary, fontFamily: FONTS.family.medium }]}>
+                  Select Your Area / Locality *
+                </Text>
+                <Dropdown
+                  style={[
+                    styles.fieldBox,
+                    {
+                      borderColor: fieldErrors.area ? '#E53935' : area ? COLORS.primary : COLORS.borderLight,
+                      backgroundColor: fieldErrors.area ? '#FFEBEE' : area ? COLORS.primary + '05' : COLORS.card,
+                    },
+                  ]}
+                  data={postOffices.map((p) => ({ label: `${p.Name}${p.Block ? ` (${p.Block})` : ''}`, value: p.Name }))}
+                  labelField="label"
+                  valueField="value"
+                  placeholder={`${postOffices.length} localities found — select yours`}
+                  value={area}
+                  onChange={(item) => {
+                    setArea(item.value);
+                    const match = postOffices.find((p) => p.Name === item.value);
+                    setCity(match?.Block ?? match?.District ?? '');
+                    clearErr('area');
+                  }}
+                  placeholderStyle={{ color: COLORS.textTertiary, fontFamily: FONTS.family.regular, fontSize: 15 }}
+                  selectedTextStyle={{ color: COLORS.textPrimary, fontFamily: FONTS.family.medium, fontSize: 15 }}
+                  itemTextStyle={{ color: COLORS.textPrimary, fontFamily: FONTS.family.regular, fontSize: 15 }}
+                  renderLeftIcon={() => (
+                    <Ionicons name="location-outline" size={18} color={area ? COLORS.primary : COLORS.textTertiary} style={{ marginRight: 10 }} />
+                  )}
+                />
+                {fieldErrors.area && (
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4, gap: 4 }}>
+                    <Ionicons name="alert-circle-outline" size={12} color="#E53935" />
+                    <Text style={{ fontSize: 11, color: '#E53935', fontFamily: FONTS.family.regular }}>{fieldErrors.area}</Text>
+                  </View>
+                )}
+              </View>
+            )}
+
             {(area || city || district || stateVal) && (
               <View style={{
                 backgroundColor: COLORS.primary + '08',
@@ -1291,9 +1472,11 @@ export default function SchemeJoinScreen() {
             <View style={[styles.validationHint, { backgroundColor: COLORS.warning + '15', borderColor: COLORS.warning + '30' }]}>
               <Ionicons name="information-circle-outline" size={16} color={COLORS.warning} />
               <Text style={[styles.validationText, { color: COLORS.warning, fontFamily: FONTS.family.regular }]}>
-                Please fill all required fields (*) and select an amount to proceed.
+                Please fill all required fields (*) to continue.
               </Text>
             </View>
+          )}
+          </>
           )}
 
           <View style={{ height: 20 }} />
@@ -1302,6 +1485,19 @@ export default function SchemeJoinScreen() {
 
         {/* ── Fixed Footer ── */}
         <View style={[styles.footer, { backgroundColor: COLORS.background, borderTopColor: COLORS.borderLight, paddingBottom: Platform.OS === 'ios' ? 4 : 16 }]}>
+        {step === 1 ? (
+          <TouchableOpacity
+            style={[styles.submitBtn, { backgroundColor: COLORS.primary, ...SHADOWS.md }]}
+            onPress={handleNextStep}
+            activeOpacity={0.85}
+          >
+            <Text style={[styles.submitBtnText, { color: COLORS.white, fontFamily: FONTS.family.bold }]}>
+              Continue to Your Details
+            </Text>
+            <Ionicons name="arrow-forward" size={moderateScale(18)} color={COLORS.white} />
+          </TouchableOpacity>
+        ) : (
+        <>
           <View style={[styles.footerSummary, { backgroundColor: COLORS.primary + '0D', borderRadius: 12, marginBottom: 12 }]}>
             <View>
               <Text style={[styles.footerSummaryLabel, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>Selected Installment</Text>
@@ -1317,8 +1513,18 @@ export default function SchemeJoinScreen() {
             </View>
           </View>
 
+          <View style={styles.footerActionsRow}>
+            <TouchableOpacity
+              style={[styles.backBtnFooter, { borderColor: COLORS.borderLight }]}
+              onPress={() => setStep(1)}
+              disabled={isProcessing}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="arrow-back" size={moderateScale(18)} color={COLORS.textSecondary} />
+            </TouchableOpacity>
+
           <TouchableOpacity
-            style={[styles.submitBtn, { backgroundColor: isProcessing ? COLORS.borderLight : COLORS.primary, ...(!isProcessing ? SHADOWS.md : {}) }]}
+            style={[styles.submitBtn, { flex: 1, backgroundColor: isProcessing ? COLORS.borderLight : COLORS.primary, ...(!isProcessing ? SHADOWS.md : {}) }]}
             onPress={handleSubmit}
             disabled={isProcessing}
             activeOpacity={0.85}
@@ -1339,6 +1545,9 @@ export default function SchemeJoinScreen() {
               </>
             )}
           </TouchableOpacity>
+          </View>
+        </>
+        )}
         </View>
       </KeyboardAvoidingView>
 
@@ -1384,8 +1593,8 @@ export default function SchemeJoinScreen() {
 
 // ── iOS Date-of-Birth picker sheet ────────────────────────────────
 const iosDob = StyleSheet.create({
-  overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'flex-end' },
-  sheet:   { borderTopLeftRadius: 20, borderTopRightRadius: 20, paddingBottom: 24 },
+  overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'center', paddingHorizontal: 24 },
+  sheet:   { borderRadius: 20, paddingBottom: 24 },
   header:  { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16, borderBottomWidth: 1 },
   title:   { fontSize: 16 },
   done:    { fontSize: 16 },
@@ -1401,6 +1610,18 @@ const styles = StyleSheet.create({
   headerSub:          { fontSize: 12, marginTop: 2, opacity: 0.7 },
   scroll:             { flex: 1 },
   scrollContent:      { paddingHorizontal: 16, paddingTop: 20, paddingBottom: 20 },
+
+  // Step indicator
+  stepIndicatorRow:   { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
+  stepIndicatorItem:  { alignItems: 'center', gap: 6 },
+  stepDot:            { width: 28, height: 28, borderRadius: 14, borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
+  stepDotText:        { fontSize: 12 },
+  stepLabel:          { fontSize: 10.5, letterSpacing: 0.2 },
+  stepConnector:      { flex: 1, height: 2, marginHorizontal: 8, marginBottom: 18, borderRadius: 1 },
+
+  // Footer step-2 actions
+  footerActionsRow:   { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  backBtnFooter:      { width: 52, height: 52, borderRadius: 14, borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
 
   schemeSummary:      { flexDirection: 'row', alignItems: 'center', padding: 14, borderRadius: 14, borderWidth: 1, marginBottom: 24, gap: 12 },
   schemeIconWrap:     { width: 42, height: 42, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
@@ -1421,8 +1642,8 @@ const styles = StyleSheet.create({
   groupInfoRow:       { alignItems: 'center', gap: 4 },
   groupInfoLabel:     { fontSize: 11 },
   groupInfoValue:     { fontSize: 14 },
-  dropdownOverlay:    { flex: 1, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'flex-end' },
-  dropdownSheet:      { borderTopLeftRadius: 20, borderTopRightRadius: 20, maxHeight: '60%' },
+  dropdownOverlay:    { flex: 1, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'center', paddingHorizontal: 24 },
+  dropdownSheet:      { borderRadius: 20, maxHeight: '60%' },
   dropdownHeader:     { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 18, borderBottomWidth: 1 },
   dropdownHeaderTitle:{ fontSize: 16 },
   dropdownItem:       { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 16, borderBottomWidth: 1, gap: 12 },

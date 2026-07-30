@@ -179,7 +179,7 @@ function Row({ label, value, valueColor, last }: { label: string; value: string;
 }
 
 // ── Payment history — bank-statement style transaction card ──────
-function TransactionCard({ item, isLast }: { item: PaymentHistory; isLast: boolean }) {
+function TransactionCard({ item, isLast, onView }: { item: PaymentHistory; isLast: boolean; onView: () => void }) {
   const { COLORS, FONTS, SIZES } = useTheme();
   const method = paymentMethod(item);
 
@@ -209,9 +209,19 @@ function TransactionCard({ item, isLast }: { item: PaymentHistory; isLast: boole
             <Text style={[s.txnAmount, { color: COLORS.success, fontFamily: FONTS.family.bold, fontSize: SIZES.font.lg }]}>
               +{currency(item.amount)}
             </Text>
-            <View style={[s.statusPill, { backgroundColor: COLORS.success + '16' }]}>
-              <View style={[s.statusDot, { backgroundColor: COLORS.success }]} />
-              <Text style={[s.statusPillTxt, { color: COLORS.success, fontFamily: FONTS.family.semiBold }]}>PAID</Text>
+            <View style={s.txnStatusRow}>
+              <View style={[s.statusPill, { backgroundColor: COLORS.success + '16' }]}>
+                <View style={[s.statusDot, { backgroundColor: COLORS.success }]} />
+                <Text style={[s.statusPillTxt, { color: COLORS.success, fontFamily: FONTS.family.semiBold }]}>PAID</Text>
+              </View>
+              <TouchableOpacity
+                style={[s.txnViewBtn, { backgroundColor: COLORS.primary + '14', borderColor: COLORS.primary + '30' }]}
+                activeOpacity={0.75}
+                onPress={onView}
+                hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
+              >
+                <Ionicons name="eye-outline" size={13} color={COLORS.primary} />
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -345,7 +355,7 @@ export default function SchemePassbook() {
   const visibleDueDates = dueExpanded ? remainingDueDates : remainingDueDates.slice(0, 1);
 
   return (
-    <SafeAreaView style={[s.flex, { backgroundColor: COLORS.background }]} edges={['top']}>
+    <SafeAreaView style={[s.flex, { backgroundColor: COLORS.background }]} edges={['top', 'bottom']}>
       <SubPageHeader title="Scheme Passbook" subtitle={ppData.schemeSummary?.schemeName} />
 
       <ScrollView
@@ -477,30 +487,7 @@ export default function SchemePassbook() {
           />
           <Row label="Country" value={ppData.personalInfo?.country ?? '—'} last />
         </Section>
-
-        {/* ── Scheme details ────────────────────────────────── */}
-        <Section title="Scheme Details" icon="document-text-outline">
-          <Row label="Scheme Name" value={ppData.schemeSummary?.schemeName ?? '—'} />
-          <Row label="Scheme Code" value={ppData.schemeSummary?.schemeSName ?? '—'} />
-          <Row label="Group Code" value={ppData.groupCode ?? '—'} />
-          <Row label="Total Installments" value={String(ppData.schemeSummary?.instalment ?? '—')} />
-          {/* <Row label="Installments Paid" value={String(paid)} />
-          <Row label="Join Date" value={formatDate(ppData.joinDate)} />
-          <Row label="Maturity Date" value={formatDate(ppData.maturityDate)} /> */}
-          {/* <Row
-            label="Next Due Date"
-            value={done ? 'Completed' : formatDate(ppData.nextDueDate)}
-            valueColor={done ? COLORS.success : undefined}
-          />
-          <Row label="Last Paid Date" value={formatDate(ppData.lastPaidDate)} /> */}
-          <Row
-            label="Installments Remaining"
-            value={done ? 'Completed' : String(remainingInstallments)}
-            valueColor={done ? COLORS.success : COLORS.primary}
-            last
-          />
-        </Section>
-
+        
         {/* ── Payment summary ───────────────────────────────── */}
         <Section title="Payment Summary" icon="wallet-outline">
           <Row label="Amount Received" value={currency(bal?.amtrecd)} />
@@ -540,6 +527,7 @@ export default function SchemePassbook() {
                   key={`${item.receiptNo}-${idx}`}
                   item={item}
                   isLast={idx === history.length - 1}
+                  onView={() => navigation.navigate('PaymentReceipt', { ppData, payment: item })}
                 />
               ))}
             </View>
@@ -687,9 +675,14 @@ const s = StyleSheet.create({
   txnTitle: { marginBottom: 2 },
   txnSub: { fontSize: 10.5 },
   txnAmount: { marginBottom: 4 },
+  txnStatusRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   statusPill: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8 },
   statusDot: { width: 5, height: 5, borderRadius: 3 },
   statusPillTxt: { fontSize: 9, letterSpacing: 0.4 },
+  txnViewBtn: {
+    width: 22, height: 22, borderRadius: 8, borderWidth: 1,
+    alignItems: 'center', justifyContent: 'center',
+  },
   txnDivider: { height: 1, marginVertical: 10 },
   txnFooter: { flexDirection: 'row', flexWrap: 'wrap', gap: 18 },
   txnFooterItem: {},

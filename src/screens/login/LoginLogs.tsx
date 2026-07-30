@@ -135,7 +135,7 @@ export default function LoginLogsScreen() {
   }, [users, query]);
 
   return (
-    <SafeAreaView style={[s.container, { backgroundColor: COLORS.background }]} edges={['top']}>
+    <SafeAreaView style={[s.container, { backgroundColor: COLORS.background }]} edges={['top', 'bottom']}>
       <SubPageHeader title="Login Logs" subtitle={`${users.length} record${users.length !== 1 ? 's' : ''}`} />
 
       {/* Search */}
@@ -201,7 +201,7 @@ const s = StyleSheet.create({
   searchBox:   { flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1, borderRadius: 12, paddingHorizontal: 12, height: 46 },
   searchInput: { flex: 1, fontSize: 14, height: '100%' },
 
-  listContent: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 24, gap: 10 },
+  listContent: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 40, gap: 10 },
 
   card:      { flexDirection: 'row', alignItems: 'center', gap: 12, borderRadius: 14, borderWidth: 1, padding: 14 },
   avatar:    { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },

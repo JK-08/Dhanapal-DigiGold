@@ -13,7 +13,7 @@ import {
   handleBackgroundOpenedApp,
 } from '../utils/NotificationHandler';
 import { ApiScheme } from '../types/Scheme/Scheme';
-import { PPData } from '../types/Account/PhoneDetails';
+import { PPData, PaymentHistory } from '../types/Account/PhoneDetails';
 
 // SchemeItem = the real API shape (used as nav param for T&C + Join screens)
 export type SchemeItem = ApiScheme;
@@ -37,10 +37,12 @@ export type RootStackParamList = {
   WebView:                 { url: string; title?: string };
   Notifications:           undefined;
   ProfileScreen:           undefined;
+  SchemeDetails:           { scheme: SchemeItem };
   SchemeTerms:             { scheme: SchemeItem };
   SchemeJoin:              { scheme: SchemeItem };
   PayInstallment:          { ppData: PPData };
   SchemePassbook:          { ppData: PPData };
+  PaymentReceipt:          { ppData: PPData; payment: PaymentHistory };
   Rates:                   { metal?: 'Gold' | 'Silver' };
   Faq:                     undefined;
 };
@@ -125,10 +127,12 @@ export default function RootNavigator() {
         <Stack.Screen name="WebView"                 component={Screens.WebViewComponent} />
         <Stack.Screen name="Notifications"            component={Screens.NotificationScreen} />
         <Stack.Screen name="ProfileScreen"            component={Screens.ProfileScreen} />
+        <Stack.Screen name="SchemeDetails"    component={Screens.SchemeDetailsScreen}    options={{ animation: 'slide_from_right' }} />
         <Stack.Screen name="SchemeTerms"      component={Screens.SchemeTermsScreen}      options={{ animation: 'slide_from_right' }} />
         <Stack.Screen name="SchemeJoin"       component={Screens.SchemeJoinScreen}       options={{ animation: 'slide_from_right' }} />
         <Stack.Screen name="PayInstallment"   component={Screens.PayInstallmentScreen}   options={{ animation: 'slide_from_right' }} />
         <Stack.Screen name="SchemePassbook"   component={Screens.SchemePassbookScreen}   options={{ animation: 'slide_from_right' }} />
+        <Stack.Screen name="PaymentReceipt"   component={Screens.PaymentReceiptScreen}   options={{ animation: 'slide_from_right' }} />
         <Stack.Screen name="Rates"            component={Screens.RatesScreen}            options={{ animation: 'slide_from_bottom', headerShown: false }} />
         <Stack.Screen name="LoginLog"            component={Screens.LoginLog} />
         <Stack.Screen name="Faq"              component={Screens.FaqScreen}              options={{ animation: 'slide_from_right' }} />

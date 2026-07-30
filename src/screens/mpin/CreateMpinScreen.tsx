@@ -1,7 +1,8 @@
 // src/screens/mpin/CreateMpinScreen.tsx
 
 import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { COLORS, FONTS, SIZES, SHADOWS } from '../../theme/theme';
@@ -75,7 +76,7 @@ export default function CreateMpinScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }} edges={['top', 'bottom']}>
       <AppLoader visible={loading} message="Creating MPIN..." />
       <AppHeader title="Create MPIN"  />
 

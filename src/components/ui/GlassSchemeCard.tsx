@@ -172,7 +172,7 @@ export default function GlassSchemeCard({ item, width }: { item: PPData; index?:
             >
               <Ionicons name="book-outline" size={15} color={COLORS.white} />
               <Text style={[glass.btnGhostTxt, { fontFamily: FONTS.family.bold }]}>
-                Passbook
+                View Details
               </Text>
             </TouchableOpacity>
             {!done && (

@@ -176,19 +176,21 @@ export default function HomeScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.background }}>
-      <MainHeader onProfilePress={() => navigation.navigate('Profile' as any)} />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: 24, paddingBottom: 32 }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
+
+        {/* Header — inside scroll so it scrolls away */}
+        <MainHeader onProfilePress={() => navigation.navigate('Profile' as any)} />
 
 
         {/* Banner */}
-        <View style={{ paddingHorizontal: SIZES.padding.container }}>
+        <View style={{ paddingHorizontal: SIZES.padding.container, marginTop: 24 }}>
           <HomeBanner />
         </View>
 
 
         {/* ── My Joined Schemes ── */}
-        <View>
+        <View style={{ marginTop: 24 }}>
           <View style={{ paddingHorizontal: SIZES.padding.container }}>
             <SectionHeader
               title="My Schemes"
@@ -278,7 +280,7 @@ export default function HomeScreen() {
         </View>
 
         {/* ── All Schemes (full-width slider) ── */}
-        <View>
+        <View style={{ marginTop: 24 }}>
           <View style={{ paddingHorizontal: SIZES.padding.container }}>
             <SectionHeader
               title="All Schemes"

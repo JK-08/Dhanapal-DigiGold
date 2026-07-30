@@ -1,7 +1,8 @@
 // src/screens/googlelogin/GoogleContactVerifyOTPScreen.tsx
 
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Platform, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useOtpVerify, removeListener } from 'react-native-otp-verify';
@@ -101,7 +102,7 @@ export default function GoogleContactVerifyOTPScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }} edges={['top', 'bottom']}>
       <AppHeader title="Verify Mobile" showBack variant="white" />
       <View style={[styles.content, { paddingHorizontal: SIZES.padding.xl }]}>
         <View style={styles.header}>

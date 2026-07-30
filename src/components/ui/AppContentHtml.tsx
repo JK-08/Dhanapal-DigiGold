@@ -17,11 +17,12 @@ interface Props {
   error: string | null;
   onRetry?: () => void;
   minHeight?: number;
+  bannerHtml?: string;
 }
 
 // Wrap the raw HTML fragment with a responsive viewport + base styling so it
 // reads well inside the app without any extra work from whoever authored it.
-const wrapHtml = (bodyHtml: string, textColor: string, bgColor: string) => `
+const wrapHtml = (bodyHtml: string, textColor: string, bgColor: string, bannerHtml = '') => `
 <!DOCTYPE html>
 <html>
   <head>
@@ -42,10 +43,10 @@ const wrapHtml = (bodyHtml: string, textColor: string, bgColor: string) => `
       td, th { padding: 6px; border: 1px solid rgba(128,128,128,0.3); }
     </style>
   </head>
-  <body>${bodyHtml}</body>
+  <body>${bannerHtml}${bodyHtml}</body>
 </html>`;
 
-export default function AppContentHtml({ html, loading, error, onRetry, minHeight = 300 }: Props) {
+export default function AppContentHtml({ html, loading, error, onRetry, minHeight = 300, bannerHtml = '' }: Props) {
   const { COLORS } = useTheme();
 
   if (loading) {
@@ -76,7 +77,7 @@ export default function AppContentHtml({ html, loading, error, onRetry, minHeigh
 
   return (
     <WebView
-      source={{ html: wrapHtml(html, COLORS.textPrimary, COLORS.background) }}
+      source={{ html: wrapHtml(html, COLORS.textPrimary, COLORS.background, bannerHtml) }}
       style={{ flex: 1, backgroundColor: 'transparent' }}
       originWhitelist={['*']}
     />
