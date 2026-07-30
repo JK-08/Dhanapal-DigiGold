@@ -19,7 +19,7 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { useTheme } from '../../theme';
 import { ratesService } from '../../api/services/ratesService';
 import { RatesResponse, MetalRates, RateEntry } from '../../types/Rates/Rates';
-import PoweredByFooter from '../../components/ui/PoweredByFooter';
+
 import { RootStackParamList } from '../../navigation/RootNavigator';
 import SubPageHeader from '../../components/ui/SubPageHeader';
 
@@ -31,7 +31,7 @@ const CHART_H = 180;
 type Metal = 'Gold' | 'Silver';
 
 // ── SVG Line Chart ────────────────────────────────────────────────
-function RateChart({ data, color }: { data: RateEntry[]; color: string }) {
+function RateChart({ data, color, labelColor }: { data: RateEntry[]; color: string; labelColor: string }) {
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
 
   if (!data || data.length < 2) return null;
@@ -119,7 +119,7 @@ function RateChart({ data, color }: { data: RateEntry[]; color: string }) {
         {/* X axis labels */}
         {labels.map(({ x, y, label }) => (
           <SvgText key={label} x={x} y={y} textAnchor="middle"
-            fontSize="9" fill="#9CA3AF">
+            fontSize="9" fill={labelColor}>
             {label}
           </SvgText>
         ))}
@@ -147,6 +147,8 @@ function RateRow({ entry, isLast, colors, fonts }: {
   entry: RateEntry; isLast: boolean; colors: any; fonts: any;
 }) {
   const up = entry.changePct >= 0;
+  const upColor = colors.success;
+  const downColor = colors.error;
   return (
     <View style={[rr.row, !isLast && { borderBottomWidth: 1, borderBottomColor: colors.borderLight }]}>
       <Text style={[rr.date, { color: colors.textSecondary, fontFamily: fonts.family.regular }]}>
@@ -156,11 +158,11 @@ function RateRow({ entry, isLast, colors, fonts }: {
         ₹{entry.rate.toLocaleString('en-IN')}
       </Text>
       <View style={rr.changeCell}>
-        <Ionicons name={up ? 'caret-up' : 'caret-down'} size={10} color={up ? '#22C55E' : '#EF4444'} />
-        <Text style={[rr.changeTxt, { color: up ? '#22C55E' : '#EF4444', fontFamily: fonts.family.medium }]}>
+        <Ionicons name={up ? 'caret-up' : 'caret-down'} size={10} color={up ? upColor : downColor} />
+        <Text style={[rr.changeTxt, { color: up ? upColor : downColor, fontFamily: fonts.family.medium }]}>
           {up ? '+' : ''}{entry.change.toLocaleString('en-IN')}
         </Text>
-        <Text style={[rr.pctTxt, { color: up ? '#22C55E' : '#EF4444', fontFamily: fonts.family.regular }]}>
+        <Text style={[rr.pctTxt, { color: up ? upColor : downColor, fontFamily: fonts.family.regular }]}>
           ({up ? '+' : ''}{entry.changePct.toFixed(2)}%)
         </Text>
       </View>
@@ -208,8 +210,8 @@ export default function RatesScreen() {
   };
 
   const metal: MetalRates | null = rates ? rates[activeMetal === 'Gold' ? 'gold' : 'silver'] : null;
-  const goldColor   = '#A8CFA8';
-  const silverColor = '#7A8FA6';
+  const goldColor   = COLORS.goldPrimary;
+  const silverColor = COLORS.secondary;
   const activeColor = activeMetal === 'Gold' ? goldColor : silverColor;
   const isUp        = (metal?.changePct ?? 0) >= 0;
 
@@ -264,9 +266,9 @@ export default function RatesScreen() {
                     {metal.purity}
                   </Text>
                 </View>
-                <View style={[s.changePill, { backgroundColor: isUp ? '#22C55E18' : '#EF444418', borderColor: isUp ? '#22C55E40' : '#EF444440' }]}>
-                  <Ionicons name={isUp ? 'trending-up' : 'trending-down'} size={14} color={isUp ? '#22C55E' : '#EF4444'} />
-                  <Text style={[s.changePillTxt, { color: isUp ? '#22C55E' : '#EF4444', fontFamily: FONTS.family.semiBold }]}>
+                <View style={[s.changePill, { backgroundColor: isUp ? COLORS.success + '18' : COLORS.error + '18', borderColor: isUp ? COLORS.success + '40' : COLORS.error + '40' }]}>
+                  <Ionicons name={isUp ? 'trending-up' : 'trending-down'} size={14} color={isUp ? COLORS.success : COLORS.error} />
+                  <Text style={[s.changePillTxt, { color: isUp ? COLORS.success : COLORS.error, fontFamily: FONTS.family.semiBold }]}>
                     {isUp ? '+' : ''}{metal.changePct.toFixed(2)}%
                   </Text>
                 </View>
@@ -279,8 +281,8 @@ export default function RatesScreen() {
                 ₹{metal.currentRate.toLocaleString('en-IN')}
               </Text>
               <View style={s.changeRow}>
-                <Ionicons name={isUp ? 'caret-up' : 'caret-down'} size={12} color={isUp ? '#22C55E' : '#EF4444'} />
-                <Text style={[s.changeAbs, { color: isUp ? '#22C55E' : '#EF4444', fontFamily: FONTS.family.medium }]}>
+                <Ionicons name={isUp ? 'caret-up' : 'caret-down'} size={12} color={isUp ? COLORS.success : COLORS.error} />
+                <Text style={[s.changeAbs, { color: isUp ? COLORS.success : COLORS.error, fontFamily: FONTS.family.medium }]}>
                   {isUp ? '+' : ''}₹{Math.abs(metal.change).toLocaleString('en-IN')} today
                 </Text>
                 <Text style={[s.updatedAt, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
@@ -300,7 +302,7 @@ export default function RatesScreen() {
                 </Text>
               </View>
               <View style={{ marginTop: 8, marginLeft: -4 }}>
-                <RateChart data={metal.history} color={activeColor} />
+                <RateChart data={metal.history} color={activeColor} labelColor={COLORS.textTertiary} />
               </View>
             </View>
 
@@ -328,7 +330,6 @@ export default function RatesScreen() {
           </>
         )}
 
-        <PoweredByFooter />
       </ScrollView>
     </SafeAreaView>
   );

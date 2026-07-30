@@ -11,24 +11,34 @@ import {
   StatusBar,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../../theme';
 import { useAppSelector } from '../../store/hooks';
+import LiveRateCard from './LiveRateCard';
 import LOGO from '../../assets/company/logo.png';
 
 type Props = {
-  onMenuPress?: () => void;
   onProfilePress?: () => void;
-  location?: string;
+  onNotificationPress?: () => void;
+  onRatesPress?: (metal: 'Gold' | 'Silver') => void;
 };
 
-export default function MainHeader({ onMenuPress, onProfilePress}: Props) {
+export default function MainHeader({ onProfilePress, onNotificationPress, onRatesPress }: Props) {
   const { COLORS, FONTS, SIZES, moderateScale, verticalScale } = useTheme();
+  const navigation = useNavigation<any>();
   const user = useAppSelector((s) => s.auth.user);
   const firstName = user?.username ?? 'User';
   const profilePic = (user as any)?.profilePic ?? (user as any)?.picture ?? null;
 
+  const goToRates = (metal: 'Gold' | 'Silver') =>
+    onRatesPress ? onRatesPress(metal) : navigation.navigate('Rates', { metal });
+
+  const goToNotifications = () =>
+    onNotificationPress ? onNotificationPress() : navigation.navigate('Notifications');
+
+  // ── Entrance animations ──
   const slideY = useRef(new Animated.Value(-40)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const stripSlide = useRef(new Animated.Value(-20)).current;
@@ -39,7 +49,6 @@ export default function MainHeader({ onMenuPress, onProfilePress}: Props) {
       Animated.spring(slideY, { toValue: 0, useNativeDriver: true, damping: 18, stiffness: 150 }),
       Animated.timing(fadeAnim, { toValue: 1, duration: 350, useNativeDriver: true }),
     ]).start(() => {
-      // Greeting strip animates in after header settles
       Animated.parallel([
         Animated.spring(stripSlide, { toValue: 0, useNativeDriver: true, damping: 16, stiffness: 120 }),
         Animated.timing(stripFade, { toValue: 1, duration: 300, useNativeDriver: true }),
@@ -109,23 +118,29 @@ export default function MainHeader({ onMenuPress, onProfilePress}: Props) {
               </View>
             </View>
 
-            {/* RIGHT: profile avatar → Profile tab (Google picture, else name initial) */}
-            <AnimatedIconButton onPress={onProfilePress} bg={COLORS.whiteOpacity20} size={moderateScale(42)}>
-              {profilePic ? (
-                <Image
-                  source={{ uri: profilePic }}
-                  style={{ width: moderateScale(32), height: moderateScale(32), borderRadius: moderateScale(16) }}
-                />
-              ) : (
-                <Text style={{
-                  fontFamily: FONTS.family.bold,
-                  fontSize: moderateScale(18),
-                  color: COLORS.white,
-                }}>
-                  {(firstName?.[0] ?? 'U').toUpperCase()}
-                </Text>
-              )}
-            </AnimatedIconButton>
+            {/* RIGHT: notification bell + profile avatar */}
+            <View style={styles.rightContainer}>
+              <AnimatedIconButton onPress={goToNotifications} bg={COLORS.whiteOpacity20} size={moderateScale(40)}>
+                <Ionicons name="notifications-outline" size={moderateScale(19)} color={COLORS.white} />
+              </AnimatedIconButton>
+
+              <AnimatedIconButton onPress={onProfilePress} bg={COLORS.whiteOpacity20} size={moderateScale(42)}>
+                {profilePic ? (
+                  <Image
+                    source={{ uri: profilePic }}
+                    style={{ width: moderateScale(32), height: moderateScale(32), borderRadius: moderateScale(16) }}
+                  />
+                ) : (
+                  <Text style={{
+                    fontFamily: FONTS.family.bold,
+                    fontSize: moderateScale(18),
+                    color: COLORS.white,
+                  }}>
+                    {(firstName?.[0] ?? 'U').toUpperCase()}
+                  </Text>
+                )}
+              </AnimatedIconButton>
+            </View>
           </Animated.View>
 
           {/* ── Greeting strip (inside gradient, below header row) ── */}
@@ -134,13 +149,12 @@ export default function MainHeader({ onMenuPress, onProfilePress}: Props) {
               styles.greetingStrip,
               {
                 paddingHorizontal: SIZES.padding.container,
-                paddingBottom: verticalScale(12),
+                paddingBottom: verticalScale(30),
                 transform: [{ translateY: stripSlide }],
                 opacity: stripFade,
               },
             ]}
           >
-            {/* Locatiing row */}
             <View style={styles.greetingRow}>
               <Text style={{
                 fontFamily: FONTS.family.semiBold ?? FONTS.family.bold,
@@ -153,6 +167,15 @@ export default function MainHeader({ onMenuPress, onProfilePress}: Props) {
           </Animated.View>
         </SafeAreaView>
       </LinearGradient>
+
+      {/* ── Floating live-rate card (overlaps gradient bottom edge) ── */}
+      <LiveRateCard
+        onRatesPress={goToRates}
+        style={{
+          marginTop: -verticalScale(26),
+          paddingHorizontal: SIZES.padding.container,
+        }}
+      />
     </>
   );
 }
@@ -197,6 +220,11 @@ const styles = StyleSheet.create({
     gap: 12,
     flex: 1,
   },
+  rightContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
   brandContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -236,13 +264,6 @@ const styles = StyleSheet.create({
   },
   greetingStrip: {
     gap: 2,
-  },
-  locationRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  locationText: {
-    opacity: 0.85,
   },
   greetingRow: {
     flexDirection: 'row',

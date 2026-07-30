@@ -40,6 +40,7 @@ export type RootStackParamList = {
   SchemeTerms:             { scheme: SchemeItem };
   SchemeJoin:              { scheme: SchemeItem };
   PayInstallment:          { ppData: PPData };
+  SchemePassbook:          { ppData: PPData };
   Rates:                   { metal?: 'Gold' | 'Silver' };
   Faq:                     undefined;
 };
@@ -55,7 +56,7 @@ export default function RootNavigator() {
 
   useEffect(() => {
     (async () => {
-      AsyncStorageHelper.clearAll(); // --- IGNORE --- TEMP: Clear storage on every app start for testing
+      // AsyncStorageHelper.clearAll(); // --- IGNORE --- TEMP: Clear storage on every app start for testing
       const onboarded = await AsyncStorageHelper.isOnboarded();
       const token     = await AsyncStorageHelper.getToken();
       const mpinSet   = await AsyncStorageHelper.isMpinSet();
@@ -127,6 +128,7 @@ export default function RootNavigator() {
         <Stack.Screen name="SchemeTerms"      component={Screens.SchemeTermsScreen}      options={{ animation: 'slide_from_right' }} />
         <Stack.Screen name="SchemeJoin"       component={Screens.SchemeJoinScreen}       options={{ animation: 'slide_from_right' }} />
         <Stack.Screen name="PayInstallment"   component={Screens.PayInstallmentScreen}   options={{ animation: 'slide_from_right' }} />
+        <Stack.Screen name="SchemePassbook"   component={Screens.SchemePassbookScreen}   options={{ animation: 'slide_from_right' }} />
         <Stack.Screen name="Rates"            component={Screens.RatesScreen}            options={{ animation: 'slide_from_bottom', headerShown: false }} />
         <Stack.Screen name="LoginLog"            component={Screens.LoginLog} />
         <Stack.Screen name="Faq"              component={Screens.FaqScreen}              options={{ animation: 'slide_from_right' }} />
