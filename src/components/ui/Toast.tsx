@@ -79,7 +79,7 @@ function useTypeConfig(): Record<ToastType, TypeCfg> {
     warning: { icon: 'warning',              bg: '#2A1E0A', accent: COLORS.warning,   textColor: '#FFD39A' },
     info:    { icon: 'information-circle',   bg: '#0D1F35', accent: COLORS.info,      textColor: '#B8D4F9' },
     gold:    { icon: 'star',                 bg: '#1A1209', accent: COLORS.secondary, textColor: COLORS.secondaryLighter },
-    loading: { icon: 'sync-circle',          bg: '#0F1117', accent: COLORS.primary,   textColor: COLORS.primaryLighter },
+    loading: { icon: 'sync-circle',          bg: '#0F1117', accent: COLORS.brand,   textColor: COLORS.brandSoft },
   };
 }
 

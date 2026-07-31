@@ -39,13 +39,13 @@ export default function AppAvatar({
   const initials = getInitials(name);
 
   const content = (
-    <View style={[{ width: sz, height: sz, borderRadius: br, overflow: 'hidden', backgroundColor: COLORS.primaryPale, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: COLORS.primaryLighter }, style]}>
+    <View style={[{ width: sz, height: sz, borderRadius: br, overflow: 'hidden', backgroundColor: COLORS.brandTint, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: COLORS.brandSoft }, style]}>
       {source?.uri ? (
         <Image source={source} style={{ width: sz, height: sz }} resizeMode="cover" />
       ) : initials ? (
-        <Text style={{ fontFamily: FONTS.family.bold, fontSize: fs, color: COLORS.primary }}>{initials}</Text>
+        <Text style={{ fontFamily: FONTS.family.bold, fontSize: fs, color: COLORS.brand }}>{initials}</Text>
       ) : (
-        <Ionicons name="person" size={sz * 0.5} color={COLORS.primaryLight} />
+        <Ionicons name="person" size={sz * 0.5} color={COLORS.brandMuted} />
       )}
     </View>
   );
@@ -61,7 +61,7 @@ export default function AppAvatar({
       )}
 
       {showEdit && (
-        <TouchableOpacity onPress={onEditPress} style={[styles.editBtn, { width: editSz, height: editSz, borderRadius: editSz / 2, backgroundColor: COLORS.primary, borderColor: COLORS.white }]}>
+        <TouchableOpacity onPress={onEditPress} style={[styles.editBtn, { width: editSz, height: editSz, borderRadius: editSz / 2, backgroundColor: COLORS.brand, borderColor: COLORS.white }]}>
           <Ionicons name="camera" size={editSz * 0.45} color={COLORS.white} />
         </TouchableOpacity>
       )}

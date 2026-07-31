@@ -151,16 +151,16 @@ function CenterTab({ item, isActive, onPress }: { item: TabItem; isActive: boole
           <Animated.View style={[
             styles.centerFabRing,
             {
-              backgroundColor: isActive ? COLORS.primary + '25' : 'transparent',
+              backgroundColor: isActive ? COLORS.brand + '25' : 'transparent',
               transform: [{ scale: pulseAnim }],
             }
           ]} />
           <Animated.View style={[
             styles.centerFab,
             {
-              backgroundColor: isActive ? COLORS.primary : COLORS.white,
-              borderColor: isActive ? COLORS.primary : COLORS.borderLight,
-              shadowColor: isActive ? COLORS.primary : '#000',
+              backgroundColor: isActive ? COLORS.brand : COLORS.white,
+              borderColor: isActive ? COLORS.brand : COLORS.borderSubtle,
+              shadowColor: isActive ? COLORS.brand : '#000',
               shadowOffset: { width: 0, height: isActive ? 4 : 2 },
               shadowOpacity: isActive ? 0.2 : 0.05,
               shadowRadius: isActive ? 8: 4,
@@ -170,7 +170,7 @@ function CenterTab({ item, isActive, onPress }: { item: TabItem; isActive: boole
             <Ionicons 
               name={isActive ? 'home' : 'home-outline'} 
               size={moderateScale(28)} 
-              color={isActive ? COLORS.white : COLORS.textTertiary} 
+              color={isActive ? COLORS.white : COLORS.contentMuted} 
             />
           </Animated.View>
         </Animated.View>
@@ -178,7 +178,7 @@ function CenterTab({ item, isActive, onPress }: { item: TabItem; isActive: boole
       <Text style={[
         styles.centerLabel, 
         { 
-          color: isActive ? COLORS.primary : COLORS.textTertiary,
+          color: isActive ? COLORS.brand : COLORS.contentMuted,
           fontFamily: isActive ? 'Poppins-SemiBold' : 'Poppins-Medium',
         }
       ]}>
@@ -249,7 +249,7 @@ function RegularTab({ item, isActive, onPress }: { item: TabItem; isActive: bool
           <Ionicons
             name={isActive ? item.iconActive : item.icon}
             size={moderateScale(24)}
-            color={isActive ? COLORS.primary : COLORS.textTertiary}
+            color={isActive ? COLORS.brand : COLORS.contentMuted}
           />
           {item.badge !== undefined && (
             <BadgeDot count={item.badge} errorColor={COLORS.error} whiteColor={COLORS.white} />
@@ -259,7 +259,7 @@ function RegularTab({ item, isActive, onPress }: { item: TabItem; isActive: bool
         <Text style={[
           styles.tabLabel,
           {
-            color: isActive ? COLORS.primary : COLORS.textTertiary,
+            color: isActive ? COLORS.brand : COLORS.contentMuted,
             fontFamily: isActive ? FONTS.family.semiBold : FONTS.family.regular,
             fontSize: SIZES.font.xs,
           },
@@ -270,7 +270,7 @@ function RegularTab({ item, isActive, onPress }: { item: TabItem; isActive: bool
         <Animated.View style={[
           styles.activeLine,
           {
-            backgroundColor: COLORS.primary,
+            backgroundColor: COLORS.brand,
             transform: [{ scaleX: lineScale }],
           }
         ]} />
@@ -296,7 +296,7 @@ function CustomTabBar({ state, navigation }: any) {
         {
           height: TAB_BAR_H,
           backgroundColor: COLORS.white,
-          borderTopColor: COLORS.borderLight,
+          borderTopColor: COLORS.borderSubtle,
           paddingHorizontal: SIZES.padding.sm,
           shadowColor: COLORS.shadow,
           shadowOffset: { width: 0, height: -1 },
@@ -306,13 +306,13 @@ function CustomTabBar({ state, navigation }: any) {
         },
       ]}>
         {/* Top accent line */}
-        <View style={[styles.topAccent, { backgroundColor: COLORS.primary }]} />
+        <View style={[styles.topAccent, { backgroundColor: COLORS.brand }]} />
         
         {/* Decorative dots */}
         <View style={styles.decorativeDots}>
-          <View style={[styles.dot, { backgroundColor: COLORS.primary + '15' }]} />
-          <View style={[styles.dot, { backgroundColor: COLORS.primary + '15' }]} />
-          <View style={[styles.dot, { backgroundColor: COLORS.primary + '15' }]} />
+          <View style={[styles.dot, { backgroundColor: COLORS.brand + '15' }]} />
+          <View style={[styles.dot, { backgroundColor: COLORS.brand + '15' }]} />
+          <View style={[styles.dot, { backgroundColor: COLORS.brand + '15' }]} />
         </View>
 
         <View style={styles.tabsContainer}>

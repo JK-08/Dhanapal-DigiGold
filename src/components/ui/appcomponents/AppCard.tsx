@@ -68,7 +68,7 @@ export default function AppCard({
       ]}
     >
       {accentBar && (
-        <View style={[styles.accentBar, { backgroundColor: COLORS.primary }]} />
+        <View style={[styles.accentBar, { backgroundColor: COLORS.brand }]} />
       )}
       {children}
     </Animated.View>

@@ -50,9 +50,9 @@ export default function GlassSchemeCard({ item, width }: { item: PPData; index?:
   const { COLORS, FONTS } = useTheme();
   const navigation = useNavigation<NavProps>();
 
-  const hg: string[] = (COLORS as any)?.gradient?.orangeDeep ?? [COLORS.primaryDark, COLORS.primary];
-  const deep: string = (COLORS as any)?.orangeDeep ?? COLORS.primaryDark;
-  const gradColors: [string, string, string] = [hg[1] ?? COLORS.primary, hg[0] ?? COLORS.primaryDark, deep];
+  const hg: string[] = (COLORS as any)?.gradient?.orangeDeep ?? [COLORS.brandStrong, COLORS.brand];
+  const deep: string = (COLORS as any)?.orangeDeep ?? COLORS.brandStrong;
+  const gradColors: [string, string, string] = [hg[1] ?? COLORS.brand, hg[0] ?? COLORS.brandStrong, deep];
 
   const STATUS_CLR: Record<string, string> = {
     active:    COLORS.successLight,
@@ -88,7 +88,7 @@ export default function GlassSchemeCard({ item, width }: { item: PPData; index?:
             </Text>
           </View>
           <View style={[card.badge, { backgroundColor: STATUS_CLR[status] + 'E6' }]}>
-            <Text style={[card.badgeTxt, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+            <Text style={[card.badgeTxt, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
               {status.toUpperCase()}
             </Text>
           </View>
@@ -96,25 +96,25 @@ export default function GlassSchemeCard({ item, width }: { item: PPData; index?:
       </LinearGradient>
 
       {/* ── Perforation seam with punched-out notches ── */}
-      <View style={[card.seam, { backgroundColor: COLORS.card }]}>
-        <View style={[card.notch, card.notchLeft, { backgroundColor: COLORS.background }]} />
-        <View style={[card.dashedLine, { borderColor: COLORS.borderMedium }]} />
-        <View style={[card.notch, card.notchRight, { backgroundColor: COLORS.background }]} />
+      <View style={[card.seam, { backgroundColor: COLORS.surface }]}>
+        <View style={[card.notch, card.notchLeft, { backgroundColor: COLORS.surfacePage }]} />
+        <View style={[card.dashedLine, { borderColor: COLORS.borderStrong }]} />
+        <View style={[card.notch, card.notchRight, { backgroundColor: COLORS.surfacePage }]} />
       </View>
 
       {/* ── Statement body (solid card colour) ── */}
-      <View style={[card.body, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight }]}>
+      <View style={[card.body, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle }]}>
         <View style={card.bodyTopRow}>
           {/* Circular progress ring */}
           <View style={card.ringWrap}>
             <Svg width={RING_SIZE} height={RING_SIZE}>
               <Circle
                 cx={RING_SIZE / 2} cy={RING_SIZE / 2} r={RING_R}
-                stroke={COLORS.borderLight} strokeWidth={RING_STROKE} fill="none"
+                stroke={COLORS.borderSubtle} strokeWidth={RING_STROKE} fill="none"
               />
               <Circle
                 cx={RING_SIZE / 2} cy={RING_SIZE / 2} r={RING_R}
-                stroke={done ? COLORS.success : COLORS.primary} strokeWidth={RING_STROKE} fill="none"
+                stroke={done ? COLORS.success : COLORS.brand} strokeWidth={RING_STROKE} fill="none"
                 strokeDasharray={`${RING_CIRC} ${RING_CIRC}`}
                 strokeDashoffset={ringOffset}
                 strokeLinecap="round"
@@ -123,7 +123,7 @@ export default function GlassSchemeCard({ item, width }: { item: PPData; index?:
               />
             </Svg>
             <View style={card.ringCenter}>
-              <Text style={[card.ringPct, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+              <Text style={[card.ringPct, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
                 {Math.round(pct * 100)}%
               </Text>
             </View>
@@ -132,22 +132,22 @@ export default function GlassSchemeCard({ item, width }: { item: PPData; index?:
           {/* Stat rows */}
           <View style={card.statList}>
             <View style={card.statRow}>
-              <Text style={[card.statLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Invested</Text>
-              <Text style={[card.statVal, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]} numberOfLines={1}>
+              <Text style={[card.statLbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Invested</Text>
+              <Text style={[card.statVal, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]} numberOfLines={1}>
                 ₹{item.totalAmount.toLocaleString('en-IN')}
               </Text>
             </View>
-            <View style={[card.statDivider, { backgroundColor: COLORS.borderLight }]} />
+            <View style={[card.statDivider, { backgroundColor: COLORS.borderSubtle }]} />
             <View style={card.statRow}>
-              <Text style={[card.statLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>EMIs Paid</Text>
-              <Text style={[card.statVal, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>{paid}/{total}</Text>
+              <Text style={[card.statLbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>EMIs Paid</Text>
+              <Text style={[card.statVal, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>{paid}/{total}</Text>
             </View>
-            <View style={[card.statDivider, { backgroundColor: COLORS.borderLight }]} />
+            <View style={[card.statDivider, { backgroundColor: COLORS.borderSubtle }]} />
             <View style={card.statRow}>
-              <Text style={[card.statLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+              <Text style={[card.statLbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
                 {done ? 'Status' : 'Remaining'}
               </Text>
-              <Text style={[card.statVal, { color: done ? COLORS.success : COLORS.primary, fontFamily: FONTS.family.bold }]}>
+              <Text style={[card.statVal, { color: done ? COLORS.success : COLORS.brand, fontFamily: FONTS.family.bold }]}>
                 {done ? 'Completed' : `${remaining} EMI${remaining === 1 ? '' : 's'}`}
               </Text>
             </View>
@@ -155,9 +155,9 @@ export default function GlassSchemeCard({ item, width }: { item: PPData; index?:
         </View>
 
         {/* Next due strip */}
-        <View style={[card.dueStrip, { backgroundColor: COLORS.primary + '0A' }]}>
-          <Ionicons name="calendar-outline" size={13} color={COLORS.primary} />
-          <Text style={[card.dueTxt, { color: COLORS.textSecondary, fontFamily: FONTS.family.medium }]} numberOfLines={1}>
+        <View style={[card.dueStrip, { backgroundColor: COLORS.brand + '0A' }]}>
+          <Ionicons name="calendar-outline" size={13} color={COLORS.brand} />
+          <Text style={[card.dueTxt, { color: COLORS.contentSecondary, fontFamily: FONTS.family.medium }]} numberOfLines={1}>
             {done ? 'Scheme completed' : `Next due: ${formatDate(item.nextDueDate ?? '')}`}
           </Text>
         </View>
@@ -165,18 +165,18 @@ export default function GlassSchemeCard({ item, width }: { item: PPData; index?:
         {/* Actions */}
         <View style={card.actionRow}>
           <TouchableOpacity
-            style={[card.btn, card.btnOutline, { borderColor: COLORS.primary + '40' }]}
+            style={[card.btn, card.btnOutline, { borderColor: COLORS.brand + '40' }]}
             activeOpacity={0.85}
             onPress={() => navigation.navigate('SchemePassbook', { ppData: item })}
           >
-            <Ionicons name="book-outline" size={15} color={COLORS.primary} />
-            <Text style={[card.btnOutlineTxt, { color: COLORS.primary, fontFamily: FONTS.family.bold }]}>
+            <Ionicons name="book-outline" size={15} color={COLORS.brand} />
+            <Text style={[card.btnOutlineTxt, { color: COLORS.brand, fontFamily: FONTS.family.bold }]}>
               Passbook
             </Text>
           </TouchableOpacity>
           {!done && (
             <TouchableOpacity
-              style={[card.btn, card.btnSolid, { backgroundColor: COLORS.primary }]}
+              style={[card.btn, card.btnSolid, { backgroundColor: COLORS.brand }]}
               activeOpacity={0.9}
               onPress={() => navigation.navigate('PayInstallment', { ppData: item })}
             >

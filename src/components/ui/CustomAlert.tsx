@@ -62,8 +62,8 @@ function Spinner() {
       width: moderateScale(52), height: moderateScale(52),
       borderRadius: moderateScale(26),
       borderWidth: 4,
-      borderColor: COLORS.primaryPale,
-      borderTopColor: COLORS.primary,
+      borderColor: COLORS.brandTint,
+      borderTopColor: COLORS.brand,
       transform: [{ rotate: spin }],
     }]} />
   );
@@ -130,9 +130,9 @@ function AlertBtn({ btn, onDismiss, isLast }: { btn: AlertButton; onDismiss?: ()
   const handlePress = () => { btn.onPress?.(); onDismiss?.(); };
   const btnStyle = btn.style ?? 'primary';
 
-  const bgColor     = btnStyle === 'primary' ? COLORS.primary : btnStyle === 'danger' ? COLORS.error : 'transparent';
-  const borderColor = btnStyle === 'secondary' ? COLORS.primary : btnStyle === 'ghost' ? COLORS.border : 'transparent';
-  const textColor   = btnStyle === 'primary' || btnStyle === 'danger' ? COLORS.white : btnStyle === 'secondary' ? COLORS.primary : COLORS.textSecondary;
+  const bgColor     = btnStyle === 'primary' ? COLORS.brand : btnStyle === 'danger' ? COLORS.error : 'transparent';
+  const borderColor = btnStyle === 'secondary' ? COLORS.brand : btnStyle === 'ghost' ? COLORS.border : 'transparent';
+  const textColor   = btnStyle === 'primary' || btnStyle === 'danger' ? COLORS.white : btnStyle === 'secondary' ? COLORS.brand : COLORS.contentSecondary;
   const hasBorder   = btnStyle === 'secondary' || btnStyle === 'ghost';
 
   return (
@@ -187,7 +187,7 @@ export default function CustomAlert({
     warning: { icon: 'warning'          as const, iconColor: COLORS.warning,   iconBg: COLORS.orangeOpacity10,  ringColor: COLORS.orangeOpacity30,   accentBar: COLORS.warning },
     info:    { icon: 'information-circle' as const, iconColor: COLORS.info,    iconBg: 'rgba(59,130,246,0.1)',   ringColor: 'rgba(59,130,246,0.2)',   accentBar: COLORS.info },
     gold:    { icon: 'star'             as const, iconColor: COLORS.secondary, iconBg: COLORS.goldOpacity10,    ringColor: COLORS.goldOpacity30,     accentBar: COLORS.secondary },
-    confirm: { icon: 'help-circle'      as const, iconColor: COLORS.primary,   iconBg: COLORS.orangeOpacity10,  ringColor: COLORS.orangeOpacity20,   accentBar: COLORS.primary },
+    confirm: { icon: 'help-circle'      as const, iconColor: COLORS.brand,   iconBg: COLORS.orangeOpacity10,  ringColor: COLORS.orangeOpacity20,   accentBar: COLORS.brand },
   };
 
   const cfg = typeConfig[type];
@@ -279,17 +279,17 @@ return (
           <AlertIcon iconName={resolvedIcon} iconColor={cfg.iconColor} iconBg={cfg.iconBg} ringColor={cfg.ringColor} loading={loading} />
 
           {/* Title */}
-          <Text style={[FONTS.h4, { textAlign: 'center', color: COLORS.textPrimary, marginBottom: SIZES.margin.sm }]}>{title}</Text>
+          <Text style={[FONTS.h4, { textAlign: 'center', color: COLORS.contentPrimary, marginBottom: SIZES.margin.sm }]}>{title}</Text>
 
           {/* Message */}
           {!!message && (
-            <Text style={[FONTS.body, { textAlign: 'center', color: COLORS.textSecondary, lineHeight: moderateScale(22), paddingHorizontal: SIZES.padding.sm, marginBottom: SIZES.margin.sm }]}>
+            <Text style={[FONTS.body, { textAlign: 'center', color: COLORS.contentSecondary, lineHeight: moderateScale(22), paddingHorizontal: SIZES.padding.sm, marginBottom: SIZES.margin.sm }]}>
               {message}
             </Text>
           )}
 
           {/* Divider */}
-          <View style={{ width: '100%', height: StyleSheet.hairlineWidth, backgroundColor: COLORS.borderLight, marginVertical: SIZES.margin.md }} />
+          <View style={{ width: '100%', height: StyleSheet.hairlineWidth, backgroundColor: COLORS.borderSubtle, marginVertical: SIZES.margin.md }} />
 
           {/* Buttons */}
           {!loading && (
@@ -301,7 +301,7 @@ return (
           )}
 
           {loading && (
-            <Text style={[FONTS.bodySmall, { color: COLORS.textTertiary, marginTop: SIZES.margin.sm, letterSpacing: 0.3 }]}>
+            <Text style={[FONTS.bodySmall, { color: COLORS.contentMuted, marginTop: SIZES.margin.sm, letterSpacing: 0.3 }]}>
               Please wait…
             </Text>
           )}

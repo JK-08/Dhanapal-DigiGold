@@ -41,7 +41,7 @@ export default function AppCheckbox({
 
   const activeColor =
     variant === 'gold'    ? COLORS.secondary :
-    variant === 'success' ? COLORS.success   : COLORS.primary;
+    variant === 'success' ? COLORS.success   : COLORS.brand;
 
   const bgColor = bgAnim.interpolate({
     inputRange: [0, 1],
@@ -87,12 +87,12 @@ export default function AppCheckbox({
       {(label || sublabel) && (
         <View style={{ flex: 1, marginLeft: 10 }}>
           {label && (
-            <Text style={[{ fontFamily: FONTS.family.medium, fontSize: SIZES.font.md, color: disabled ? COLORS.textDisabled : COLORS.textPrimary }]}>
+            <Text style={[{ fontFamily: FONTS.family.medium, fontSize: SIZES.font.md, color: disabled ? COLORS.contentDisabled : COLORS.contentPrimary }]}>
               {label}
             </Text>
           )}
           {sublabel && (
-            <Text style={[{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.textTertiary, marginTop: 1 }]}>
+            <Text style={[{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.contentMuted, marginTop: 1 }]}>
               {sublabel}
             </Text>
           )}

@@ -326,7 +326,7 @@ export default function ComponentsUsage() {
   const chips = ['Gold SIP', 'Buy Gold', 'Sell Gold', 'History', 'Offers'];
 
   const S = {
-    container: { flex: 1, backgroundColor: COLORS.background } as const,
+    container: { flex: 1, backgroundColor: COLORS.surfacePage } as const,
     scroll: { padding: SIZES.padding.container, paddingBottom: 60 } as const,
     section: { marginTop: SIZES.margin.lg, marginBottom: SIZES.margin.sm } as const,
     row: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8, flexWrap: 'wrap' as const },
@@ -565,14 +565,14 @@ export default function ComponentsUsage() {
           <AppText variant="caption">With label:</AppText>
           <AppDivider label="OR" />
           <AppText variant="caption">Custom color & thickness:</AppText>
-          <AppDivider color={COLORS.primary} thickness={2} />
+          <AppDivider color={COLORS.brand} thickness={2} />
           <AppText variant="caption">Gold divider:</AppText>
           <AppDivider color={COLORS.secondary} thickness={1.5} />
           <View style={{ flexDirection: 'row', alignItems: 'center', height: 40, gap: 12, marginTop: 8 }}>
             <AppText variant="caption">Vertical:</AppText>
             <AppDivider orientation="vertical" />
             <AppText variant="caption">divider</AppText>
-            <AppDivider orientation="vertical" color={COLORS.primary} thickness={2} />
+            <AppDivider orientation="vertical" color={COLORS.brand} thickness={2} />
             <AppText variant="caption">here</AppText>
           </View>
         </AppCard>
@@ -1106,12 +1106,12 @@ export default function ComponentsUsage() {
                 setKwRefreshing(true);
                 setTimeout(() => { setKwRefreshing(false); toast.success('Refreshed!'); }, 1500);
               }}
-              backgroundColor={COLORS.background}
+              backgroundColor={COLORS.surfacePage}
               paddingHorizontal={16}
               paddingTop={8}
               paddingBottom={16}
               header={
-                <View style={{ padding: 12, backgroundColor: COLORS.primary }}>
+                <View style={{ padding: 12, backgroundColor: COLORS.brand }}>
                   <AppText variant="bodyMedium" style={{ color: COLORS.white }}>📌 Fixed Header</AppText>
                 </View>
               }

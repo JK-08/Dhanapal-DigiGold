@@ -49,7 +49,7 @@ export default function SchemeDetailsScreen() {
   const route = useRoute<RouteProps>();
   const { scheme } = route.params;
 
-  const mColor  = METAL_COLOR[scheme.MetalType] ?? COLORS.primary;
+  const mColor  = METAL_COLOR[scheme.MetalType] ?? COLORS.brand;
   const mLabel  = METAL_LABEL[scheme.MetalType] ?? scheme.MetalType;
   const isFixed = scheme.FixedIns === 'Y';
   const canJoin = scheme.ADDNEWMEMBER === 'Y';
@@ -63,7 +63,7 @@ export default function SchemeDetailsScreen() {
   );
 
   return (
-    <SafeAreaView style={[st.flex, { backgroundColor: COLORS.background }]} edges={['bottom']}>
+    <SafeAreaView style={[st.flex, { backgroundColor: COLORS.surfacePage }]} edges={['bottom']}>
       <AppHeader title="Scheme Details" subtitle={scheme.schemeName} showBack  />
 
       <ScrollView contentContainerStyle={st.scrollContent} showsVerticalScrollIndicator={false}>
@@ -106,39 +106,39 @@ export default function SchemeDetailsScreen() {
 
         {/* ── Key info grid ───────────────────────────────────── */}
         <View style={st.grid}>
-          <View style={[st.statCard, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
+          <View style={[st.statCard, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, ...SHADOWS.sm }]}>
             <Ionicons name="layers-outline" size={18} color={mColor} />
-            <Text style={[st.statVal, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>{scheme.Instalment}</Text>
-            <Text style={[st.statLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Installments</Text>
+            <Text style={[st.statVal, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>{scheme.Instalment}</Text>
+            <Text style={[st.statLbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Installments</Text>
           </View>
-          <View style={[st.statCard, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
+          <View style={[st.statCard, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, ...SHADOWS.sm }]}>
             <Ionicons name="cash-outline" size={18} color={mColor} />
-            <Text style={[st.statVal, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+            <Text style={[st.statVal, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
               {isFixed ? 'Fixed' : 'Flexible'}
             </Text>
-            <Text style={[st.statLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Amount Type</Text>
+            <Text style={[st.statLbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Amount Type</Text>
           </View>
-          <View style={[st.statCard, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
+          <View style={[st.statCard, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, ...SHADOWS.sm }]}>
             <Ionicons name="scale-outline" size={18} color={mColor} />
-            <Text style={[st.statVal, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+            <Text style={[st.statVal, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
               {scheme.WeightLedger === 'Y' ? 'Yes' : 'No'}
             </Text>
-            <Text style={[st.statLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Weight Ledger</Text>
+            <Text style={[st.statLbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Weight Ledger</Text>
           </View>
-          <View style={[st.statCard, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
+          <View style={[st.statCard, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, ...SHADOWS.sm }]}>
             <Ionicons name="diamond-outline" size={18} color={mColor} />
             <Text style={[st.statVal, { color: mColor, fontFamily: FONTS.family.bold }]}>{mLabel}</Text>
-            <Text style={[st.statLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Metal Type</Text>
+            <Text style={[st.statLbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Metal Type</Text>
           </View>
         </View>
 
         {/* ── Available amounts ───────────────────────────────── */}
-        <View style={[st.section, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
+        <View style={[st.section, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, ...SHADOWS.sm }]}>
           <View style={st.sectionHeader}>
             <View style={[st.sectionIconWrap, { backgroundColor: mColor + '14' }]}>
               <Ionicons name="wallet-outline" size={15} color={mColor} />
             </View>
-            <Text style={[st.sectionTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold, fontSize: SIZES.font.md }]}>
+            <Text style={[st.sectionTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold, fontSize: SIZES.font.md }]}>
               {isFixed ? 'Available Installment Amounts' : 'Installment Amount'}
             </Text>
           </View>
@@ -151,35 +151,35 @@ export default function SchemeDetailsScreen() {
                 <View style={st.amountWrap}>
                   {amounts.map((g) => (
                     <View key={g.GROUPCODE} style={[st.amountChip, { backgroundColor: mColor + '10', borderColor: mColor + '35' }]}>
-                      <Text style={[st.amountChipTxt, { color: COLORS.primary, fontFamily: FONTS.family.bold }]}>
+                      <Text style={[st.amountChipTxt, { color: COLORS.brand, fontFamily: FONTS.family.bold }]}>
                         ₹{g.AMOUNT.toLocaleString('en-IN')}
                       </Text>
                     </View>
                   ))}
                 </View>
-                <Text style={[st.sectionNote, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+                <Text style={[st.sectionNote, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
                   You'll pick one of these {amounts.length} slabs on the next step.
                 </Text>
               </>
             ) : (
-              <Text style={[st.sectionNote, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+              <Text style={[st.sectionNote, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
                 No installment slabs available right now.
               </Text>
             )
           ) : (
-            <Text style={[st.sectionNote, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+            <Text style={[st.sectionNote, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
               This scheme has a flexible amount — you can enter any monthly amount you're comfortable with when you join.
             </Text>
           )}
         </View>
 
         {/* ── How it works ─────────────────────────────────────── */}
-        <View style={[st.section, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
+        <View style={[st.section, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, ...SHADOWS.sm }]}>
           <View style={st.sectionHeader}>
-            <View style={[st.sectionIconWrap, { backgroundColor: COLORS.primary + '14' }]}>
-              <Ionicons name="list-outline" size={15} color={COLORS.primary} />
+            <View style={[st.sectionIconWrap, { backgroundColor: COLORS.brand + '14' }]}>
+              <Ionicons name="list-outline" size={15} color={COLORS.brand} />
             </View>
-            <Text style={[st.sectionTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold, fontSize: SIZES.font.md }]}>
+            <Text style={[st.sectionTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold, fontSize: SIZES.font.md }]}>
               How This Scheme Works
             </Text>
           </View>
@@ -187,33 +187,33 @@ export default function SchemeDetailsScreen() {
           {HOW_IT_WORKS.map((step, i) => (
             <View key={step.title} style={[st.stepRow, i !== HOW_IT_WORKS.length - 1 && st.stepRowGap]}>
               <View style={st.stepRail}>
-                <View style={[st.stepDot, { backgroundColor: COLORS.primary + '14', borderColor: COLORS.primary + '30' }]}>
-                  <Text style={[st.stepDotTxt, { color: COLORS.primary, fontFamily: FONTS.family.bold }]}>{i + 1}</Text>
+                <View style={[st.stepDot, { backgroundColor: COLORS.brand + '14', borderColor: COLORS.brand + '30' }]}>
+                  <Text style={[st.stepDotTxt, { color: COLORS.brand, fontFamily: FONTS.family.bold }]}>{i + 1}</Text>
                 </View>
-                {i !== HOW_IT_WORKS.length - 1 && <View style={[st.stepLine, { backgroundColor: COLORS.borderLight }]} />}
+                {i !== HOW_IT_WORKS.length - 1 && <View style={[st.stepLine, { backgroundColor: COLORS.borderSubtle }]} />}
               </View>
               <View style={{ flex: 1, paddingBottom: i !== HOW_IT_WORKS.length - 1 ? 14 : 0 }}>
-                <Text style={[st.stepTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>{step.title}</Text>
-                <Text style={[st.stepDesc, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>{step.desc}</Text>
+                <Text style={[st.stepTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>{step.title}</Text>
+                <Text style={[st.stepDesc, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>{step.desc}</Text>
               </View>
             </View>
           ))}
         </View>
 
         {/* ── Why join ─────────────────────────────────────────── */}
-        <View style={[st.section, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
+        <View style={[st.section, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, ...SHADOWS.sm }]}>
           <View style={st.sectionHeader}>
             <View style={[st.sectionIconWrap, { backgroundColor: COLORS.success + '14' }]}>
               <Ionicons name="sparkles-outline" size={15} color={COLORS.success} />
             </View>
-            <Text style={[st.sectionTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold, fontSize: SIZES.font.md }]}>
+            <Text style={[st.sectionTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold, fontSize: SIZES.font.md }]}>
               Why Join Through the App
             </Text>
           </View>
           {WHY_JOIN.map((item) => (
             <View key={item.text} style={st.whyRow}>
               <Ionicons name={item.icon} size={16} color={COLORS.success} />
-              <Text style={[st.whyTxt, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>{item.text}</Text>
+              <Text style={[st.whyTxt, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>{item.text}</Text>
             </View>
           ))}
         </View>
@@ -222,9 +222,9 @@ export default function SchemeDetailsScreen() {
       </ScrollView>
 
       {/* ── Sticky footer CTA ────────────────────────────────── */}
-      <View style={[st.footer, { backgroundColor: COLORS.background, borderTopColor: COLORS.borderLight }]}>
+      <View style={[st.footer, { backgroundColor: COLORS.surfacePage, borderTopColor: COLORS.borderSubtle }]}>
         <TouchableOpacity
-          style={[st.ctaBtn, { backgroundColor: canJoin ? COLORS.primary : COLORS.borderLight, ...(canJoin ? SHADOWS.md : {}) }]}
+          style={[st.ctaBtn, { backgroundColor: canJoin ? COLORS.brand : COLORS.borderSubtle, ...(canJoin ? SHADOWS.md : {}) }]}
           activeOpacity={canJoin ? 0.9 : 1}
           disabled={!canJoin}
           onPress={() => navigation.navigate('SchemeTerms', { scheme })}
@@ -232,14 +232,14 @@ export default function SchemeDetailsScreen() {
           <Ionicons
             name={canJoin ? 'arrow-forward-circle-outline' : 'lock-closed-outline'}
             size={moderateScale(20)}
-            color={canJoin ? COLORS.white : COLORS.textTertiary}
+            color={canJoin ? COLORS.white : COLORS.contentMuted}
           />
-          <Text style={[st.ctaBtnTxt, { color: canJoin ? COLORS.white : COLORS.textTertiary, fontFamily: FONTS.family.bold }]}>
+          <Text style={[st.ctaBtnTxt, { color: canJoin ? COLORS.white : COLORS.contentMuted, fontFamily: FONTS.family.bold }]}>
             {canJoin ? 'View Terms & Continue' : 'Enrolment Closed'}
           </Text>
         </TouchableOpacity>
         {!canJoin && (
-          <Text style={[st.footerHint, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+          <Text style={[st.footerHint, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
             This scheme isn't accepting new members right now.
           </Text>
         )}

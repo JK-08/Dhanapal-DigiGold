@@ -53,7 +53,7 @@ export default function VerifyMpinScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="dark-content" backgroundColor={COLORS.background} />
+      <StatusBar barStyle="dark-content" backgroundColor={COLORS.surfacePage} />
       <AppLoader visible={loading} message="Verifying..." />
       <View style={styles.content}>
 
@@ -102,7 +102,7 @@ export default function VerifyMpinScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.surfacePage,
   },
   content: {
     flex: 1,
@@ -124,17 +124,17 @@ const styles = StyleSheet.create({
   title: {
     fontFamily:    FONTS.family.bold,
     fontSize:      SIZES.heading.h3,
-    color:         COLORS.textPrimary,
+    color:         COLORS.contentPrimary,
     letterSpacing: -0.3,
   },
   subtitle: {
     fontFamily: FONTS.family.regular,
     fontSize:   SIZES.font.sm,
-    color:      COLORS.textSecondary,
+    color:      COLORS.contentSecondary,
   },
   name: {
     fontFamily: FONTS.family.semiBold,
-    color:      COLORS.textPrimary,
+    color:      COLORS.contentPrimary,
   },
   card: {
     backgroundColor: COLORS.white,
@@ -151,12 +151,12 @@ const styles = StyleSheet.create({
   forgotText: {
     fontFamily: FONTS.family.semiBold,
     fontSize:   SIZES.font.md,
-    color:      COLORS.primary,
+    color:      COLORS.brand,
   },
   loginText: {
     fontFamily:         FONTS.family.regular,
     fontSize:           SIZES.font.sm,
-    color:              COLORS.textTertiary,
+    color:              COLORS.contentMuted,
     textDecorationLine: 'underline',
   },
 });

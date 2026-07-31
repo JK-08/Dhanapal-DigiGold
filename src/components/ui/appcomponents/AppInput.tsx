@@ -84,7 +84,7 @@ const AppInput = forwardRef<AppInputRef, Props>(({
     inputRange:  [0, 1],
     outputRange: [
       error ? COLORS.error : COLORS.border,
-      error ? COLORS.error : COLORS.primary,
+      error ? COLORS.error : COLORS.brand,
     ],
   });
 
@@ -99,7 +99,7 @@ const AppInput = forwardRef<AppInputRef, Props>(({
         <Text style={[styles.label, {
           fontFamily: FONTS.family.medium,
           fontSize:   SIZES.font.sm,
-          color: hasError ? COLORS.error : focused ? COLORS.primary : COLORS.textSecondary,
+          color: hasError ? COLORS.error : focused ? COLORS.brand : COLORS.contentSecondary,
           marginBottom: 6,
         }]}>
           {label}
@@ -121,7 +121,7 @@ const AppInput = forwardRef<AppInputRef, Props>(({
           <Ionicons
             name={leftIcon as any}
             size={iSize}
-            color={hasError ? COLORS.error : focused ? COLORS.primary : COLORS.textTertiary}
+            color={hasError ? COLORS.error : focused ? COLORS.brand : COLORS.contentMuted}
             style={styles.leftIcon}
           />
         )}
@@ -138,7 +138,7 @@ const AppInput = forwardRef<AppInputRef, Props>(({
             {
               fontFamily: FONTS.family.regular,
               fontSize:   SIZES.font.md,
-              color:      COLORS.textPrimary,
+              color:      COLORS.contentPrimary,
             },
           ]}
         />
@@ -148,7 +148,7 @@ const AppInput = forwardRef<AppInputRef, Props>(({
             <Ionicons
               name={showPass ? 'eye-off-outline' : 'eye-outline'}
               size={iSize}
-              color={COLORS.textTertiary}
+              color={COLORS.contentMuted}
             />
           </TouchableOpacity>
         ) : rightIcon ? (
@@ -156,7 +156,7 @@ const AppInput = forwardRef<AppInputRef, Props>(({
             <Ionicons
               name={rightIcon as any}
               size={iSize}
-              color={focused ? COLORS.primary : COLORS.textTertiary}
+              color={focused ? COLORS.brand : COLORS.contentMuted}
             />
           </TouchableOpacity>
         ) : null}
@@ -176,7 +176,7 @@ const AppInput = forwardRef<AppInputRef, Props>(({
         </View>
       ) : hint ? (
         <Text style={[styles.helperText, {
-          color:      COLORS.textTertiary,
+          color:      COLORS.contentMuted,
           fontFamily: FONTS.family.regular,
           fontSize:   SIZES.font.xs,
           marginTop:  4,

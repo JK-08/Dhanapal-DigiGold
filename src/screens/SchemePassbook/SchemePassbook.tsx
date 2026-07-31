@@ -106,30 +106,30 @@ function Section({
   const { COLORS, FONTS, SIZES, SHADOWS } = useTheme();
   const HeaderWrapper = collapsible ? TouchableOpacity : View;
   return (
-    <View style={[s.section, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
+    <View style={[s.section, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, ...SHADOWS.sm }]}>
       <HeaderWrapper
-        style={[s.sectionHeader, { borderBottomColor: collapsible && !expanded ? 'transparent' : COLORS.borderLight }]}
+        style={[s.sectionHeader, { borderBottomColor: collapsible && !expanded ? 'transparent' : COLORS.borderSubtle }]}
         {...(collapsible ? { onPress: onToggle, activeOpacity: 0.7 } : {})}
       >
         <View style={s.sectionHeaderLeft}>
-          <View style={[s.sectionIconWrap, { backgroundColor: COLORS.primary + '12' }]}>
-            <Ionicons name={icon} size={15} color={COLORS.primary} />
+          <View style={[s.sectionIconWrap, { backgroundColor: COLORS.brand + '12' }]}>
+            <Ionicons name={icon} size={15} color={COLORS.brand} />
           </View>
-          <Text style={[s.sectionTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold, fontSize: SIZES.font.md }]}>
+          <Text style={[s.sectionTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold, fontSize: SIZES.font.md }]}>
             {title}
           </Text>
         </View>
         <View style={s.sectionHeaderRight}>
           {typeof count === 'number' && (
-            <View style={[s.countPill, { backgroundColor: COLORS.backgroundSecondary }]}>
-              <Text style={[s.countPillTxt, { color: COLORS.textSecondary, fontFamily: FONTS.family.semiBold }]}>{count}</Text>
+            <View style={[s.countPill, { backgroundColor: COLORS.surfaceMuted }]}>
+              <Text style={[s.countPillTxt, { color: COLORS.contentSecondary, fontFamily: FONTS.family.semiBold }]}>{count}</Text>
             </View>
           )}
           {collapsible && (
             <Ionicons
               name={expanded ? 'chevron-up' : 'chevron-down'}
               size={16}
-              color={COLORS.textTertiary}
+              color={COLORS.contentMuted}
             />
           )}
         </View>
@@ -140,15 +140,15 @@ function Section({
       {(collapsible && !expanded) && (
         <View style={[s.sectionBody, { paddingVertical: 10 }]}>
           <View style={s.previewRow}>
-            <Ionicons name="person-outline" size={13} color={COLORS.textTertiary} />
-            <Text style={[s.previewTxt, { color: COLORS.textSecondary, fontFamily: FONTS.family.medium }]}>
+            <Ionicons name="person-outline" size={13} color={COLORS.contentMuted} />
+            <Text style={[s.previewTxt, { color: COLORS.contentSecondary, fontFamily: FONTS.family.medium }]}>
               {previewName}
             </Text>
             {previewMobile ? (
               <>
-                <View style={[s.previewDot, { backgroundColor: COLORS.borderMedium }]} />
-                <Ionicons name="call-outline" size={13} color={COLORS.textTertiary} />
-                <Text style={[s.previewTxt, { color: COLORS.textSecondary, fontFamily: FONTS.family.medium }]}>
+                <View style={[s.previewDot, { backgroundColor: COLORS.borderStrong }]} />
+                <Ionicons name="call-outline" size={13} color={COLORS.contentMuted} />
+                <Text style={[s.previewTxt, { color: COLORS.contentSecondary, fontFamily: FONTS.family.medium }]}>
                   {previewMobile}
                 </Text>
               </>
@@ -164,13 +164,13 @@ function Section({
 function Row({ label, value, valueColor, last }: { label: string; value: string; valueColor?: string; last?: boolean }) {
   const { COLORS, FONTS, SIZES } = useTheme();
   return (
-    <View style={[s.row, !last && { borderBottomWidth: 1, borderBottomColor: COLORS.borderLight + '90' }]}>
-      <Text style={[s.rowLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm }]}>
+    <View style={[s.row, !last && { borderBottomWidth: 1, borderBottomColor: COLORS.borderSubtle + '90' }]}>
+      <Text style={[s.rowLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm }]}>
         {label}
       </Text>
       <Text
         numberOfLines={2}
-        style={[s.rowValue, { color: valueColor ?? COLORS.textPrimary, fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.sm }]}
+        style={[s.rowValue, { color: valueColor ?? COLORS.contentPrimary, fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.sm }]}
       >
         {value}
       </Text>
@@ -190,17 +190,17 @@ function TransactionCard({ item, isLast, onView }: { item: PaymentHistory; isLas
         <View style={[s.txnIconWrap, { backgroundColor: COLORS.success + '14', borderColor: COLORS.success + '30' }]}>
           <Ionicons name={method.icon} size={16} color={COLORS.success} />
         </View>
-        {!isLast && <View style={[s.txnRailLine, { backgroundColor: COLORS.borderLight }]} />}
+        {!isLast && <View style={[s.txnRailLine, { backgroundColor: COLORS.borderSubtle }]} />}
       </View>
 
       {/* Card body */}
-      <View style={[s.txnBody, { backgroundColor: COLORS.backgroundSecondary, borderColor: COLORS.borderLight }]}>
+      <View style={[s.txnBody, { backgroundColor: COLORS.surfaceMuted, borderColor: COLORS.borderSubtle }]}>
         <View style={s.txnTopRow}>
           <View style={{ flex: 1 }}>
-            <Text style={[s.txnTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold, fontSize: SIZES.font.sm }]}>
+            <Text style={[s.txnTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold, fontSize: SIZES.font.sm }]}>
               Installment #{item.installment}
             </Text>
-            <Text style={[s.txnSub, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+            <Text style={[s.txnSub, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
               {formatDay(item.updateTime)}, {formatDate(item.updateTime)} · {formatTime(item.updateTime)}
             </Text>
           </View>
@@ -215,12 +215,12 @@ function TransactionCard({ item, isLast, onView }: { item: PaymentHistory; isLas
                 <Text style={[s.statusPillTxt, { color: COLORS.success, fontFamily: FONTS.family.semiBold }]}>PAID</Text>
               </View>
               <TouchableOpacity
-                style={[s.txnViewBtn, { backgroundColor: COLORS.primary + '14', borderColor: COLORS.primary + '30' }]}
+                style={[s.txnViewBtn, { backgroundColor: COLORS.brand + '14', borderColor: COLORS.brand + '30' }]}
                 activeOpacity={0.75}
                 onPress={onView}
                 hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
               >
-                <Ionicons name="eye-outline" size={13} color={COLORS.primary} />
+                <Ionicons name="eye-outline" size={13} color={COLORS.brand} />
               </TouchableOpacity>
             </View>
           </View>
@@ -230,23 +230,23 @@ function TransactionCard({ item, isLast, onView }: { item: PaymentHistory; isLas
 
         <View style={s.txnFooter}>
           <View style={s.txnFooterItem}>
-            <Text style={[s.txnFooterLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Receipt No</Text>
-            <Text style={[s.txnFooterVal, { color: COLORS.textSecondary, fontFamily: FONTS.family.semiBold }]}>{item.receiptNo}</Text>
+            <Text style={[s.txnFooterLbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Receipt No</Text>
+            <Text style={[s.txnFooterVal, { color: COLORS.contentSecondary, fontFamily: FONTS.family.semiBold }]}>{item.receiptNo}</Text>
           </View>
           {item.weight ? (
             <View style={s.txnFooterItem}>
-              <Text style={[s.txnFooterLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Gold Weight</Text>
-              <Text style={[s.txnFooterVal, { color: COLORS.textSecondary, fontFamily: FONTS.family.semiBold }]}>{item.weight} g</Text>
+              <Text style={[s.txnFooterLbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Gold Weight</Text>
+              <Text style={[s.txnFooterVal, { color: COLORS.contentSecondary, fontFamily: FONTS.family.semiBold }]}>{item.weight} g</Text>
             </View>
           ) : null}
           <View style={s.txnFooterItem}>
-            <Text style={[s.txnFooterLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Method</Text>
-            <Text style={[s.txnFooterVal, { color: COLORS.textSecondary, fontFamily: FONTS.family.semiBold }]}>{method.label}</Text>
+            <Text style={[s.txnFooterLbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Method</Text>
+            <Text style={[s.txnFooterVal, { color: COLORS.contentSecondary, fontFamily: FONTS.family.semiBold }]}>{method.label}</Text>
           </View>
         </View>
 
         {item.chq_CardNo ? (
-          <Text numberOfLines={1} style={[s.txnRef, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+          <Text numberOfLines={1} style={[s.txnRef, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
             Txn / Ref ID: {item.chq_CardNo}
           </Text>
         ) : null}
@@ -274,37 +274,37 @@ function DueTimelineItem({
           style={[
             s.dueDot,
             {
-              backgroundColor: isNext ? COLORS.primary : COLORS.card,
-              borderColor: isNext ? COLORS.primary : COLORS.border,
+              backgroundColor: isNext ? COLORS.brand : COLORS.surface,
+              borderColor: isNext ? COLORS.brand : COLORS.border,
             },
           ]}
         >
-          <Text style={[s.dueDotTxt, { color: isNext ? COLORS.white : COLORS.textTertiary, fontFamily: FONTS.family.bold }]}>
+          <Text style={[s.dueDotTxt, { color: isNext ? COLORS.white : COLORS.contentMuted, fontFamily: FONTS.family.bold }]}>
             {index + 1}
           </Text>
         </View>
-        {!isLast && <View style={[s.txnRailLine, { backgroundColor: COLORS.borderLight }]} />}
+        {!isLast && <View style={[s.txnRailLine, { backgroundColor: COLORS.borderSubtle }]} />}
       </View>
 
       <View
         style={[
           s.dueBody,
           {
-            backgroundColor: isNext ? COLORS.primary + '0C' : COLORS.backgroundSecondary,
-            borderColor: isNext ? COLORS.primary + '35' : COLORS.borderLight,
+            backgroundColor: isNext ? COLORS.brand + '0C' : COLORS.surfaceMuted,
+            borderColor: isNext ? COLORS.brand + '35' : COLORS.borderSubtle,
           },
         ]}
       >
         <View>
-          <Text style={[s.dueDate, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold, fontSize: SIZES.font.sm }]}>
+          <Text style={[s.dueDate, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold, fontSize: SIZES.font.sm }]}>
             {formatDate(date)}
           </Text>
-          <Text style={[s.dueDay, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+          <Text style={[s.dueDay, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
             {formatDay(date)}  ·  {remainingLabel}
           </Text>
         </View>
         {isNext && (
-          <View style={[s.nextTag, { backgroundColor: COLORS.primary }]}>
+          <View style={[s.nextTag, { backgroundColor: COLORS.brand }]}>
             <Text style={[s.nextTagTxt, { color: COLORS.white, fontFamily: FONTS.family.bold }]}>NEXT</Text>
           </View>
         )}
@@ -355,7 +355,7 @@ export default function SchemePassbook() {
   const visibleDueDates = dueExpanded ? remainingDueDates : remainingDueDates.slice(0, 1);
 
   return (
-    <SafeAreaView style={[s.flex, { backgroundColor: COLORS.background }]} edges={['bottom']}>
+    <SafeAreaView style={[s.flex, { backgroundColor: COLORS.surfacePage }]} edges={['bottom']}>
       <AppHeader title="Scheme Passbook" subtitle={ppData.schemeSummary?.schemeName} showBack  />
 
       <ScrollView
@@ -495,16 +495,16 @@ export default function SchemePassbook() {
           <Row
             label="Installments Remaining"
             value={done ? 'Completed' : String(remainingInstallments)}
-            valueColor={done ? COLORS.success : COLORS.primary}
+            valueColor={done ? COLORS.success : COLORS.brand}
             last
           />
 
-          <View style={[s.summaryTotalBox, { backgroundColor: COLORS.primary + '0A', borderColor: COLORS.primary + '25' }]}>
+          <View style={[s.summaryTotalBox, { backgroundColor: COLORS.brand + '0A', borderColor: COLORS.brand + '25' }]}>
             <View style={s.summaryTotalRow}>
-              <Text style={[s.summaryGrandLbl, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+              <Text style={[s.summaryGrandLbl, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
                 Total Amount Paid
               </Text>
-              <Text style={[s.summaryGrandVal, { color: COLORS.primary, fontFamily: FONTS.family.bold }]}>
+              <Text style={[s.summaryGrandVal, { color: COLORS.brand, fontFamily: FONTS.family.bold }]}>
                 {currency(ppData.totalAmount)}
               </Text>
             </View>
@@ -515,8 +515,8 @@ export default function SchemePassbook() {
         <Section title="Payment History" icon="time-outline" count={history.length}>
           {history.length === 0 ? (
             <View style={s.emptyWrap}>
-              <Ionicons name="receipt-outline" size={28} color={COLORS.textTertiary} />
-              <Text style={[s.emptyTxt, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+              <Ionicons name="receipt-outline" size={28} color={COLORS.contentMuted} />
+              <Text style={[s.emptyTxt, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
                 No payments recorded yet
               </Text>
             </View>
@@ -551,14 +551,14 @@ export default function SchemePassbook() {
 
             {remainingDueDates.length > 1 && (
               <TouchableOpacity
-                style={[s.expandBtn, { borderColor: COLORS.borderLight, backgroundColor: COLORS.backgroundSecondary }]}
+                style={[s.expandBtn, { borderColor: COLORS.borderSubtle, backgroundColor: COLORS.surfaceMuted }]}
                 activeOpacity={0.8}
                 onPress={() => setDueExpanded((v) => !v)}
               >
-                <Text style={[s.expandBtnTxt, { color: COLORS.primary, fontFamily: FONTS.family.semiBold }]}>
+                <Text style={[s.expandBtnTxt, { color: COLORS.brand, fontFamily: FONTS.family.semiBold }]}>
                   {dueExpanded ? 'Show Less' : `View All ${remainingDueDates.length} Due Dates`}
                 </Text>
-                <Ionicons name={dueExpanded ? 'chevron-up' : 'chevron-down'} size={14} color={COLORS.primary} />
+                <Ionicons name={dueExpanded ? 'chevron-up' : 'chevron-down'} size={14} color={COLORS.brand} />
               </TouchableOpacity>
             )}
           </Section>

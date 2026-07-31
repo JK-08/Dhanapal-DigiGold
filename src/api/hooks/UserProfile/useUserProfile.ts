@@ -31,7 +31,7 @@ export function useUserProfile() {
     setError(null);
     try {
       const updated = await userProfileService.updateUser(userId, data);
-      console.log('Updated user:', updated);
+      // console.log('Updated user:', updated);
       setUser(prev => ({ ...prev, ...updated }));
       return updated;
     } catch (e: any) {

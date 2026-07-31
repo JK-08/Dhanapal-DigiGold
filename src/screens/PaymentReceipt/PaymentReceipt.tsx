@@ -66,7 +66,7 @@ export default function PaymentReceipt() {
   };
 
   return (
-    <SafeAreaView style={[st.flex, { backgroundColor: COLORS.background }]} edges={['bottom']}>
+    <SafeAreaView style={[st.flex, { backgroundColor: COLORS.surfacePage }]} edges={['bottom']}>
       <AppHeader
         title="Payment Receipt"
         subtitle={`Receipt No: ${payment.receiptNo}`}
@@ -75,24 +75,24 @@ export default function PaymentReceipt() {
         rightComponent={
           <TouchableOpacity onPress={handleDownload} disabled={downloading} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
             {downloading
-              ? <ActivityIndicator size="small" color={COLORS.primary} />
-              : <Ionicons name="download-outline" size={21} color={COLORS.primary} />}
+              ? <ActivityIndicator size="small" color={COLORS.brand} />
+              : <Ionicons name="download-outline" size={21} color={COLORS.brand} />}
           </TouchableOpacity>
         }
       />
 
       <ScrollView contentContainerStyle={st.scrollContent} showsVerticalScrollIndicator={false}>
-        <View style={[st.card, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
+        <View style={[st.card, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, ...SHADOWS.sm }]}>
 
           {/* Company header */}
           <View style={st.companyRow}>
             <Image source={require('../../../assets/logo.png')} style={st.logo} resizeMode="contain" />
             <View style={{ flex: 1 }}>
-              <Text style={[st.companyName, { color: COLORS.primaryDark, fontFamily: FONTS.family.bold }]} numberOfLines={1}>
+              <Text style={[st.companyName, { color: COLORS.brandStrong, fontFamily: FONTS.family.bold }]} numberOfLines={1}>
                 {company?.COMPANYNAME?.trim() || 'Dhanapal DigiGold'}
               </Text>
               {!!company?.PHONE && (
-                <Text style={[st.companyMeta, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]} numberOfLines={1}>
+                <Text style={[st.companyMeta, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]} numberOfLines={1}>
                   {company.PHONE}
                 </Text>
               )}
@@ -104,67 +104,67 @@ export default function PaymentReceipt() {
           </View>
 
           {(company?.EMAIL || company?.ADDRESS1) && (
-            <View style={[st.contactBox, { backgroundColor: COLORS.primary + '0A' }]}>
+            <View style={[st.contactBox, { backgroundColor: COLORS.brand + '0A' }]}>
               {!!company?.EMAIL && (
-                <Text style={[st.contactTxt, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+                <Text style={[st.contactTxt, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
                   ✉ {company.EMAIL}
                 </Text>
               )}
               {!!company?.ADDRESS1 && (
-                <Text style={[st.contactTxt, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]} numberOfLines={2}>
+                <Text style={[st.contactTxt, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]} numberOfLines={2}>
                   📍 {[company.ADDRESS1, company.ADDRESS2, company.ADDRESS3, company.ADDRESS4].filter(Boolean).join(', ')}
                 </Text>
               )}
             </View>
           )}
 
-          <View style={[st.divider, { backgroundColor: COLORS.primary }]} />
+          <View style={[st.divider, { backgroundColor: COLORS.brand }]} />
 
-          <Text style={[st.title, { color: COLORS.primaryDark, fontFamily: FONTS.family.bold }]}>PAYMENT RECEIPT</Text>
+          <Text style={[st.title, { color: COLORS.brandStrong, fontFamily: FONTS.family.bold }]}>PAYMENT RECEIPT</Text>
 
           {/* Scheme + date */}
-          <View style={[st.infoBox, { backgroundColor: COLORS.backgroundSecondary, borderLeftColor: COLORS.primary }]}>
+          <View style={[st.infoBox, { backgroundColor: COLORS.surfaceMuted, borderLeftColor: COLORS.brand }]}>
             <View style={{ flex: 1 }}>
-              <Text style={[st.lbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.semiBold }]}>SCHEME NAME</Text>
-              <Text style={[st.val, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]} numberOfLines={1}>
+              <Text style={[st.lbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.semiBold }]}>SCHEME NAME</Text>
+              <Text style={[st.val, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]} numberOfLines={1}>
                 {ppData.schemeSummary?.schemeName?.trim() || 'Scheme'}
               </Text>
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={[st.lbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.semiBold }]}>TRANSACTION DATE</Text>
-              <Text style={[st.val, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+              <Text style={[st.lbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.semiBold }]}>TRANSACTION DATE</Text>
+              <Text style={[st.val, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
                 {formatDate(payment.updateTime)}
               </Text>
             </View>
           </View>
 
           {/* Receipt to */}
-          <Text style={[st.sectionTitle, { color: COLORS.primaryDark, fontFamily: FONTS.family.bold }]}>RECEIPT TO</Text>
-          <View style={[st.customerBox, { borderColor: COLORS.borderLight, backgroundColor: COLORS.backgroundSecondary }]}>
+          <Text style={[st.sectionTitle, { color: COLORS.brandStrong, fontFamily: FONTS.family.bold }]}>RECEIPT TO</Text>
+          <View style={[st.customerBox, { borderColor: COLORS.borderSubtle, backgroundColor: COLORS.surfaceMuted }]}>
             <View style={st.row2}>
               <View style={{ flex: 1 }}>
-                <Text style={[st.custLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Name</Text>
-                <Text style={[st.custVal, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]} numberOfLines={1}>
+                <Text style={[st.custLbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Name</Text>
+                <Text style={[st.custVal, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]} numberOfLines={1}>
                   {ppData.personalInfo?.pName ?? ppData.pName}
                 </Text>
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={[st.custLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Receipt No</Text>
-                <Text style={[st.custVal, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+                <Text style={[st.custLbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Receipt No</Text>
+                <Text style={[st.custVal, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
                   {payment.receiptNo}
                 </Text>
               </View>
             </View>
             <View style={st.row2}>
               <View style={{ flex: 1 }}>
-                <Text style={[st.custLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Mobile</Text>
-                <Text style={[st.custVal, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+                <Text style={[st.custLbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Mobile</Text>
+                <Text style={[st.custVal, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
                   {ppData.personalInfo?.mobile ?? 'N/A'}
                 </Text>
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={[st.custLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Group Code - Reg No</Text>
-                <Text style={[st.custVal, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+                <Text style={[st.custLbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Group Code - Reg No</Text>
+                <Text style={[st.custVal, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
                   {groupRegNo}
                 </Text>
               </View>
@@ -172,67 +172,67 @@ export default function PaymentReceipt() {
           </View>
 
           {/* Payment table */}
-          <View style={[st.table, { borderColor: COLORS.borderLight }]}>
-            <View style={[st.tableHeader, { backgroundColor: COLORS.primary }]}>
+          <View style={[st.table, { borderColor: COLORS.borderSubtle }]}>
+            <View style={[st.tableHeader, { backgroundColor: COLORS.brand }]}>
               <Text style={[st.th, { flex: 0.5 }]}>S.No</Text>
               <Text style={[st.th, { flex: 1.8 }]}>Group-Reg No</Text>
               <Text style={[st.th, { flex: 1 }]}>Installment</Text>
               {weight > 0 && <Text style={[st.th, { flex: 1 }]}>Weight</Text>}
               <Text style={[st.th, { flex: 1.2 }]}>Amount</Text>
             </View>
-            <View style={[st.tableRow, { borderTopColor: COLORS.borderLight }]}>
-              <Text style={[st.td, { flex: 0.5, color: COLORS.textPrimary }]}>1</Text>
-              <Text style={[st.td, { flex: 1.8, color: COLORS.textPrimary }]}>{groupRegNo}</Text>
-              <Text style={[st.td, { flex: 1, color: COLORS.textPrimary }]}>#{payment.installment}</Text>
-              {weight > 0 && <Text style={[st.td, { flex: 1, color: COLORS.textPrimary }]}>{weight.toFixed(3)}</Text>}
-              <Text style={[st.td, { flex: 1.2, color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+            <View style={[st.tableRow, { borderTopColor: COLORS.borderSubtle }]}>
+              <Text style={[st.td, { flex: 0.5, color: COLORS.contentPrimary }]}>1</Text>
+              <Text style={[st.td, { flex: 1.8, color: COLORS.contentPrimary }]}>{groupRegNo}</Text>
+              <Text style={[st.td, { flex: 1, color: COLORS.contentPrimary }]}>#{payment.installment}</Text>
+              {weight > 0 && <Text style={[st.td, { flex: 1, color: COLORS.contentPrimary }]}>{weight.toFixed(3)}</Text>}
+              <Text style={[st.td, { flex: 1.2, color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
                 {currency(payment.amount)}
               </Text>
             </View>
           </View>
 
           {/* Total */}
-          <View style={[st.totalBox, { backgroundColor: COLORS.primary + '0F', borderColor: COLORS.primary + '35' }]}>
-            <Text style={[st.totalLbl, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>Total Amount Paid</Text>
-            <Text style={[st.totalVal, { color: COLORS.primaryDark, fontFamily: FONTS.family.bold }]}>
+          <View style={[st.totalBox, { backgroundColor: COLORS.brand + '0F', borderColor: COLORS.brand + '35' }]}>
+            <Text style={[st.totalLbl, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>Total Amount Paid</Text>
+            <Text style={[st.totalVal, { color: COLORS.brandStrong, fontFamily: FONTS.family.bold }]}>
               {currency(payment.amount)}
             </Text>
           </View>
 
           {/* Payment mode */}
           {hasPaymentMode && (
-            <View style={[st.paymodeBox, { backgroundColor: COLORS.backgroundSecondary }]}>
+            <View style={[st.paymodeBox, { backgroundColor: COLORS.surfaceMuted }]}>
               <View style={st.paymodeTitleRow}>
-                <Ionicons name={method.icon} size={13} color={COLORS.primary} />
-                <Text style={[st.paymodeTitle, { color: COLORS.primaryDark, fontFamily: FONTS.family.bold }]}>Payment Details</Text>
+                <Ionicons name={method.icon} size={13} color={COLORS.brand} />
+                <Text style={[st.paymodeTitle, { color: COLORS.brandStrong, fontFamily: FONTS.family.bold }]}>Payment Details</Text>
               </View>
               {!!payment.chqBank && payment.chqBank !== 'N/A' && (
                 <View style={st.pmRow}>
-                  <Text style={[st.pmK, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Mode</Text>
-                  <Text style={[st.pmV, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>{payment.chqBank}</Text>
+                  <Text style={[st.pmK, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Mode</Text>
+                  <Text style={[st.pmV, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>{payment.chqBank}</Text>
                 </View>
               )}
               {!!payment.chqBranch && payment.chqBranch !== 'N/A' && (
                 <View style={st.pmRow}>
-                  <Text style={[st.pmK, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Branch</Text>
-                  <Text style={[st.pmV, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>{payment.chqBranch}</Text>
+                  <Text style={[st.pmK, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Branch</Text>
+                  <Text style={[st.pmV, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>{payment.chqBranch}</Text>
                 </View>
               )}
               {!!payment.chq_CardNo && payment.chq_CardNo !== 'N/A' && (
                 <View style={st.pmRow}>
-                  <Text style={[st.pmK, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Ref No</Text>
-                  <Text style={[st.pmV, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]} numberOfLines={1}>{payment.chq_CardNo}</Text>
+                  <Text style={[st.pmK, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Ref No</Text>
+                  <Text style={[st.pmV, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]} numberOfLines={1}>{payment.chq_CardNo}</Text>
                 </View>
               )}
             </View>
           )}
 
           {/* Footer */}
-          <View style={[st.footer, { borderTopColor: COLORS.borderLight }]}>
-            <Text style={[st.footerTxt, { color: COLORS.textSecondary, fontFamily: FONTS.family.semiBold }]}>
+          <View style={[st.footer, { borderTopColor: COLORS.borderSubtle }]}>
+            <Text style={[st.footerTxt, { color: COLORS.contentSecondary, fontFamily: FONTS.family.semiBold }]}>
               Thank you for being our valued customer
             </Text>
-            <Text style={[st.footerSub, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+            <Text style={[st.footerSub, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
               This is a computer generated receipt
             </Text>
           </View>
@@ -240,7 +240,7 @@ export default function PaymentReceipt() {
 
         {/* Download CTA */}
         <TouchableOpacity
-          style={[st.downloadBtn, { backgroundColor: COLORS.primary, opacity: downloading ? 0.7 : 1 }]}
+          style={[st.downloadBtn, { backgroundColor: COLORS.brand, opacity: downloading ? 0.7 : 1 }]}
           activeOpacity={0.9}
           onPress={handleDownload}
           disabled={downloading}

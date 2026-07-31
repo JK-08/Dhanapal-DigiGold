@@ -17,13 +17,13 @@ export default function AppBadge({ label, variant = 'primary', size = 'md', dot 
   const { COLORS, FONTS, SIZES } = useTheme();
 
   const configs: Record<BadgeVariant, { bg: string; text: string; border?: string }> = {
-    primary: { bg: COLORS.primary,   text: COLORS.white          },
+    primary: { bg: COLORS.brand,   text: COLORS.white          },
     gold:    { bg: COLORS.secondary, text: COLORS.white          },
     success: { bg: COLORS.success,   text: COLORS.white          },
     error:   { bg: COLORS.error,     text: COLORS.white          },
     warning: { bg: COLORS.warning,   text: COLORS.white          },
     info:    { bg: COLORS.info,      text: COLORS.white          },
-    neutral: { bg: COLORS.gray200,   text: COLORS.textSecondary  },
+    neutral: { bg: COLORS.gray200,   text: COLORS.contentSecondary  },
   };
   const cfg = configs[variant];
 

@@ -238,8 +238,8 @@ function ExpiredOverlay({ onRedeem, id }: { onRedeem?: (id: string) => void; id:
   return (
     <View style={styles.expiredOverlay} pointerEvents="box-none">
       <View style={[styles.expiredPill, { backgroundColor: COLORS.white, borderColor: COLORS.border }]}>
-        <Ionicons name="lock-closed-outline" size={12} color={COLORS.textTertiary} />
-        <Text style={[styles.expiredText, { fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xs, color: COLORS.textTertiary }]}>
+        <Ionicons name="lock-closed-outline" size={12} color={COLORS.contentMuted} />
+        <Text style={[styles.expiredText, { fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xs, color: COLORS.contentMuted }]}>
           {' '}Scheme closed
         </Text>
       </View>
@@ -266,7 +266,7 @@ function DefaultCard({
 
   if (loading) {
     return (
-      <View style={[styles.card, { backgroundColor: COLORS.card }]}>
+      <View style={[styles.card, { backgroundColor: COLORS.surface }]}>
         <Shimmer width="100%" height={140} borderRadius={0} />
         <View style={{ padding: 14, gap: 10 }}>
           <View style={{ flexDirection: 'row', gap: 8 }}>
@@ -294,14 +294,14 @@ function DefaultCard({
     <Pressable
       style={[
         styles.card,
-        { backgroundColor: COLORS.card },
-        scheme.isFeatured && { borderWidth: 2, borderColor: COLORS.primary },
+        { backgroundColor: COLORS.surface },
+        scheme.isFeatured && { borderWidth: 2, borderColor: COLORS.brand },
       ]}
       onPress={() => !isExpired && onPress?.(scheme.id)}
       android_ripple={{ color: COLORS.orangeOpacity10 }}
     >
       {scheme.isFeatured && (
-        <View style={[styles.featuredBadge, { backgroundColor: COLORS.primary }]}>
+        <View style={[styles.featuredBadge, { backgroundColor: COLORS.brand }]}>
           <Text style={[styles.featuredBadgeText, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.xxs, color: COLORS.white }]}>
             MOST POPULAR
           </Text>
@@ -311,7 +311,7 @@ function DefaultCard({
       <SchemeImage
         image={scheme.image}
         height={140}
-        gradientColors={[COLORS.primaryPale, COLORS.secondaryLighter]}
+        gradientColors={[COLORS.brandTint, COLORS.secondaryLighter]}
       >
         <View style={StyleSheet.absoluteFillObject} pointerEvents="box-none">
           <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -323,10 +323,10 @@ function DefaultCard({
             <WishlistBtn active={isWishlisted} onToggle={toggleWish} />
           </View>
           <View style={{ position: 'absolute', bottom: 12, left: 14 }}>
-            <Text style={[{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.xxs, color: COLORS.primaryDark, letterSpacing: 0.5 }]}>
+            <Text style={[{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.xxs, color: COLORS.brandStrong, letterSpacing: 0.5 }]}>
               {scheme.category.toUpperCase()}
             </Text>
-            <Text style={[{ fontFamily: FONTS.family.extraBold, fontSize: SIZES.font.xl, color: COLORS.textPrimary, lineHeight: SIZES.font.xl * 1.2 }]}>
+            <Text style={[{ fontFamily: FONTS.family.extraBold, fontSize: SIZES.font.xl, color: COLORS.contentPrimary, lineHeight: SIZES.font.xl * 1.2 }]}>
               {scheme.name}
             </Text>
           </View>
@@ -336,8 +336,8 @@ function DefaultCard({
 
       <View style={styles.body}>
         <View style={styles.metaRow}>
-          <View style={[styles.categoryPill, { backgroundColor: COLORS.primaryPale }]}>
-            <Text style={[styles.categoryText, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.xxs, color: COLORS.primaryDark }]}>
+          <View style={[styles.categoryPill, { backgroundColor: COLORS.brandTint }]}>
+            <Text style={[styles.categoryText, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.xxs, color: COLORS.brandStrong }]}>
               {scheme.category}
             </Text>
           </View>
@@ -348,7 +348,7 @@ function DefaultCard({
                 {' '}{scheme.rating.toFixed(1)}
               </Text>
               {scheme.reviewCount != null && (
-                <Text style={[{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.xxs, color: COLORS.textTertiary }]}>
+                <Text style={[{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.xxs, color: COLORS.contentMuted }]}>
                   {' '}({scheme.reviewCount.toLocaleString('en-IN')})
                 </Text>
               )}
@@ -356,30 +356,30 @@ function DefaultCard({
           )}
         </View>
 
-        <Text style={[styles.schemeName, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.lg, color: COLORS.textPrimary }]}>
+        <Text style={[styles.schemeName, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.lg, color: COLORS.contentPrimary }]}>
           {scheme.name}
         </Text>
-        <Text style={[styles.schemeDesc, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.textSecondary }]}>
+        <Text style={[styles.schemeDesc, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.contentSecondary }]}>
           {scheme.description}
         </Text>
 
         <View style={styles.statsRow}>
           <StatBlock value={scheme.returns} label="Returns" valueColor={COLORS.successDark} bgColor={COLORS.gray50} />
           <StatBlock value={scheme.purity} label="Purity" valueColor={COLORS.secondaryDark} bgColor={COLORS.gray50} />
-          <StatBlock value={`₹${scheme.minAmount.toLocaleString('en-IN')}`} label="Min / mo" valueColor={COLORS.textPrimary} bgColor={COLORS.gray50} />
+          <StatBlock value={`₹${scheme.minAmount.toLocaleString('en-IN')}`} label="Min / mo" valueColor={COLORS.contentPrimary} bgColor={COLORS.gray50} />
         </View>
 
         {scheme.progress != null && (
           <View style={{ marginBottom: 12 }}>
             <View style={styles.progressLabelRow}>
-              <Text style={[{ fontFamily: FONTS.family.medium, fontSize: SIZES.font.xs, color: COLORS.textSecondary }]}>
+              <Text style={[{ fontFamily: FONTS.family.medium, fontSize: SIZES.font.xs, color: COLORS.contentSecondary }]}>
                 Scheme completion
               </Text>
-              <Text style={[{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.xs, color: COLORS.primary }]}>
+              <Text style={[{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.xs, color: COLORS.brand }]}>
                 {scheme.progress}%
               </Text>
             </View>
-            <ProgressBar value={scheme.progress} color={COLORS.primary} />
+            <ProgressBar value={scheme.progress} color={COLORS.brand} />
           </View>
         )}
 
@@ -387,7 +387,7 @@ function DefaultCard({
           <View style={styles.tagsRow}>
             {scheme.tags.map(tag => (
               <View key={tag} style={[styles.tag, { borderColor: COLORS.border }]}>
-                <Text style={[styles.tagText, { fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xxs, color: COLORS.textSecondary }]}>
+                <Text style={[styles.tagText, { fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xxs, color: COLORS.contentSecondary }]}>
                   {tag}
                 </Text>
               </View>
@@ -400,12 +400,12 @@ function DefaultCard({
             <View style={[styles.divider, { backgroundColor: COLORS.border }]} />
             <View style={styles.footer}>
               <View>
-                <Text style={[{ fontFamily: FONTS.family.extraBold, fontSize: SIZES.font.xxl, color: COLORS.textPrimary }]}>
+                <Text style={[{ fontFamily: FONTS.family.extraBold, fontSize: SIZES.font.xxl, color: COLORS.contentPrimary }]}>
                   ₹{scheme.monthlyAmount.toLocaleString('en-IN')}
-                  <Text style={[{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.textSecondary }]}>/month</Text>
+                  <Text style={[{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.contentSecondary }]}>/month</Text>
                 </Text>
                 {scheme.nextDueDate && (
-                  <Text style={[{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.xxs, color: COLORS.textTertiary, marginTop: 2 }]}>
+                  <Text style={[{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.xxs, color: COLORS.contentMuted, marginTop: 2 }]}>
                     Next due: {scheme.nextDueDate}
                   </Text>
                 )}
@@ -427,14 +427,14 @@ function DefaultCard({
             {isExpired ? (
               <>
                 <TouchableOpacity style={[styles.btn, styles.btnDisabled]} disabled activeOpacity={1}>
-                  <Ionicons name="close-circle-outline" size={15} color={COLORS.textTertiary} />
-                  <Text style={[styles.btnText, { color: COLORS.textTertiary, fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.sm }]}>
+                  <Ionicons name="close-circle-outline" size={15} color={COLORS.contentMuted} />
+                  <Text style={[styles.btnText, { color: COLORS.contentMuted, fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.sm }]}>
                     Enrolment closed
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.btn, styles.btnOutline, { borderColor: COLORS.border }]} onPress={() => onRedeem?.(scheme.id)} activeOpacity={0.75}>
-                  <Ionicons name="cash-outline" size={15} color={COLORS.textSecondary} />
-                  <Text style={[styles.btnText, { color: COLORS.textSecondary, fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.sm }]}>
+                  <Ionicons name="cash-outline" size={15} color={COLORS.contentSecondary} />
+                  <Text style={[styles.btnText, { color: COLORS.contentSecondary, fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.sm }]}>
                     Redeem
                   </Text>
                 </TouchableOpacity>
@@ -442,8 +442,8 @@ function DefaultCard({
             ) : (
               <>
                 <TouchableOpacity style={[styles.btn, styles.btnOutline, { borderColor: COLORS.border }]} onPress={() => onDetails?.(scheme.id)} activeOpacity={0.75}>
-                  <Ionicons name="information-circle-outline" size={15} color={COLORS.textSecondary} />
-                  <Text style={[styles.btnText, { color: COLORS.textSecondary, fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.sm }]}>
+                  <Ionicons name="information-circle-outline" size={15} color={COLORS.contentSecondary} />
+                  <Text style={[styles.btnText, { color: COLORS.contentSecondary, fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.sm }]}>
                     Details
                   </Text>
                 </TouchableOpacity>
@@ -474,7 +474,7 @@ function HorizontalCard({
 
   if (loading) {
     return (
-      <View style={[styles.hCard, { backgroundColor: COLORS.card }]}>
+      <View style={[styles.hCard, { backgroundColor: COLORS.surface }]}>
         <Shimmer width={110} height={90} borderRadius={0} />
         <View style={{ flex: 1, padding: 12, gap: 8 }}>
           <Shimmer width="75%" height={12} />
@@ -494,11 +494,11 @@ function HorizontalCard({
 
   return (
     <Pressable
-      style={[styles.hCard, { backgroundColor: COLORS.card }]}
+      style={[styles.hCard, { backgroundColor: COLORS.surface }]}
       onPress={() => onPress?.(scheme.id)}
       android_ripple={{ color: COLORS.orangeOpacity10 }}
     >
-      <SchemeImage image={scheme.image} height={90} gradientColors={[COLORS.primaryPale, COLORS.secondaryLighter]}>
+      <SchemeImage image={scheme.image} height={90} gradientColors={[COLORS.brandTint, COLORS.secondaryLighter]}>
         <View style={{ padding: 6 }}>
           <View style={[styles.badge, { backgroundColor: statusCfg.bg }]}>
             <Text style={[styles.badgeText, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.xxs, color: statusCfg.color }]}>
@@ -513,24 +513,24 @@ function HorizontalCard({
 
       <View style={styles.hBody}>
         <View>
-          <Text style={[styles.hName, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.sm, color: COLORS.textPrimary }]} numberOfLines={1}>
+          <Text style={[styles.hName, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.sm, color: COLORS.contentPrimary }]} numberOfLines={1}>
             {scheme.name}
           </Text>
-          <Text style={[styles.hDesc, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.textSecondary }]} numberOfLines={2}>
+          <Text style={[styles.hDesc, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.contentSecondary }]} numberOfLines={2}>
             {scheme.description}
           </Text>
           <View style={styles.hStats}>
             <View>
               <Text style={[{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.sm, color: COLORS.secondaryDark }]}>{scheme.purity}</Text>
-              <Text style={[styles.hStatLabel, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xxs, color: COLORS.textTertiary }]}>Purity</Text>
+              <Text style={[styles.hStatLabel, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xxs, color: COLORS.contentMuted }]}>Purity</Text>
             </View>
             <View>
               <Text style={[{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.sm, color: COLORS.successDark }]}>{scheme.returns}</Text>
-              <Text style={[styles.hStatLabel, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xxs, color: COLORS.textTertiary }]}>Returns</Text>
+              <Text style={[styles.hStatLabel, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xxs, color: COLORS.contentMuted }]}>Returns</Text>
             </View>
             <View>
-              <Text style={[{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.sm, color: COLORS.textPrimary }]}>₹{scheme.minAmount.toLocaleString('en-IN')}</Text>
-              <Text style={[styles.hStatLabel, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xxs, color: COLORS.textTertiary }]}>Min</Text>
+              <Text style={[{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.sm, color: COLORS.contentPrimary }]}>₹{scheme.minAmount.toLocaleString('en-IN')}</Text>
+              <Text style={[styles.hStatLabel, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xxs, color: COLORS.contentMuted }]}>Min</Text>
             </View>
           </View>
         </View>
@@ -540,7 +540,7 @@ function HorizontalCard({
             onPress={() => onDetails?.(scheme.id)}
             activeOpacity={0.75}
           >
-            <Text style={[{ fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xxs, color: COLORS.textSecondary }]}>Details</Text>
+            <Text style={[{ fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xxs, color: COLORS.contentSecondary }]}>Details</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.hBtn, { backgroundColor: isExpired ? COLORS.gray200 : COLORS.secondary }]}
@@ -548,7 +548,7 @@ function HorizontalCard({
             disabled={isExpired}
             activeOpacity={0.8}
           >
-            <Text style={[{ fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xxs, color: isExpired ? COLORS.textTertiary : COLORS.white }]}>
+            <Text style={[{ fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xxs, color: isExpired ? COLORS.contentMuted : COLORS.white }]}>
               {isExpired ? 'Closed' : 'Join'}
             </Text>
           </TouchableOpacity>
@@ -570,7 +570,7 @@ function MiniCard({
 
   if (loading) {
     return (
-      <View style={[styles.miniCard, { backgroundColor: COLORS.card }]}>
+      <View style={[styles.miniCard, { backgroundColor: COLORS.surface }]}>
         <Shimmer width="100%" height={80} borderRadius={0} />
         <View style={{ padding: 10, gap: 6 }}>
           <Shimmer width="80%" height={11} />
@@ -584,11 +584,11 @@ function MiniCard({
 
   return (
     <Pressable
-      style={[styles.miniCard, { backgroundColor: COLORS.card }]}
+      style={[styles.miniCard, { backgroundColor: COLORS.surface }]}
       onPress={() => onPress?.(scheme.id)}
       android_ripple={{ color: COLORS.orangeOpacity10 }}
     >
-      <SchemeImage image={scheme.image} height={80} gradientColors={[COLORS.primaryPale, COLORS.secondaryLighter]}>
+      <SchemeImage image={scheme.image} height={80} gradientColors={[COLORS.brandTint, COLORS.secondaryLighter]}>
         <View style={{ padding: 6 }}>
           <View style={[styles.badge, { backgroundColor: statusCfg.bg }]}>
             <Text style={[styles.badgeText, { fontFamily: FONTS.family.bold, fontSize: 8, color: statusCfg.color }]}>
@@ -602,13 +602,13 @@ function MiniCard({
         {isExpired && <ExpiredOverlay id={scheme.id} />}
       </SchemeImage>
       <View style={styles.miniBody}>
-        <Text style={[styles.miniName, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.sm, color: COLORS.textPrimary }]} numberOfLines={1}>
+        <Text style={[styles.miniName, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.sm, color: COLORS.contentPrimary }]} numberOfLines={1}>
           {scheme.name}
         </Text>
         <Text style={[{ fontFamily: FONTS.family.extraBold, fontSize: SIZES.font.xl, color: COLORS.secondaryDark }]}>
           {scheme.returns}
         </Text>
-        <Text style={[{ fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xxs, color: COLORS.textTertiary, textTransform: 'uppercase', letterSpacing: 0.3 }]}>
+        <Text style={[{ fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xxs, color: COLORS.contentMuted, textTransform: 'uppercase', letterSpacing: 0.3 }]}>
           Returns · {scheme.purity}
         </Text>
         <TouchableOpacity
@@ -617,7 +617,7 @@ function MiniCard({
           disabled={isExpired}
           activeOpacity={0.8}
         >
-          <Text style={[{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.xs, color: isExpired ? COLORS.textTertiary : COLORS.white }]}>
+          <Text style={[{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.xs, color: isExpired ? COLORS.contentMuted : COLORS.white }]}>
             {isExpired ? 'Closed' : 'Invest →'}
           </Text>
         </TouchableOpacity>

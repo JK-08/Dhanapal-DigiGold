@@ -22,20 +22,20 @@ export default function StepIndicator({ activeIndex }: { activeIndex: 0 | 1 | 2 
               <View style={[
                 s.dot,
                 {
-                  backgroundColor: isDone || isActive ? COLORS.primary : COLORS.gray100,
-                  borderColor:     isDone || isActive ? COLORS.primary : COLORS.borderMedium,
+                  backgroundColor: isDone || isActive ? COLORS.brand : COLORS.gray100,
+                  borderColor:     isDone || isActive ? COLORS.brand : COLORS.borderStrong,
                 },
               ]}>
                 {isDone ? (
                   <Ionicons name="checkmark" size={13} color={COLORS.white} />
                 ) : (
-                  <Text style={[s.dotText, { color: isActive ? COLORS.white : COLORS.textTertiary }]}>{i + 1}</Text>
+                  <Text style={[s.dotText, { color: isActive ? COLORS.white : COLORS.contentMuted }]}>{i + 1}</Text>
                 )}
               </View>
-              <Text style={[s.label, { color: isActive ? COLORS.textPrimary : COLORS.textTertiary }]}>{label}</Text>
+              <Text style={[s.label, { color: isActive ? COLORS.contentPrimary : COLORS.contentMuted }]}>{label}</Text>
             </View>
             {i < LABELS.length - 1 && (
-              <View style={[s.connector, { backgroundColor: i < activeIndex ? COLORS.primary : COLORS.borderMedium }]} />
+              <View style={[s.connector, { backgroundColor: i < activeIndex ? COLORS.brand : COLORS.borderStrong }]} />
             )}
           </React.Fragment>
         );

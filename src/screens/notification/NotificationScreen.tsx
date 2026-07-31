@@ -62,22 +62,22 @@ function NotifCard({
         style={[
           styles.card,
           {
-            backgroundColor:  item.read ? COLORS.card : COLORS.primaryPale,
-            borderColor:      item.read ? COLORS.border : COLORS.primary + '40',
-            borderLeftColor:  item.read ? COLORS.border : COLORS.primary,
+            backgroundColor:  item.read ? COLORS.surface : COLORS.brandTint,
+            borderColor:      item.read ? COLORS.border : COLORS.brand + '40',
+            borderLeftColor:  item.read ? COLORS.border : COLORS.brand,
             ...SHADOWS.sm,
           },
         ]}
       >
         {/* Unread dot */}
         {!item.read && (
-          <View style={[styles.unreadDot, { backgroundColor: COLORS.primary }]} />
+          <View style={[styles.unreadDot, { backgroundColor: COLORS.brand }]} />
         )}
 
         {/* Icon or image */}
         <View style={[
           styles.iconWrap,
-          { backgroundColor: item.read ? COLORS.gray100 : COLORS.primary + '18' },
+          { backgroundColor: item.read ? COLORS.gray100 : COLORS.brand + '18' },
         ]}>
           {item.imageUrl ? (
             <Image
@@ -89,7 +89,7 @@ function NotifCard({
             <Ionicons
               name={item.read ? 'notifications-outline' : 'notifications'}
               size={20}
-              color={item.read ? COLORS.textTertiary : COLORS.primary}
+              color={item.read ? COLORS.contentMuted : COLORS.brand}
             />
           )}
         </View>
@@ -101,7 +101,7 @@ function NotifCard({
             style={{
               fontFamily: FONTS.family.semiBold,
               fontSize:   FONTS.bodyMedium.fontSize,
-              color:      item.read ? COLORS.textSecondary : COLORS.textPrimary,
+              color:      item.read ? COLORS.contentSecondary : COLORS.contentPrimary,
             }}
           >
             {item.title}
@@ -111,7 +111,7 @@ function NotifCard({
             style={{
               fontFamily: FONTS.family.regular,
               fontSize:   FONTS.caption.fontSize,
-              color:      COLORS.textTertiary,
+              color:      COLORS.contentMuted,
               lineHeight: 18,
             }}
           >
@@ -139,7 +139,7 @@ function NotifCard({
           <Text style={{
             fontFamily: FONTS.family.regular,
             fontSize:   FONTS.caption.fontSize,
-            color:      COLORS.textDisabled,
+            color:      COLORS.contentDisabled,
             marginTop:  2,
           }}>
             {item.createdAt ? timeAgo(item.createdAt) : ''}
@@ -152,9 +152,9 @@ function NotifCard({
             <TouchableOpacity
               onPress={() => onRead(item.id)}
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-              style={[styles.actionBtn, { backgroundColor: COLORS.primary + '15' }]}
+              style={[styles.actionBtn, { backgroundColor: COLORS.brand + '15' }]}
             >
-              <Ionicons name="checkmark" size={14} color={COLORS.primary} />
+              <Ionicons name="checkmark" size={14} color={COLORS.brand} />
             </TouchableOpacity>
           )}
           <TouchableOpacity
@@ -185,7 +185,7 @@ function EmptyState({ filter }: { filter: Filter }) {
       <Text style={{
         fontFamily: FONTS.family.medium,
         fontSize:   FONTS.bodyMedium.fontSize,
-        color:      COLORS.textTertiary,
+        color:      COLORS.contentMuted,
         marginTop:  12,
       }}>
         {m.text}
@@ -257,7 +257,7 @@ export default function NotificationScreen() {
   ];
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.background }} >
+    <View style={{ flex: 1, backgroundColor: COLORS.surfacePage }} >
 
       {/* ── Header ─────────────────────────────────────────────── */}
       <AppHeader
@@ -280,7 +280,7 @@ export default function NotificationScreen() {
 
       {/* ── Filter tabs ─────────────────────────────────────────── */}
       <View style={[styles.filterRow, {
-        backgroundColor:   COLORS.card,
+        backgroundColor:   COLORS.surface,
         borderBottomColor: COLORS.border,
       }]}>
         {FILTERS.map((f) => (
@@ -289,13 +289,13 @@ export default function NotificationScreen() {
             onPress={() => setFilter(f.key)}
             style={[
               styles.filterTab,
-              { borderBottomColor: filter === f.key ? COLORS.primary : 'transparent' },
+              { borderBottomColor: filter === f.key ? COLORS.brand : 'transparent' },
             ]}
           >
             <Text style={{
               fontFamily: filter === f.key ? FONTS.family.semiBold : FONTS.family.regular,
               fontSize:   FONTS.bodyMedium.fontSize,
-              color:      filter === f.key ? COLORS.primary : COLORS.textTertiary,
+              color:      filter === f.key ? COLORS.brand : COLORS.contentMuted,
             }}>
               {f.label}
             </Text>
@@ -306,15 +306,15 @@ export default function NotificationScreen() {
       {/* ── Content ─────────────────────────────────────────────── */}
       {loading && !refreshing ? (
         <View style={styles.center}>
-          <ActivityIndicator size="large" color={COLORS.primary} />
+          <ActivityIndicator size="large" color={COLORS.brand} />
         </View>
       ) : error ? (
         <View style={styles.center}>
-          <Ionicons name="cloud-offline-outline" size={48} color={COLORS.textDisabled} />
+          <Ionicons name="cloud-offline-outline" size={48} color={COLORS.contentDisabled} />
           <Text style={{
             fontFamily: FONTS.family.medium,
             fontSize:   FONTS.bodyMedium.fontSize,
-            color:      COLORS.textTertiary,
+            color:      COLORS.contentMuted,
             marginTop:  12,
             textAlign:  'center',
             paddingHorizontal: 24,
@@ -323,7 +323,7 @@ export default function NotificationScreen() {
           </Text>
           <TouchableOpacity
             onPress={refresh}
-            style={[styles.retryBtn, { backgroundColor: COLORS.primary }]}
+            style={[styles.retryBtn, { backgroundColor: COLORS.brand }]}
           >
             <Text style={{
               fontFamily: FONTS.family.semiBold,
@@ -350,8 +350,8 @@ export default function NotificationScreen() {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              colors={[COLORS.primary]}
-              tintColor={COLORS.primary}
+              colors={[COLORS.brand]}
+              tintColor={COLORS.brand}
             />
           }
           ListEmptyComponent={<EmptyState filter={filter} />}

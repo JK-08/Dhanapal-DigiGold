@@ -28,187 +28,371 @@ const fontScale = (size) => {
 };
 
 // ============================================
-// 🎨 COLOR PALETTE - 
+// 🎨 PALETTE — raw hex ramps. Never reference these directly from
+// components; always go through the semantic COLORS roles below.
 // ============================================
-export const COLORS = {
-  // ===== PRIMARY BRAND COLORS (CHERRY RED) =====
-  primary: "#C2185B",           // Cherry Red (Main Brand)
-  primaryLight: "#D8467F",      // Medium Cherry Red
-  primaryDark: "#8E0F42",       // Deep Cherry Red
-  primaryLighter: "#F3AFC9",    // Soft Pink
-  primaryPale: "#FFF8F5",       // Soft Cream (very light)
+const PALETTE = {
+  // Magenta ramp (brand)
+  magenta900: "#46002A",
+  magenta800: "#64003C",
+  magenta700: "#80004D", // ← brand / primary
+  magenta500: "#A4477F",
+  magenta300: "#C68CAF",
+  magenta100: "#EBD6E3",
+  magenta050: "#F9F4F7",
 
-  secondary: "#A8CFA8",         // Sage Green
-  secondaryLight: "#C3DFC3",    // Light Sage
-  secondaryDark: "#7FAF7F",     // Dark Sage
-  secondaryLighter: "#E3EFE3",  // Pale Sage
+  // Cream ramp (accent) — SURFACE colours only. Never used as text/icon
+  // colour: #FFF2D8-family on white is ~1.1:1 and effectively invisible.
+  cream050: "#FFF8E1",
+  cream100: "#F8EDC2",
+  cream200: "#ECD98A",
+  cream400: "#D4AF37", // main gold
 
-  accent: "#A8CFA8",             // Sage Green
-  accentLight: "#E3EFE3",        // Pale Sage
-  accentDark: "#7FAF7F",         // Dark Sage
-  bottomGlow: "rgb(194, 24, 91)",
-
-  // ===== NEUTRAL COLORS =====
+  // Neutrals
+  ink: "#14161F",
+  slate700: "#3C4152",
+  slate500: "#6B7280",
+  slate400: "#9CA3AF", // decorative only — fails 4.5:1, never use for text
+  slate450: "#5E6471", // placeholder/muted text that must clear 4.5:1 on tinted fields
+  slate300: "#D2D6DE",
+  slate200: "#E6E9EF",
+  slate100: "#F1F3F7",
+  slate050: "#F8F9FC",
   white: "#FFFFFF",
   black: "#000000",
-  background: "#FAFAF8",         // Off White (page background)
-  backgroundSecondary: "#F2F2EE", // Deeper off-white
-  backgroundTertiary: "#E8E8E2",  // Deepest off-white
-  backgroundDark: "#1A1A1A",      // Near-black (dark surfaces)
-  backgroundOrange: "#FAFAF8",    // Reuse off white
-  backgroundGold: "#EDF5ED",      // Light sage tint
-  surface: "#FFFFFF",             // White surface
-  card: "#FFFFFF",
-  softCard: "#F2F2EE",
-  overlay: "rgba(194, 24, 91, 0.7)",    // Cherry red overlay
-  overlayDark: "rgba(0, 0, 0, 0.7)",
-  overlayGold: "rgba(168, 207, 168, 0.1)",
-  overlayOrange: "rgba(194, 24, 91, 0.1)",
 
-  // ===== TEXT COLORS =====
-  textPrimary: "#2D2D2D",        // Charcoal (readable)
-  textSecondary: "#5C5C5C",      // Medium gray
-  textTertiary: "#8C8C8C",       // Light gray
-  textDisabled: "#C7C7C7",       // Muted gray
-  textInverse: "#FFFFFF",        // White on dark
-  textOrange: "#C2185B",         // Reuse primary cherry red
-  textOrangeDark: "#8E0F42",     // Deep cherry red text
-  textGold: "#A8CFA8",           // Sage green text (secondary)
-  textGoldDark: "#7FAF7F",       // Dark sage text
+  // States. The base tone is the FILL colour (icons, borders, chips — needs
+  // 3:1). The `*Text` tone is a darker sibling for the same state rendered
+  // AS TEXT on a light surface (needs 4.5:1); `*OnDark` is the lighter
+  // sibling for text on `surfaceInverse`.
+  green: "#128A5E",
+  greenSoft: "#E4F5EE",
+  greenText: "#0F714D",
+  greenOnDark: "#139364",
+  red: "#C62828",
+  redSoft: "#FCEAEA",
+  redText: "#C62828",
+  redOnDark: "#DD5353",
+  orange: "#B7791F",
+  orangeSoft: "#FDF3E2",
+  orangeText: "#875A17",
+  orangeOnDark: "#B1761E",
+  blue: "#1F6FD0",
+  blueSoft: "#E8F1FC",
+  blueText: "#1C63B9",
+  blueOnDark: "#3381E0",
+};
 
-  // ===== GRAY SCALE =====
-  gray50: "#FAFAFA",
-  gray100: "#F0F0F0",
-  gray200: "#E0E0E0",
-  gray300: "#C7C7C7",
-  gray400: "#9E9E9E",
-  gray500: "#757575",
-  gray600: "#5C5C5C",
-  gray700: "#424242",
-  gray800: "#2D2D2D",
-  gray900: "#1A1A1A",
+/* ============================================================
+   ALPHA HELPER
+   Every translucent colour below is COMPUTED from a PALETTE hex,
+   so changing a hex in PALETTE updates the scrims, shadows and
+   overlays too. Never hand-write an rgba() string in this file.
+   ============================================================ */
+const withAlpha = (hex, alpha) => {
+  const h = hex.replace("#", "");
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
 
-  // ===== BRAND VARIATIONS =====
-  orangeLight: "#FFF8F5",         // Soft Cream
-  orangeMedium: "#C2185B",        // Cherry Red
-  orangeDark: "#8E0F42",          // Deep Cherry Red
-  orangeVivid: "#D8467F",         // Medium vivid Cherry Red
-  orangeIce: "#FBE0D6",           // Deep Cream
-  orangeSoft: "#F3AFC9",          // Soft Pink
-  orangeDeep: "#6B0930",          // Darkest Cherry Red
+/* ============================================================
+   COLORS — semantic roles. Use these in components.
+   ============================================================ */
+export const COLORS = {
+  /* --- Brand (main identity, headers, primary actions, ALL text & icons) --- */
+  brand: PALETTE.magenta700,
+  brandStrong: PALETTE.magenta800, // pressed / hover state
+  brandDeep: PALETTE.magenta900,   // dark hero sections
+  brandMuted: PALETTE.magenta500,  // secondary brand elements
+  brandSoft: PALETTE.magenta300,   // disabled brand, illustrations
+  brandSubtle: PALETTE.magenta100, // chips, selected rows
+  brandTint: PALETTE.magenta050,   // section backgrounds
 
-  // ===== BORDER & DIVIDER =====
-  border: "#E0E0E0",
-  borderLight: "#F0F0F0",
-  borderMedium: "#C7C7C7",
-  borderDark: "#5C5C5C",
-  borderOrange: "#C2185B",
-  borderGold: "#A8CFA8",
-  divider: "#E0E0E0",
+  /* --- Accent (cream SURFACES only — never text; see PALETTE note) --- */
+  accent: PALETTE.cream050,        // filled cream panels, badges
+  accentStrong: PALETTE.cream200,  // pressed state
+  accentDeep: PALETTE.cream400,    // deepest cream, borders on cream
+  accentSoft: PALETTE.cream100,
+  accentSubtle: PALETTE.cream200,  // borders, dividers
+  accentTint: PALETTE.cream050,    // callout backgrounds
 
-  // ===== INPUT COLORS =====
-  inputBackground: "#FFFFFF",
-  inputBorder: "#E0E0E0",
-  inputPlaceholder: "rgba(92, 92, 92, 0.5)",
-  inputFocused: "#C2185B",        // Cherry red focus ring
-  inputFocusedAlt: "#A8CFA8",     // Sage green alternative
+  /* --- Surfaces (anything you place content on) --- */
+  surface: PALETTE.white,          // cards, sheets
+  surfacePage: PALETTE.white,      // screen background
+  surfaceMuted: PALETTE.slate050,  // grouped list background
+  surfaceSunken: PALETTE.slate100, // input wells, skeletons
+  surfaceBrand: PALETTE.magenta700, // filled brand panels
+  surfaceInverse: PALETTE.ink,     // dark panels, toasts
 
-  // ===== STATUS COLORS =====
-  success: "#2E7D32",
-  successLight: "#4CAF50",
-  successDark: "#1B5E20",
-  error: "#C62828",
-  errorLight: "#E53935",
-  errorDark: "#8E0000",
-  warning: "#D97706",
-  warningLight: "#F59E0B",
-  warningDark: "#B45309",
-  info: "#1565C0",
-  infoLight: "#42A5F5",
-  infoDark: "#0D47A1",
-  disabled: "#F0F0F0",
+  /* --- Content (text & icons) --- */
+  contentPrimary: PALETTE.ink,
+  contentSecondary: PALETTE.slate700,
+  contentMuted: PALETTE.slate500,
+  contentPlaceholder: PALETTE.slate450, // slate400 fails 4.5:1; placeholders are text
+  contentDisabled: PALETTE.slate300,
+  contentOnBrand: PALETTE.white,   // text sitting on `brand` — 10.4:1
+  contentOnAccent: PALETTE.magenta700, // text sitting on cream — 9.4:1
+  contentOnInverse: PALETTE.white,
+  contentBrand: PALETTE.magenta700, // links, active tab labels
+  contentAccent: PALETTE.magenta700, // cream can't be text; accent text = brand
 
-  // ===== GOLD VARIATIONS (mapped to secondary sage green) =====
-  goldPrimary: "#A8CFA8",         // Sage Green
-  goldSecondary: "#C3DFC3",       // Light Sage
-  goldTertiary: "#E3EFE3",        // Pale Sage
-  goldBronze: "#5F8F5F",          // Deep Sage
-  goldRose: "#C2185B",            // Rose tint (cherry red)
-  goldLight: "#EDF5ED",           // Very light sage
-  goldMedium: "#A8CFA8",          // Medium sage
-  goldDark: "#7FAF7F",            // Dark sage
+  /* --- Lines --- */
+  border: PALETTE.slate200,
+  borderSubtle: PALETTE.slate100,
+  borderStrong: PALETTE.slate300,
+  borderBrand: PALETTE.magenta700,
+  borderAccent: PALETTE.cream400,
+  divider: PALETTE.slate200,
 
-  // ===== TRANSPARENT COLORS =====
+  /* --- Fields --- */
+  fieldBackground: PALETTE.slate050,
+  fieldBorder: PALETTE.slate200,
+  fieldBorderFocused: PALETTE.magenta700,
+  fieldBorderError: PALETTE.red,
+
+  /* --- Feedback states --- */
+  success: PALETTE.green,
+  successSurface: PALETTE.greenSoft,
+  danger: PALETTE.red,
+  dangerSurface: PALETTE.redSoft,
+  warning: PALETTE.orange,
+  warningSurface: PALETTE.orangeSoft,
+  info: PALETTE.blue,
+  infoSurface: PALETTE.blueSoft,
+
+  /* --- State colours rendered AS TEXT on a light surface. Use these instead
+         of `success`/`danger`/`warning`/`info` whenever the colour lands on a
+         Text node; the base tones are fills and only guarantee 3:1. --- */
+  successText: PALETTE.greenText,
+  dangerText: PALETTE.redText,
+  warningText: PALETTE.orangeText,
+  infoText: PALETTE.blueText,
+
+  /* --- State colours on dark surfaces (toasts, inverse panels). --- */
+  successOnInverse: PALETTE.greenOnDark,
+  dangerOnInverse: PALETTE.redOnDark,
+  warningOnInverse: PALETTE.orangeOnDark,
+  infoOnInverse: PALETTE.blueOnDark,
+
+  /* --- Absolute neutrals (use sparingly; prefer surface/content roles) --- */
+  white: PALETTE.white,
+  black: PALETTE.black,
+
+  /* --- Scrims & transparency --- */
+  scrim: withAlpha(PALETTE.ink, 0.55),        // behind modals
+  scrimHeavy: withAlpha(PALETTE.ink, 0.78),   // scrims that carry white text/spinners
+  scrimBrand: withAlpha(PALETTE.magenta700, 0.72), // brand-tinted image overlay
+  scrimLight: withAlpha(PALETTE.white, 0.85),
   transparent: "transparent",
-  // Cherry red (primary) opacity
-  orangeOpacity10: "rgba(194, 24, 91, 0.1)",
-  orangeOpacity20: "rgba(194, 24, 91, 0.2)",
-  orangeOpacity30: "rgba(194, 24, 91, 0.3)",
-  orangeOpacity40: "rgba(194, 24, 91, 0.4)",
-  orangeOpacity50: "rgba(194, 24, 91, 0.5)",
-  orangeOpacity60: "rgba(194, 24, 91, 0.6)",
-  orangeOpacity70: "rgba(194, 24, 91, 0.7)",
-  orangeOpacity80: "rgba(194, 24, 91, 0.8)",
-  orangeOpacity90: "rgba(194, 24, 91, 0.9)",
-  // Black opacity
-  blackOpacity10: "rgba(0, 0, 0, 0.1)",
-  blackOpacity20: "rgba(0, 0, 0, 0.2)",
-  blackOpacity30: "rgba(0, 0, 0, 0.3)",
-  blackOpacity40: "rgba(0, 0, 0, 0.4)",
-  blackOpacity50: "rgba(0, 0, 0, 0.5)",
-  blackOpacity60: "rgba(0, 0, 0, 0.6)",
-  blackOpacity70: "rgba(0, 0, 0, 0.7)",
-  blackOpacity80: "rgba(0, 0, 0, 0.8)",
-  blackOpacity90: "rgba(0, 0, 0, 0.9)",
-  // White opacity
-  whiteOpacity10: "rgba(255, 255, 255, 0.1)",
-  whiteOpacity20: "rgba(255, 255, 255, 0.2)",
-  whiteOpacity30: "rgba(255, 255, 255, 0.3)",
-  whiteOpacity50: "rgba(255, 255, 255, 0.5)",
-  whiteOpacity70: "rgba(255, 255, 255, 0.7)",
-  whiteOpacity80: "rgba(255, 255, 255, 0.8)",
-  whiteOpacity90: "rgba(255, 255, 255, 0.9)",
-  // Gold opacity (sage green)
-  goldOpacity10: "rgba(168, 207, 168, 0.1)",
-  goldOpacity20: "rgba(168, 207, 168, 0.2)",
-  goldOpacity30: "rgba(168, 207, 168, 0.3)",
-  goldOpacity50: "rgba(168, 207, 168, 0.5)",
 
-  // ===== SHADOW & EFFECTS =====
-  shadow: "rgba(45, 45, 45, 0.08)",
-  shadowMedium: "rgba(45, 45, 45, 0.15)",
-  shadowStrong: "rgba(45, 45, 45, 0.25)",
-  shadowOrange: "rgba(194, 24, 91, 0.2)",
-  shadowGold: "rgba(168, 207, 168, 0.25)",
+  whiteAlpha10: withAlpha(PALETTE.white, 0.1),
+  whiteAlpha20: withAlpha(PALETTE.white, 0.2),
+  whiteAlpha50: withAlpha(PALETTE.white, 0.5),
+  whiteAlpha70: withAlpha(PALETTE.white, 0.7),
+  whiteAlpha80: withAlpha(PALETTE.white, 0.8),
+  whiteAlpha90: withAlpha(PALETTE.white, 0.9),
 
-  // ===== GRADIENT COLORS =====
+  brandAlpha08: withAlpha(PALETTE.magenta700, 0.08),
+  brandAlpha16: withAlpha(PALETTE.magenta700, 0.16),
+  brandAlpha32: withAlpha(PALETTE.magenta700, 0.32),
+  // Warm tan alphas taken from the deep end of the cream ramp — the cream
+  // itself is too light to register as an overlay.
+  accentAlpha08: withAlpha(PALETTE.cream400, 0.14),
+  accentAlpha16: withAlpha(PALETTE.cream400, 0.26),
+  accentAlpha32: withAlpha(PALETTE.cream400, 0.45),
+  inkAlpha08: withAlpha(PALETTE.ink, 0.08),
+  inkAlpha16: withAlpha(PALETTE.ink, 0.16),
+  inkAlpha40: withAlpha(PALETTE.ink, 0.4),
+
+  /* --- Shadow tints --- */
+  shadowNeutral: withAlpha(PALETTE.ink, 0.18),
+  shadowBrand: withAlpha(PALETTE.magenta700, 0.28),
+  shadowAccent: withAlpha(PALETTE.magenta700, 0.18), // cream casts no usable shadow
+
+  /* --- Gradients --- */
   gradient: {
-    // Primary cherry red gradients
-    orangePrimary: ["#C2185B", "#D8467F"],       // Cherry red to medium cherry red
-    orangeDeep: ["#8E0F42", "#C2185B"],          // Deep to medium cherry red
-    orangeLight: ["#D8467F", "#F3AFC9"],         // Cherry red to soft pink
-    orangeVivid: ["#8E0F42", "#D8467F"],         // Deep vivid cherry red
-    orangeToWhite: ["#C2185B", "#FAFAF8"],       // Cherry red to off white
-    orangeToRed: ["#C2185B", "#A8CFA8E0"],       // Cherry red to sage green
+    brand: [PALETTE.magenta700, PALETTE.magenta500],
+    brandDeep: [PALETTE.magenta900, PALETTE.magenta700],
+    accent: [PALETTE.cream050, PALETTE.cream200],
+    accentDeep: [PALETTE.cream100, PALETTE.cream400],
+    signature: [PALETTE.magenta700, PALETTE.cream050], // the brand pairing
+    signatureDeep: [PALETTE.magenta900, PALETTE.magenta700, PALETTE.cream050],
+    pageWash: [PALETTE.white, PALETTE.magenta050],
+    accentWash: [PALETTE.white, PALETTE.cream050],
+    fadeToDark: [withAlpha(PALETTE.ink, 0), withAlpha(PALETTE.ink, 0.85)], // image captions
+    shine: [
+      withAlpha(PALETTE.white, 0),
+      withAlpha(PALETTE.white, 0.7),
+      withAlpha(PALETTE.white, 0),
+    ],
 
-    // Sage green gradients
-    goldLight: ["#A8CFA8", "#C3DFC3"],           // Sage gradient
-    goldDark: ["#7FAF7F", "#A8CFA8"],            // Dark to light sage
-    luxuryGold: ["#A8CFA8", "#C3DFC3", "#E3EFE3"], // Full sage range
-    shimmer: ["#A8CFA8", "#E3EFE3", "#A8CFA8"],    // Shimmer effect
-
-    // Cherry Red & Sage Green combinations
-    orangeToGold: ["#C2185B", "#A8CFA8"],        // Cherry red to sage green
-    goldToOrange: ["#A8CFA8", "#C2185B"],        // Sage green to cherry red
-    elegance: ["#8E0F42", "#A8CFA8"],            // Deep cherry red to sage
-    luxury: ["#C2185B", "#A8CFA8", "#C3DFC3"],   // Full brand palette
-    premium: ["#8E0F42", "#C2185B", "#A8CFA8"],  // Deep to sage
-
-    // Neutral surfaces
-    surface: ["#F2F2EE", "#FAFAF8"],             // Off-white surface
-    surfaceWarm: ["#E8E8E2", "#FAFAF8"],          // Deeper off-white surface
-    darkSurface: ["#1A1A1A", "#2D2D2D"],          // Dark charcoal surface
+    // ── Legacy gradient keys (still used across older screens) ──
+    orangePrimary: [PALETTE.magenta700, PALETTE.magenta500],
+    orangeDeep: [PALETTE.magenta800, PALETTE.magenta700],
+    orangeLight: [PALETTE.magenta500, PALETTE.magenta300],
+    orangeVivid: [PALETTE.magenta800, PALETTE.magenta500],
+    orangeToWhite: [PALETTE.magenta700, PALETTE.white],
+    orangeToRed: [PALETTE.magenta700, PALETTE.red],
+    goldLight: [PALETTE.cream400, PALETTE.cream200],
+    goldDark: [PALETTE.cream400, PALETTE.cream200],
+    luxuryGold: [PALETTE.cream400, PALETTE.cream200, PALETTE.cream100],
+    shimmer: [PALETTE.cream400, PALETTE.cream100, PALETTE.cream400],
+    orangeToGold: [PALETTE.magenta700, PALETTE.cream400],
+    goldToOrange: [PALETTE.cream400, PALETTE.magenta700],
+    elegance: [PALETTE.magenta800, PALETTE.cream400],
+    luxury: [PALETTE.magenta700, PALETTE.cream400, PALETTE.cream200],
+    premium: [PALETTE.magenta800, PALETTE.magenta700, PALETTE.cream400],
+    surface: [PALETTE.slate100, PALETTE.white],
+    surfaceWarm: [PALETTE.slate200, PALETTE.white],
+    darkSurface: [PALETTE.ink, PALETTE.slate700],
   },
+
+  /* ============================================================
+     LEGACY COMPATIBILITY — old key names used throughout the app,
+     recomputed from PALETTE so the whole project re-themes to the
+     new magenta/cream system without every call site needing an
+     immediate rename. New code should prefer the semantic roles
+     above; these are kept so nothing currently on screen breaks.
+     ============================================================ */
+
+  // Old primary/brand family
+  primary: PALETTE.magenta700,
+  primaryLight: PALETTE.magenta500,
+  primaryDark: PALETTE.magenta800,
+  primaryLighter: PALETTE.magenta300,
+  primaryPale: PALETTE.magenta050,
+
+  // Old secondary/accent family (was sage green) → cream/gold ramp
+  secondary: PALETTE.cream400,
+  secondaryLight: PALETTE.cream200,
+  secondaryDark: PALETTE.cream400,
+  secondaryLighter: PALETTE.cream100,
+  accentLight: PALETTE.cream100,
+  accentDark: PALETTE.cream400,
+
+  bottomGlow: withAlpha(PALETTE.magenta700, 1),
+
+  // Old neutrals / surfaces
+  background: PALETTE.white,
+  backgroundSecondary: PALETTE.slate050,
+  backgroundTertiary: PALETTE.slate100,
+  backgroundDark: PALETTE.ink,
+  backgroundOrange: PALETTE.white,
+  backgroundGold: PALETTE.cream050,
+  card: PALETTE.white,
+  softCard: PALETTE.slate050,
+  overlay: withAlpha(PALETTE.magenta700, 0.7),
+  overlayDark: withAlpha(PALETTE.ink, 0.7),
+  overlayGold: withAlpha(PALETTE.cream400, 0.1),
+  overlayOrange: withAlpha(PALETTE.magenta700, 0.1),
+
+  // Old text roles
+  textPrimary: PALETTE.ink,
+  textSecondary: PALETTE.slate700,
+  textTertiary: PALETTE.slate500,
+  textDisabled: PALETTE.slate300,
+  textInverse: PALETTE.white,
+  textOrange: PALETTE.magenta700,
+  textOrangeDark: PALETTE.magenta800,
+  textGold: PALETTE.cream400,
+  textGoldDark: PALETTE.orangeText,
+
+  // Old gray scale → slate ramp
+  gray50: PALETTE.slate050,
+  gray100: PALETTE.slate100,
+  gray200: PALETTE.slate200,
+  gray300: PALETTE.slate300,
+  gray400: PALETTE.slate400,
+  gray500: PALETTE.slate500,
+  gray600: PALETTE.slate700,
+  gray700: PALETTE.slate700,
+  gray800: PALETTE.ink,
+  gray900: PALETTE.ink,
+
+  // Old "orange" brand-variation aliases
+  orangeLight: PALETTE.magenta050,
+  orangeMedium: PALETTE.magenta700,
+  orangeDark: PALETTE.magenta800,
+  orangeVivid: PALETTE.magenta500,
+  orangeIce: PALETTE.magenta100,
+  orangeSoft: PALETTE.magenta300,
+  orangeDeep: PALETTE.magenta900,
+
+  // Old border/divider
+  borderLight: PALETTE.slate100,
+  borderMedium: PALETTE.slate300,
+  borderDark: PALETTE.slate700,
+  borderOrange: PALETTE.magenta700,
+  borderGold: PALETTE.cream400,
+
+  // Old input colours
+  inputBackground: PALETTE.white,
+  inputBorder: PALETTE.slate200,
+  inputPlaceholder: withAlpha(PALETTE.slate500, 0.5),
+  inputFocused: PALETTE.magenta700,
+  inputFocusedAlt: PALETTE.cream400,
+
+  // Old status colour variants
+  error: PALETTE.red,
+  successLight: PALETTE.greenOnDark,
+  successDark: PALETTE.greenText,
+  errorLight: PALETTE.redOnDark,
+  errorDark: PALETTE.red,
+  warningLight: PALETTE.orangeOnDark,
+  warningDark: PALETTE.orangeText,
+  infoLight: PALETTE.blueOnDark,
+  infoDark: PALETTE.blueText,
+  disabled: PALETTE.slate100,
+
+  // Old "gold" variation family → cream ramp
+  goldPrimary: PALETTE.cream400,
+  goldSecondary: PALETTE.cream200,
+  goldTertiary: PALETTE.cream100,
+  goldBronze: PALETTE.orangeText,
+  goldRose: PALETTE.magenta700,
+  goldLight: PALETTE.cream050,
+  goldMedium: PALETTE.cream400,
+  goldDark: PALETTE.orangeText,
+
+  // Old opacity variants
+  orangeOpacity10: withAlpha(PALETTE.magenta700, 0.1),
+  orangeOpacity20: withAlpha(PALETTE.magenta700, 0.2),
+  orangeOpacity30: withAlpha(PALETTE.magenta700, 0.3),
+  orangeOpacity40: withAlpha(PALETTE.magenta700, 0.4),
+  orangeOpacity50: withAlpha(PALETTE.magenta700, 0.5),
+  orangeOpacity60: withAlpha(PALETTE.magenta700, 0.6),
+  orangeOpacity70: withAlpha(PALETTE.magenta700, 0.7),
+  orangeOpacity80: withAlpha(PALETTE.magenta700, 0.8),
+  orangeOpacity90: withAlpha(PALETTE.magenta700, 0.9),
+  blackOpacity10: withAlpha(PALETTE.black, 0.1),
+  blackOpacity20: withAlpha(PALETTE.black, 0.2),
+  blackOpacity30: withAlpha(PALETTE.black, 0.3),
+  blackOpacity40: withAlpha(PALETTE.black, 0.4),
+  blackOpacity50: withAlpha(PALETTE.black, 0.5),
+  blackOpacity60: withAlpha(PALETTE.black, 0.6),
+  blackOpacity70: withAlpha(PALETTE.black, 0.7),
+  blackOpacity80: withAlpha(PALETTE.black, 0.8),
+  blackOpacity90: withAlpha(PALETTE.black, 0.9),
+  whiteOpacity10: withAlpha(PALETTE.white, 0.1),
+  whiteOpacity20: withAlpha(PALETTE.white, 0.2),
+  whiteOpacity30: withAlpha(PALETTE.white, 0.3),
+  whiteOpacity50: withAlpha(PALETTE.white, 0.5),
+  whiteOpacity70: withAlpha(PALETTE.white, 0.7),
+  whiteOpacity80: withAlpha(PALETTE.white, 0.8),
+  whiteOpacity90: withAlpha(PALETTE.white, 0.9),
+  goldOpacity10: withAlpha(PALETTE.cream400, 0.1),
+  goldOpacity20: withAlpha(PALETTE.cream400, 0.2),
+  goldOpacity30: withAlpha(PALETTE.cream400, 0.3),
+  goldOpacity50: withAlpha(PALETTE.cream400, 0.5),
+
+  // Old shadow tints
+  shadow: withAlpha(PALETTE.ink, 0.08),
+  shadowMedium: withAlpha(PALETTE.ink, 0.15),
+  shadowStrong: withAlpha(PALETTE.ink, 0.25),
+  shadowOrange: withAlpha(PALETTE.magenta700, 0.2),
+  shadowGold: withAlpha(PALETTE.cream400, 0.25),
 };
 
 // ============================================
@@ -404,40 +588,40 @@ export const FONTS = {
     fontFamily: "Poppins-Bold",
     fontSize: SIZES.heading.h1,
     lineHeight: SIZES.heading.h1 * 1.2,
-    color: COLORS.textPrimary,
+    color: COLORS.contentPrimary,
     letterSpacing: -0.5,
   },
   h2: {
     fontFamily: "Poppins-Bold",
     fontSize: SIZES.heading.h2,
     lineHeight: SIZES.heading.h2 * 1.25,
-    color: COLORS.textPrimary,
+    color: COLORS.contentPrimary,
     letterSpacing: -0.3,
   },
   h3: {
     fontFamily: "Poppins-SemiBold",
     fontSize: SIZES.heading.h3,
     lineHeight: SIZES.heading.h3 * 1.3,
-    color: COLORS.textPrimary,
+    color: COLORS.contentPrimary,
     letterSpacing: -0.2,
   },
   h4: {
     fontFamily: "Poppins-SemiBold",
     fontSize: SIZES.heading.h4,
     lineHeight: SIZES.heading.h4 * 1.3,
-    color: COLORS.textPrimary,
+    color: COLORS.contentPrimary,
   },
   h5: {
     fontFamily: "Poppins-Medium",
     fontSize: SIZES.heading.h5,
     lineHeight: SIZES.heading.h5 * 1.4,
-    color: COLORS.textPrimary,
+    color: COLORS.contentPrimary,
   },
   h6: {
     fontFamily: "Poppins-Medium",
     fontSize: SIZES.heading.h6,
     lineHeight: SIZES.heading.h6 * 1.4,
-    color: COLORS.textPrimary,
+    color: COLORS.contentPrimary,
   },
 
   // ===== BODY TEXT STYLES =====
@@ -445,31 +629,31 @@ export const FONTS = {
     fontFamily: "Poppins-Regular",
     fontSize: SIZES.font.lg,
     lineHeight: SIZES.font.lg * 1.5,
-    color: COLORS.textPrimary,
+    color: COLORS.contentPrimary,
   },
   body: {
     fontFamily: "Poppins-Regular",
     fontSize: SIZES.font.md,
     lineHeight: SIZES.font.md * 1.5,
-    color: COLORS.textPrimary,
+    color: COLORS.contentPrimary,
   },
   bodyMedium: {
     fontFamily: "Poppins-Medium",
     fontSize: SIZES.font.md,
     lineHeight: SIZES.font.md * 1.5,
-    color: COLORS.textPrimary,
+    color: COLORS.contentPrimary,
   },
   bodySmall: {
     fontFamily: "Poppins-Regular",
     fontSize: SIZES.font.sm,
     lineHeight: SIZES.font.sm * 1.5,
-    color: COLORS.textSecondary,
+    color: COLORS.contentSecondary,
   },
   bodyBold: {
     fontFamily: "Poppins-Bold",
     fontSize: SIZES.font.md,
     lineHeight: SIZES.font.md * 1.5,
-    color: COLORS.textPrimary,
+    color: COLORS.contentPrimary,
   },
 
   // ===== LABEL & CAPTION =====
@@ -477,14 +661,14 @@ export const FONTS = {
     fontFamily: "Poppins-SemiBold",
     fontSize: SIZES.font.sm,
     lineHeight: SIZES.font.sm * 1.4,
-    color: COLORS.textPrimary,
+    color: COLORS.contentPrimary,
     letterSpacing: 0.5,
   },
   labelUppercase: {
     fontFamily: "Poppins-SemiBold",
     fontSize: SIZES.font.sm,
     lineHeight: SIZES.font.sm * 1.4,
-    color: COLORS.textPrimary,
+    color: COLORS.contentPrimary,
     textTransform: "uppercase",
     letterSpacing: 1,
   },
@@ -492,13 +676,13 @@ export const FONTS = {
     fontFamily: "Poppins-Regular",
     fontSize: SIZES.font.xs,
     lineHeight: SIZES.font.xs * 1.4,
-    color: COLORS.textSecondary,
+    color: COLORS.contentSecondary,
   },
   captionBold: {
     fontFamily: "Poppins-SemiBold",
     fontSize: SIZES.font.xs,
     lineHeight: SIZES.font.xs * 1.4,
-    color: COLORS.textPrimary,
+    color: COLORS.contentPrimary,
   },
 
   // ===== BUTTON TEXT =====
@@ -523,32 +707,32 @@ export const FONTS = {
     color: COLORS.white,
   },
 
-  // ===== SPECIAL STYLES (ORANGE & GOLD TEXT) =====
+  // ===== SPECIAL STYLES (BRAND & ACCENT TEXT) =====
   orangeHeading: {
     fontFamily: "Poppins-Bold",
     fontSize: SIZES.heading.h2,
     lineHeight: SIZES.heading.h2 * 1.25,
-    color: COLORS.primary,
+    color: COLORS.brand,
     letterSpacing: -0.3,
   },
   orangeText: {
     fontFamily: "Poppins-SemiBold",
     fontSize: SIZES.font.md,
     lineHeight: SIZES.font.md * 1.5,
-    color: COLORS.primary,
+    color: COLORS.brand,
   },
   goldHeading: {
     fontFamily: "Poppins-Bold",
     fontSize: SIZES.heading.h2,
     lineHeight: SIZES.heading.h2 * 1.25,
-    color: COLORS.goldPrimary,
+    color: COLORS.accentDeep,
     letterSpacing: -0.3,
   },
   goldText: {
     fontFamily: "Poppins-SemiBold",
     fontSize: SIZES.font.md,
     lineHeight: SIZES.font.md * 1.5,
-    color: COLORS.goldPrimary,
+    color: COLORS.accentDeep,
   },
 };
 
@@ -598,31 +782,31 @@ export const SHADOWS = {
     shadowRadius: 24,
     elevation: 12,
   },
-  // Orange shadow for brand feel
+  // Brand shadow for brand feel
   orange: {
-    shadowColor: COLORS.primary,
+    shadowColor: COLORS.brand,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 8,
     elevation: 4,
   },
   orangeStrong: {
-    shadowColor: COLORS.primary,
+    shadowColor: COLORS.brand,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.35,
     shadowRadius: 16,
     elevation: 8,
   },
-  // Gold shadow for accents
+  // Accent (gold) shadow
   gold: {
-    shadowColor: COLORS.goldPrimary,
+    shadowColor: COLORS.accentDeep,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 4,
   },
   goldStrong: {
-    shadowColor: COLORS.goldPrimary,
+    shadowColor: COLORS.accentDeep,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.4,
     shadowRadius: 16,

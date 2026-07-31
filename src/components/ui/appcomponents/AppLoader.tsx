@@ -45,8 +45,8 @@ export default function AppLoader({
           {
             width: ringSize[size], height: ringSize[size],
             borderRadius: ringSize[size] / 2,
-            borderColor: COLORS.primaryPale,
-            borderTopColor: COLORS.primary,
+            borderColor: COLORS.brandTint,
+            borderTopColor: COLORS.brand,
             transform: [{ rotate: spin1 }],
           },
         ]} />
@@ -65,14 +65,14 @@ export default function AppLoader({
         {/* Center dot */}
         <Animated.View style={[
           styles.dot,
-          { backgroundColor: COLORS.primary, transform: [{ scale: pulse }] },
+          { backgroundColor: COLORS.brand, transform: [{ scale: pulse }] },
         ]} />
       </View>
       {message && (
         <Text style={[styles.msg, {
           fontFamily: FONTS.family.medium,
           fontSize: SIZES.font.sm,
-          color: mode === 'overlay' ? COLORS.white : COLORS.textSecondary,
+          color: mode === 'overlay' ? COLORS.white : COLORS.contentSecondary,
           marginTop: SIZES.margin.md,
         }]}>
           {message}

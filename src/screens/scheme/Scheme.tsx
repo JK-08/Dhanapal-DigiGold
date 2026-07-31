@@ -53,7 +53,7 @@ function statusColor(status: string, COLORS: any): string {
   if (status === 'active')    return COLORS.success;
   if (status === 'completed') return COLORS.warning;
   if (status === 'pending')   return '#FF9800';
-  return COLORS.textTertiary;
+  return COLORS.contentMuted;
 }
 
 function statusIcon(status: string): keyof typeof Ionicons.glyphMap {
@@ -88,12 +88,12 @@ function AllSchemeCard({
   const maxHeight  = anim.interpolate({ inputRange: [0, 1], outputRange: [0, 320] });
   const rotateIcon = anim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] });
 
-  const mColor = METAL_COLOR[item.MetalType] ?? COLORS.primary;
+  const mColor = METAL_COLOR[item.MetalType] ?? COLORS.brand;
   const mLabel = METAL_LABEL[item.MetalType] ?? item.MetalType;
   const canJoin = item.ADDNEWMEMBER === 'Y';
 
   return (
-    <Animated.View style={[styles.card, { backgroundColor: COLORS.white, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
+    <Animated.View style={[styles.card, { backgroundColor: COLORS.white, borderColor: COLORS.borderSubtle, ...SHADOWS.sm }]}>
 
       {/* Header row */}
       <TouchableOpacity onPress={() => setExpanded(e => !e)} activeOpacity={0.7} style={styles.cardHeader}>
@@ -111,7 +111,7 @@ function AllSchemeCard({
             )}
           </View>
           <View style={styles.cardTitleContainer}>
-            <Text style={[styles.cardTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+            <Text style={[styles.cardTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
               {item.schemeName}
             </Text>
             {/* Metal badge */}
@@ -122,28 +122,28 @@ function AllSchemeCard({
           </View>
         </View>
         <Animated.View style={{ transform: [{ rotate: rotateIcon }] }}>
-          <Ionicons name="chevron-down" size={moderateScale(22)} color={COLORS.textTertiary} />
+          <Ionicons name="chevron-down" size={moderateScale(22)} color={COLORS.contentMuted} />
         </Animated.View>
       </TouchableOpacity>
 
       {/* Always-visible stats */}
       <View style={styles.cardContent}>
-        <Text style={[styles.description, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+        <Text style={[styles.description, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
           {item.FixedIns === 'Y' ? 'Fixed' : 'Flexible'} instalment {mLabel.toLowerCase()} savings scheme.
           Code: {item.SchemeSName}
         </Text>
         <View style={styles.statsRow}>
           <View style={styles.statItem}>
-            <Text style={[styles.statLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Instalments</Text>
-            <Text style={[styles.statValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>{item.Instalment}</Text>
+            <Text style={[styles.statLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Instalments</Text>
+            <Text style={[styles.statValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>{item.Instalment}</Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={[styles.statLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Metal</Text>
+            <Text style={[styles.statLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Metal</Text>
             <Text style={[styles.statValue, { color: mColor, fontFamily: FONTS.family.semiBold }]}>{mLabel}</Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={[styles.statLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Amount</Text>
-            <Text style={[styles.statValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+            <Text style={[styles.statLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Amount</Text>
+            <Text style={[styles.statValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
               {item.FixedIns === 'Y' ? 'Fixed' : 'Flexible'}
             </Text>
           </View>
@@ -154,25 +154,25 @@ function AllSchemeCard({
       <Animated.View style={[styles.expandableContent, { maxHeight }]}>
         {expanded && (
           <View style={styles.expandedDetails}>
-            <View style={[styles.divider, { backgroundColor: COLORS.borderLight }]} />
+            <View style={[styles.divider, { backgroundColor: COLORS.borderSubtle }]} />
             <View style={styles.detailRow}>
-              <Text style={[styles.detailLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Scheme Code</Text>
-              <Text style={[styles.detailValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>{item.SchemeSName}</Text>
+              <Text style={[styles.detailLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Scheme Code</Text>
+              <Text style={[styles.detailValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>{item.SchemeSName}</Text>
             </View>
             <View style={styles.detailRow}>
-              <Text style={[styles.detailLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Instalment Type</Text>
-              <Text style={[styles.detailValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+              <Text style={[styles.detailLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Instalment Type</Text>
+              <Text style={[styles.detailValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
                 {item.FixedIns === 'Y' ? 'Fixed Amount' : 'Flexible Amount'}
               </Text>
             </View>
             <View style={styles.detailRow}>
-              <Text style={[styles.detailLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Weight Ledger</Text>
-              <Text style={[styles.detailValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+              <Text style={[styles.detailLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Weight Ledger</Text>
+              <Text style={[styles.detailValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
                 {item.WeightLedger === 'Y' ? 'Maintained' : 'Not Maintained'}
               </Text>
             </View>
             <View style={styles.detailRow}>
-              <Text style={[styles.detailLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Enrolment</Text>
+              <Text style={[styles.detailLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Enrolment</Text>
               <Text style={[styles.detailValue, {
                 color: canJoin ? COLORS.success : COLORS.error ?? '#E53935',
                 fontFamily: FONTS.family.semiBold,
@@ -187,7 +187,7 @@ function AllSchemeCard({
       {/* Action */}
       <View style={styles.cardFooter}>
         <TouchableOpacity
-          style={[styles.actionButton, { backgroundColor: canJoin ? COLORS.primary : COLORS.borderLight }]}
+          style={[styles.actionButton, { backgroundColor: canJoin ? COLORS.brand : COLORS.borderSubtle }]}
           onPress={() => canJoin && onJoin(item)}
           disabled={!canJoin}
           activeOpacity={canJoin ? 0.85 : 1}
@@ -195,10 +195,10 @@ function AllSchemeCard({
           <Ionicons
             name={canJoin ? 'add-circle-outline' : 'lock-closed-outline'}
             size={20}
-            color={canJoin ? COLORS.white : COLORS.textTertiary}
+            color={canJoin ? COLORS.white : COLORS.contentMuted}
           />
           <Text style={[styles.actionButtonText, {
-            color: canJoin ? COLORS.white : COLORS.textTertiary,
+            color: canJoin ? COLORS.white : COLORS.contentMuted,
             fontFamily: FONTS.family.semiBold,
           }]}>
             {canJoin ? 'Join Scheme' : 'Enrolment Closed'}
@@ -244,16 +244,16 @@ function MySchemeCard({
 
   return (
 
-    <Animated.View style={[styles.card, { backgroundColor: COLORS.white, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
+    <Animated.View style={[styles.card, { backgroundColor: COLORS.white, borderColor: COLORS.borderSubtle, ...SHADOWS.sm }]}>
 
       {/* Header */}
       <TouchableOpacity onPress={() => setExpanded(e => !e)} activeOpacity={0.7} style={styles.cardHeader}>
         <View style={styles.cardHeaderLeft}>
-          <View style={[styles.iconContainer, { backgroundColor: COLORS.primary + '10' }]}>
-            <Ionicons name="diamond-outline" size={moderateScale(20)} color={COLORS.primary} />
+          <View style={[styles.iconContainer, { backgroundColor: COLORS.brand + '10' }]}>
+            <Ionicons name="diamond-outline" size={moderateScale(20)} color={COLORS.brand} />
           </View>
           <View style={styles.cardTitleContainer}>
-            <Text style={[styles.cardTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+            <Text style={[styles.cardTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
               {item.schemeSummary?.schemeName ?? item.pName}
             </Text>
             <View style={[styles.statusBadge, { backgroundColor: sColor + '15' }]}>
@@ -263,29 +263,29 @@ function MySchemeCard({
           </View>
         </View>
         <Animated.View style={{ transform: [{ rotate: rotateIcon }] }}>
-          <Ionicons name="chevron-down" size={moderateScale(22)} color={COLORS.textTertiary} />
+          <Ionicons name="chevron-down" size={moderateScale(22)} color={COLORS.contentMuted} />
         </Animated.View>
       </TouchableOpacity>
 
       {/* Always-visible stats */}
       <View style={styles.cardContent}>
-        <Text style={[styles.description, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+        <Text style={[styles.description, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
           {item.schemeSummary?.fixedIns === 'Y' ? 'Fixed' : 'Flexible'} instalment scheme · Reg No: {item.regNo}
         </Text>
         <View style={styles.statsRow}>
           <View style={styles.statItem}>
-            <Text style={[styles.statLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Instalments</Text>
-            <Text style={[styles.statValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>{paid}/{total}</Text>
+            <Text style={[styles.statLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Instalments</Text>
+            <Text style={[styles.statValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>{paid}/{total}</Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={[styles.statLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Invested</Text>
-            <Text style={[styles.statValue, { color: COLORS.primary, fontFamily: FONTS.family.semiBold }]}>
+            <Text style={[styles.statLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Invested</Text>
+            <Text style={[styles.statValue, { color: COLORS.brand, fontFamily: FONTS.family.semiBold }]}>
               ₹{item.totalAmount.toLocaleString('en-IN')}
             </Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={[styles.statLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>{done ? 'Status' : 'Remaining'}</Text>
-            <Text style={[styles.statValue, { color: done ? COLORS.success : COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+            <Text style={[styles.statLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>{done ? 'Status' : 'Remaining'}</Text>
+            <Text style={[styles.statValue, { color: done ? COLORS.success : COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
               {done ? 'Completed' : `${remaining} EMI${remaining === 1 ? '' : 's'}`}
             </Text>
           </View>
@@ -296,47 +296,47 @@ function MySchemeCard({
       <Animated.View style={[styles.expandableContent, { maxHeight }]}>
         {expanded && (
           <View style={styles.expandedDetails}>
-            <View style={[styles.divider, { backgroundColor: COLORS.borderLight }]} />
+            <View style={[styles.divider, { backgroundColor: COLORS.borderSubtle }]} />
             <View style={styles.detailRow}>
-              <Text style={[styles.detailLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Total Invested</Text>
-              <Text style={[styles.detailValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+              <Text style={[styles.detailLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Total Invested</Text>
+              <Text style={[styles.detailValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
                 ₹{item.totalAmount.toLocaleString('en-IN')}
               </Text>
             </View>
             <View style={styles.detailRow}>
-              <Text style={[styles.detailLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>EMIs Paid</Text>
-              <Text style={[styles.detailValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>{paid} / {total}</Text>
+              <Text style={[styles.detailLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>EMIs Paid</Text>
+              <Text style={[styles.detailValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>{paid} / {total}</Text>
             </View>
             <View style={styles.detailRow}>
-              <Text style={[styles.detailLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>{done ? 'Status' : 'Installments Remaining'}</Text>
-              <Text style={[styles.detailValue, { color: done ? COLORS.success : COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+              <Text style={[styles.detailLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>{done ? 'Status' : 'Installments Remaining'}</Text>
+              <Text style={[styles.detailValue, { color: done ? COLORS.success : COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
                 {done ? 'Completed' : `${remaining} EMI${remaining === 1 ? '' : 's'}`}
               </Text>
             </View>
             {item.nextDueDate ? (
               <View style={styles.detailRow}>
-                <Text style={[styles.detailLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Next Due Date</Text>
-                <Text style={[styles.detailValue, { color: COLORS.primary, fontFamily: FONTS.family.semiBold }]}>
+                <Text style={[styles.detailLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Next Due Date</Text>
+                <Text style={[styles.detailValue, { color: COLORS.brand, fontFamily: FONTS.family.semiBold }]}>
                   {formatDate(item.nextDueDate)}
                 </Text>
               </View>
             ) : null}
             <View style={styles.detailRow}>
-              <Text style={[styles.detailLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Maturity Date</Text>
-              <Text style={[styles.detailValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+              <Text style={[styles.detailLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Maturity Date</Text>
+              <Text style={[styles.detailValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
                 {formatDate(item.maturityDate)}
               </Text>
             </View>
             {/* Progress */}
             <View style={styles.progressContainer}>
               <View style={styles.progressHeader}>
-                <Text style={[styles.progressLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Progress</Text>
-                <Text style={[styles.progressValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+                <Text style={[styles.progressLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Progress</Text>
+                <Text style={[styles.progressValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
                   {Math.round(pct * 100)}%
                 </Text>
               </View>
-              <View style={[styles.progressBar, { backgroundColor: COLORS.borderLight }]}>
-                <View style={[styles.progressFill, { width: `${pct * 100}%` as any, backgroundColor: COLORS.primary }]} />
+              <View style={[styles.progressBar, { backgroundColor: COLORS.borderSubtle }]}>
+                <View style={[styles.progressFill, { width: `${pct * 100}%` as any, backgroundColor: COLORS.brand }]} />
               </View>
             </View>
           </View>
@@ -346,7 +346,7 @@ function MySchemeCard({
       {/* Action */}
       <View style={styles.cardFooter}>
         <TouchableOpacity
-          style={[styles.actionButton, { backgroundColor: COLORS.primary }]}
+          style={[styles.actionButton, { backgroundColor: COLORS.brand }]}
           activeOpacity={0.85}
           onPress={() => navigation.navigate('PayInstallment', { ppData: item })}
         >
@@ -373,19 +373,19 @@ function SkeletonCard() {
     ).start();
   }, []);
   return (
-    <Animated.View style={[styles.card, { backgroundColor: COLORS.white, borderColor: COLORS.borderLight, opacity: pulse }]}>
+    <Animated.View style={[styles.card, { backgroundColor: COLORS.white, borderColor: COLORS.borderSubtle, opacity: pulse }]}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-        <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: COLORS.borderLight }} />
+        <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: COLORS.borderSubtle }} />
         <View style={{ gap: 8, flex: 1 }}>
-          <View style={{ height: 14, borderRadius: 6, backgroundColor: COLORS.borderLight, width: '60%' }} />
-          <View style={{ height: 10, borderRadius: 6, backgroundColor: COLORS.borderLight, width: '35%' }} />
+          <View style={{ height: 14, borderRadius: 6, backgroundColor: COLORS.borderSubtle, width: '60%' }} />
+          <View style={{ height: 10, borderRadius: 6, backgroundColor: COLORS.borderSubtle, width: '35%' }} />
         </View>
       </View>
       <View style={{ marginTop: 16, gap: 10 }}>
-        <View style={{ height: 10, borderRadius: 6, backgroundColor: COLORS.borderLight }} />
-        <View style={{ height: 10, borderRadius: 6, backgroundColor: COLORS.borderLight, width: '80%' }} />
+        <View style={{ height: 10, borderRadius: 6, backgroundColor: COLORS.borderSubtle }} />
+        <View style={{ height: 10, borderRadius: 6, backgroundColor: COLORS.borderSubtle, width: '80%' }} />
       </View>
-      <View style={{ marginTop: 20, height: 44, borderRadius: 10, backgroundColor: COLORS.borderLight }} />
+      <View style={{ marginTop: 20, height: 44, borderRadius: 10, backgroundColor: COLORS.borderSubtle }} />
     </Animated.View>
   );
 }
@@ -422,14 +422,14 @@ export default function SchemeScreen() {
 
 
       {/* Tab Switcher */}
-      <View style={[styles.tabContainer, { backgroundColor: COLORS.background }]}>
-        <View style={[styles.tabWrapper, { backgroundColor: COLORS.borderLight }]}>
+      <View style={[styles.tabContainer, { backgroundColor: COLORS.surfacePage }]}>
+        <View style={[styles.tabWrapper, { backgroundColor: COLORS.borderSubtle }]}>
           {(['all', 'my'] as const).map((tab) => {
             const isActive = activeTab === tab;
             return (
               <TouchableOpacity
                 key={tab}
-                style={[styles.tab, isActive && [styles.activeTab, { backgroundColor: COLORS.primary }]]}
+                style={[styles.tab, isActive && [styles.activeTab, { backgroundColor: COLORS.brand }]]}
                 onPress={() => setActiveTab(tab)}
               >
                 <Ionicons
@@ -437,9 +437,9 @@ export default function SchemeScreen() {
                     ? (isActive ? 'grid' : 'grid-outline')
                     : (isActive ? 'folder' : 'folder-outline')}
                   size={16}
-                  color={isActive ? COLORS.white : COLORS.textSecondary}
+                  color={isActive ? COLORS.white : COLORS.contentSecondary}
                 />
-                <Text style={[styles.tabText, { fontFamily: FONTS.family.medium, color: isActive ? COLORS.white : COLORS.textSecondary }]}>
+                <Text style={[styles.tabText, { fontFamily: FONTS.family.medium, color: isActive ? COLORS.white : COLORS.contentSecondary }]}>
                   {tab === 'all' ? 'View All' : 'My Schemes'}
                 </Text>
               </TouchableOpacity>
@@ -453,7 +453,7 @@ export default function SchemeScreen() {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} colors={[COLORS.primary]} tintColor={COLORS.primary} />}
+        refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} colors={[COLORS.brand]} tintColor={COLORS.brand} />}
       >
         {/* Loading skeletons */}
         {loading && (
@@ -467,10 +467,10 @@ export default function SchemeScreen() {
         {/* Error */}
         {!loading && error && (
           <View style={styles.errorBox}>
-            <Ionicons name="alert-circle-outline" size={36} color={COLORS.textTertiary} />
-            <Text style={[styles.errorText, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>{error}</Text>
-            <TouchableOpacity style={[styles.retryBtn, { borderColor: COLORS.primary }]} onPress={refetch}>
-              <Text style={[styles.retryTxt, { color: COLORS.primary, fontFamily: FONTS.family.semiBold }]}>Retry</Text>
+            <Ionicons name="alert-circle-outline" size={36} color={COLORS.contentMuted} />
+            <Text style={[styles.errorText, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>{error}</Text>
+            <TouchableOpacity style={[styles.retryBtn, { borderColor: COLORS.brand }]} onPress={refetch}>
+              <Text style={[styles.retryTxt, { color: COLORS.brand, fontFamily: FONTS.family.semiBold }]}>Retry</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -479,8 +479,8 @@ export default function SchemeScreen() {
         {!loading && !error && activeTab === 'all' && (
           activeSchemes.length === 0 ? (
             <View style={styles.errorBox}>
-              <Ionicons name="diamond-outline" size={36} color={COLORS.textTertiary} />
-              <Text style={[styles.errorText, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>No schemes available</Text>
+              <Ionicons name="diamond-outline" size={36} color={COLORS.contentMuted} />
+              <Text style={[styles.errorText, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>No schemes available</Text>
             </View>
           ) : (
             activeSchemes.map((item, index) => (
@@ -493,15 +493,15 @@ export default function SchemeScreen() {
         {!loading && !error && activeTab === 'my' && (
           mySchemes.length === 0 ? (
             <View style={styles.errorBox}>
-              <Ionicons name="folder-open-outline" size={36} color={COLORS.textTertiary} />
-              <Text style={[styles.errorText, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+              <Ionicons name="folder-open-outline" size={36} color={COLORS.contentMuted} />
+              <Text style={[styles.errorText, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
                 You haven't joined any schemes yet.
               </Text>
               <TouchableOpacity
-                style={[styles.retryBtn, { borderColor: COLORS.primary }]}
+                style={[styles.retryBtn, { borderColor: COLORS.brand }]}
                 onPress={() => setActiveTab('all')}
               >
-                <Text style={[styles.retryTxt, { color: COLORS.primary, fontFamily: FONTS.family.semiBold }]}>Browse Schemes</Text>
+                <Text style={[styles.retryTxt, { color: COLORS.brand, fontFamily: FONTS.family.semiBold }]}>Browse Schemes</Text>
               </TouchableOpacity>
               {/* DEV TEST ONLY — remove before release */}
   

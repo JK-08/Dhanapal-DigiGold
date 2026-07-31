@@ -52,7 +52,7 @@ export default function AppContentHtml({ html, loading, error, onRetry, minHeigh
   if (loading) {
     return (
       <View style={[styles.center, { minHeight }]}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
+        <ActivityIndicator size="large" color={COLORS.brand} />
       </View>
     );
   }
@@ -60,8 +60,8 @@ export default function AppContentHtml({ html, loading, error, onRetry, minHeigh
   if (error) {
     return (
       <View style={[styles.center, { minHeight }]}>
-        <Ionicons name="alert-circle-outline" size={32} color={COLORS.textTertiary} />
-        <Text style={[styles.msg, { color: COLORS.textSecondary }]}>{error}</Text>
+        <Ionicons name="alert-circle-outline" size={32} color={COLORS.contentMuted} />
+        <Text style={[styles.msg, { color: COLORS.contentSecondary }]}>{error}</Text>
       </View>
     );
   }
@@ -69,15 +69,15 @@ export default function AppContentHtml({ html, loading, error, onRetry, minHeigh
   if (!html || !html.trim()) {
     return (
       <View style={[styles.center, { minHeight }]}>
-        <Ionicons name="document-outline" size={32} color={COLORS.textTertiary} />
-        <Text style={[styles.msg, { color: COLORS.textSecondary }]}>No content available.</Text>
+        <Ionicons name="document-outline" size={32} color={COLORS.contentMuted} />
+        <Text style={[styles.msg, { color: COLORS.contentSecondary }]}>No content available.</Text>
       </View>
     );
   }
 
   return (
     <WebView
-      source={{ html: wrapHtml(html, COLORS.textPrimary, COLORS.background, bannerHtml) }}
+      source={{ html: wrapHtml(html, COLORS.contentPrimary, COLORS.surfacePage, bannerHtml) }}
       style={{ flex: 1, backgroundColor: 'transparent' }}
       originWhitelist={['*']}
     />

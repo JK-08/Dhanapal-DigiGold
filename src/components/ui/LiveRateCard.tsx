@@ -66,14 +66,14 @@ export default function LiveRateCard({ onRatesPress, style }: Props) {
         style,
       ]}
     >
-      <View style={[styles.card, { backgroundColor: COLORS.card, ...SHADOWS.md }]}>
+      <View style={[styles.card, { backgroundColor: COLORS.surface, ...SHADOWS.md }]}>
         <View style={styles.header}>
           <View style={styles.liveRow}>
             <View style={[styles.liveDot, { backgroundColor: COLORS.success }]} />
             <Text style={{
               fontFamily: FONTS.family.semiBold,
               fontSize: SIZES.font.xs,
-              color: COLORS.textTertiary,
+              color: COLORS.contentMuted,
               letterSpacing: 0.6,
             }}>
               LIVE RATES
@@ -82,7 +82,7 @@ export default function LiveRateCard({ onRatesPress, style }: Props) {
           <Text style={{
             fontFamily: FONTS.family.regular,
             fontSize: SIZES.font.xs,
-            color: COLORS.textDisabled,
+            color: COLORS.contentDisabled,
           }}>
             {gold?.updatedAt ?? 'Today'}
           </Text>
@@ -99,15 +99,15 @@ export default function LiveRateCard({ onRatesPress, style }: Props) {
               <Ionicons name="diamond-outline" size={moderateScale(18)} color={GOLD_CLR} />
             </View>
             <View style={styles.info}>
-              <Text style={{ fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xs, color: COLORS.textPrimary }}>
+              <Text style={{ fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xs, color: COLORS.contentPrimary }}>
                 Gold 91.6%
               </Text>
               {ratesLoading ? (
                 <ActivityIndicator size="small" color={GOLD_CLR} style={{ marginTop: 3, alignSelf: 'flex-start' }} />
               ) : (
-                <Text style={{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.lg, color: COLORS.textPrimary }}>
+                <Text style={{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.lg, color: COLORS.contentPrimary }}>
                   {fmtRate(gold?.currentRate)}
-                  <Text style={{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.textTertiary }}>/g</Text>
+                  <Text style={{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.contentMuted }}>/g</Text>
                 </Text>
               )}
             </View>
@@ -121,7 +121,7 @@ export default function LiveRateCard({ onRatesPress, style }: Props) {
             )}
           </TouchableOpacity>
 
-          <View style={[styles.divider, { backgroundColor: COLORS.borderLight }]} />
+          <View style={[styles.divider, { backgroundColor: COLORS.borderSubtle }]} />
 
           {/* Silver */}
           <TouchableOpacity
@@ -133,15 +133,15 @@ export default function LiveRateCard({ onRatesPress, style }: Props) {
               <Ionicons name="ellipse-outline" size={moderateScale(18)} color={SILVER_CLR} />
             </View>
             <View style={styles.info}>
-              <Text style={{ fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xs, color: COLORS.textPrimary }}>
+              <Text style={{ fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xs, color: COLORS.contentPrimary }}>
                 Silver 91.6%
               </Text>
               {ratesLoading ? (
                 <ActivityIndicator size="small" color={SILVER_CLR} style={{ marginTop: 3, alignSelf: 'flex-start' }} />
               ) : (
-                <Text style={{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.lg, color: COLORS.textPrimary }}>
+                <Text style={{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.lg, color: COLORS.contentPrimary }}>
                   {fmtRate(silver?.currentRate)}
-                  <Text style={{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.textTertiary }}>/g</Text>
+                  <Text style={{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.contentMuted }}>/g</Text>
                 </Text>
               )}
             </View>
@@ -156,18 +156,18 @@ export default function LiveRateCard({ onRatesPress, style }: Props) {
           </TouchableOpacity>
         </View>
 
-        <View style={[styles.footerDivider, { backgroundColor: COLORS.borderLight }]} />
+        <View style={[styles.footerDivider, { backgroundColor: COLORS.borderSubtle }]} />
 
         <TouchableOpacity
           style={styles.footer}
           activeOpacity={0.7}
           onPress={() => onRatesPress?.('Gold')}
         >
-          <Ionicons name="stats-chart-outline" size={moderateScale(14)} color={COLORS.primary} />
-          <Text style={{ fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.sm, color: COLORS.primary }}>
+          <Ionicons name="stats-chart-outline" size={moderateScale(14)} color={COLORS.brand} />
+          <Text style={{ fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.sm, color: COLORS.brand }}>
             View Chart & History
           </Text>
-          <Ionicons name="chevron-forward" size={moderateScale(14)} color={COLORS.primary} />
+          <Ionicons name="chevron-forward" size={moderateScale(14)} color={COLORS.brand} />
         </TouchableOpacity>
       </View>
     </Animated.View>

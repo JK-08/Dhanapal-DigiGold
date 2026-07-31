@@ -20,12 +20,12 @@ export default function AppIcon({ name, size, variant = 'default', onPress, cont
   const scale = useRef(new Animated.Value(1)).current;
 
   const configs: Record<IconVariant, { bg: string; color: string }> = {
-    default: { bg: COLORS.gray100,        color: COLORS.textSecondary },
-    primary: { bg: COLORS.primaryPale,    color: COLORS.primary       },
+    default: { bg: COLORS.gray100,        color: COLORS.contentSecondary },
+    primary: { bg: COLORS.brandTint,    color: COLORS.brand       },
     gold:    { bg: COLORS.goldLight,      color: COLORS.secondary     },
     success: { bg: 'rgba(123,174,58,.12)',color: COLORS.success       },
     error:   { bg: 'rgba(220,38,38,.1)',  color: COLORS.error         },
-    ghost:   { bg: 'transparent',         color: COLORS.textPrimary   },
+    ghost:   { bg: 'transparent',         color: COLORS.contentPrimary   },
   };
   const cfg  = configs[variant];
   const sz   = size ?? moderateScale(22);

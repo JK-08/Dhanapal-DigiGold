@@ -50,12 +50,12 @@ export default function SchemeTermsScreen() {
     navigation.navigate('SchemeJoin', { scheme });
   };
 
-  const mColor = METAL_COLOR[scheme.MetalType] ?? COLORS.primary;
+  const mColor = METAL_COLOR[scheme.MetalType] ?? COLORS.brand;
   const mLabel = METAL_LABEL[scheme.MetalType] ?? scheme.MetalType;
   const isFixed = scheme.FixedIns === 'Y';
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: COLORS.background }]} edges={['bottom']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: COLORS.surfacePage }]} edges={['bottom']}>
       {/* ── Header ── */}
       <AppHeader title="Terms & Conditions" subtitle={scheme.schemeName} showBack  />
 
@@ -84,13 +84,13 @@ export default function SchemeTermsScreen() {
       </View>
 
       {/* ── Fixed Footer ── */}
-      <View style={[styles.footer, { backgroundColor: COLORS.background, borderTopColor: COLORS.borderLight, paddingBottom: Platform.OS === 'ios' ? 4 : 16 }]}>
+      <View style={[styles.footer, { backgroundColor: COLORS.surfacePage, borderTopColor: COLORS.borderSubtle, paddingBottom: Platform.OS === 'ios' ? 4 : 16 }]}>
                 <TouchableOpacity
           style={[
             styles.acceptRow,
             {
-              backgroundColor: accepted ? COLORS.primary + '08' : COLORS.card,
-              borderColor: accepted ? COLORS.primary + '40' : COLORS.borderLight,
+              backgroundColor: accepted ? COLORS.brand + '08' : COLORS.surface,
+              borderColor: accepted ? COLORS.brand + '40' : COLORS.borderSubtle,
             }
           ]}
           onPress={toggleAccept}
@@ -99,8 +99,8 @@ export default function SchemeTermsScreen() {
           <Animated.View style={[
             styles.checkbox,
             {
-              backgroundColor: accepted ? COLORS.primary : 'transparent',
-              borderColor: accepted ? COLORS.primary : COLORS.borderMedium,
+              backgroundColor: accepted ? COLORS.brand : 'transparent',
+              borderColor: accepted ? COLORS.brand : COLORS.borderStrong,
               transform: [{ scale: checkScale }],
             }
           ]}>
@@ -108,25 +108,25 @@ export default function SchemeTermsScreen() {
           </Animated.View>
           <Text style={[
             styles.acceptText,
-            { color: accepted ? COLORS.textPrimary : COLORS.textSecondary, fontFamily: FONTS.family.medium }
+            { color: accepted ? COLORS.contentPrimary : COLORS.contentSecondary, fontFamily: FONTS.family.medium }
           ]}>
             I have read and agree to all the Terms & Conditions and General Guidelines of{' '}
             <Text style={{ fontFamily: FONTS.family.bold, color: mColor }}>{scheme.schemeName}</Text>.
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.joinBtn, { backgroundColor: accepted ? mColor : COLORS.borderLight, ...(accepted ? SHADOWS.md : {}) }]}
+          style={[styles.joinBtn, { backgroundColor: accepted ? mColor : COLORS.borderSubtle, ...(accepted ? SHADOWS.md : {}) }]}
           onPress={handleJoin}
           disabled={!accepted}
           activeOpacity={0.85}
         >
-          <Ionicons name="checkmark-circle-outline" size={moderateScale(20)} color={accepted ? COLORS.white : COLORS.textTertiary} />
-          <Text style={[styles.joinBtnText, { color: accepted ? COLORS.white : COLORS.textTertiary, fontFamily: FONTS.family.bold }]}>
+          <Ionicons name="checkmark-circle-outline" size={moderateScale(20)} color={accepted ? COLORS.white : COLORS.contentMuted} />
+          <Text style={[styles.joinBtnText, { color: accepted ? COLORS.white : COLORS.contentMuted, fontFamily: FONTS.family.bold }]}>
             Join Scheme
           </Text>
         </TouchableOpacity>
         {!accepted && (
-          <Text style={[styles.footerHint, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+          <Text style={[styles.footerHint, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
             Please accept the terms to continue
           </Text>
         )}

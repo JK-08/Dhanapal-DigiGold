@@ -407,7 +407,7 @@ export default function AppSkeletonLoader({ type, count = 3, lines = 4, style }:
             <View key={i} style={i < count - 1 ? { marginBottom: type === 'card' ? 14 : 0 } : undefined}>
               {renderItem(i)}
               {type !== 'card' && i < count - 1 && (
-                <View style={[styles.separator, { backgroundColor: COLORS.borderLight }]} />
+                <View style={[styles.separator, { backgroundColor: COLORS.borderSubtle }]} />
               )}
             </View>
           ))

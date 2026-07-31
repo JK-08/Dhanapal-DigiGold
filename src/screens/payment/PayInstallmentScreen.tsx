@@ -50,8 +50,8 @@ function InfoRow({ label, value, valueColor }: { label: string; value: string; v
   const { COLORS, FONTS } = useTheme();
   return (
     <View style={s.infoRow}>
-      <Text style={[s.infoLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>{label}</Text>
-      <Text style={[s.infoValue, { color: valueColor ?? COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>{value}</Text>
+      <Text style={[s.infoLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>{label}</Text>
+      <Text style={[s.infoValue, { color: valueColor ?? COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>{value}</Text>
     </View>
   );
 }
@@ -83,20 +83,20 @@ function SuccessModal({ visible, amount, schemeName, paymentId, onDone }: {
   return (
     <Modal visible={visible} transparent animationType="none">
       <View style={s.modalOverlay}>
-        <Animated.View style={[s.modalCard, { backgroundColor: COLORS.background, transform: [{ scale }], opacity }]}>
+        <Animated.View style={[s.modalCard, { backgroundColor: COLORS.surfacePage, transform: [{ scale }], opacity }]}>
 
           {/* Icon */}
           <View style={[s.modalIconWrap, { backgroundColor: COLORS.success + '18' }]}>
             <Ionicons name="checkmark-circle" size={72} color={COLORS.success} />
           </View>
 
-          <Text style={[s.modalTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+          <Text style={[s.modalTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
             Payment Successful!
           </Text>
 
-          <Text style={[s.modalDesc, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+          <Text style={[s.modalDesc, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
             Your installment for{'\n'}
-            <Text style={{ color: COLORS.primary, fontFamily: FONTS.family.semiBold }}>{schemeName}</Text>
+            <Text style={{ color: COLORS.brand, fontFamily: FONTS.family.semiBold }}>{schemeName}</Text>
             {'\n'}has been paid successfully.
           </Text>
 
@@ -110,12 +110,12 @@ function SuccessModal({ visible, amount, schemeName, paymentId, onDone }: {
 
           {/* Payment ID */}
           {paymentId ? (
-            <Text style={[s.paymentId, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+            <Text style={[s.paymentId, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
               Payment ID: {paymentId}
             </Text>
           ) : null}
 
-          <TouchableOpacity style={[s.modalBtn, { backgroundColor: COLORS.primary }]} onPress={onDone}>
+          <TouchableOpacity style={[s.modalBtn, { backgroundColor: COLORS.brand }]} onPress={onDone}>
             <Text style={[s.modalBtnText, { color: COLORS.white, fontFamily: FONTS.family.bold }]}>
               Back to My Schemes
             </Text>
@@ -137,21 +137,21 @@ function FailureModal({ visible, message, onRetry, onCancel }: {
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={s.modalOverlay}>
-        <View style={[s.modalCard, { backgroundColor: COLORS.background }]}>
+        <View style={[s.modalCard, { backgroundColor: COLORS.surfacePage }]}>
           <View style={[s.modalIconWrap, { backgroundColor: '#E5393518' }]}>
             <Ionicons name="close-circle" size={72} color="#E53935" />
           </View>
-          <Text style={[s.modalTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+          <Text style={[s.modalTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
             Payment Failed
           </Text>
-          <Text style={[s.modalDesc, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+          <Text style={[s.modalDesc, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
             {message || 'Something went wrong with your payment. Please try again.'}
           </Text>
-          <TouchableOpacity style={[s.modalBtn, { backgroundColor: COLORS.primary, marginBottom: 10 }]} onPress={onRetry}>
+          <TouchableOpacity style={[s.modalBtn, { backgroundColor: COLORS.brand, marginBottom: 10 }]} onPress={onRetry}>
             <Text style={[s.modalBtnText, { color: COLORS.white, fontFamily: FONTS.family.bold }]}>Try Again</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[s.modalBtn, { backgroundColor: COLORS.borderLight }]} onPress={onCancel}>
-            <Text style={[s.modalBtnText, { color: COLORS.textSecondary, fontFamily: FONTS.family.semiBold }]}>Cancel</Text>
+          <TouchableOpacity style={[s.modalBtn, { backgroundColor: COLORS.borderSubtle }]} onPress={onCancel}>
+            <Text style={[s.modalBtnText, { color: COLORS.contentSecondary, fontFamily: FONTS.family.semiBold }]}>Cancel</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -288,7 +288,7 @@ export default function PayInstallmentScreen() {
           email:   ppData.personalInfo?.mobile + '@dhanapal.com',
           contact: ppData.personalInfo?.mobile ?? '',
         },
-        theme: { color: COLORS.primary },
+        theme: { color: COLORS.brand },
       },
       buildUserDetails(),
       // After the payment is verified, record the installment via /api/v1/account/insert.
@@ -336,7 +336,7 @@ export default function PayInstallmentScreen() {
   const isProcessing = ['creating_order', 'checkout_open', 'verifying'].includes(status);
 
   return (
-    <SafeAreaView style={[s.container, { backgroundColor: COLORS.background }]} edges={['bottom']}>
+    <SafeAreaView style={[s.container, { backgroundColor: COLORS.surfacePage }]} edges={['bottom']}>
 
       {/* Header */}
       <AppHeader title="Pay Installment" subtitle={schemeName} showBack  />
@@ -349,21 +349,21 @@ export default function PayInstallmentScreen() {
       >
 
         {/* ── Scheme Summary Card ── */}
-        <View style={[s.card, { backgroundColor: COLORS.white, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
-          <View style={[s.cardIconWrap, { backgroundColor: COLORS.primary + '12' }]}>
-            <Ionicons name="diamond-outline" size={22} color={COLORS.primary} />
+        <View style={[s.card, { backgroundColor: COLORS.white, borderColor: COLORS.borderSubtle, ...SHADOWS.sm }]}>
+          <View style={[s.cardIconWrap, { backgroundColor: COLORS.brand + '12' }]}>
+            <Ionicons name="diamond-outline" size={22} color={COLORS.brand} />
           </View>
-          <Text style={[s.cardTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+          <Text style={[s.cardTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
             {schemeName}
           </Text>
-          <Text style={[s.cardSub, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+          <Text style={[s.cardSub, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
             Scheme Code: {scheme?.schemeSName ?? ppData.groupCode}  ·  Reg No: {ppData.regNo}
           </Text>
 
-          <View style={[s.divider, { backgroundColor: COLORS.borderLight }]} />
+          <View style={[s.divider, { backgroundColor: COLORS.borderSubtle }]} />
 
           <InfoRow label="Instalments Paid"   value={`${paid} / ${total}`} />
-          <InfoRow label="Next Instalment No." value={`# ${nextInstNum}`} valueColor={COLORS.primary} />
+          <InfoRow label="Next Instalment No." value={`# ${nextInstNum}`} valueColor={COLORS.brand} />
           <InfoRow label="Maturity Date"       value={formatDate(ppData.maturityDate)} />
           <InfoRow label="Next Due Date"       value={formatDate(ppData.nextDueDate)} valueColor={COLORS.warning} />
           <InfoRow label="Total Invested"      value={`₹${ppData.totalAmount.toLocaleString('en-IN')}`} />
@@ -371,11 +371,11 @@ export default function PayInstallmentScreen() {
         </View>
 
         {/* ── Amount Section ── */}
-        <View style={[s.card, { backgroundColor: COLORS.white, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
-          <Text style={[s.sectionTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+        <View style={[s.card, { backgroundColor: COLORS.white, borderColor: COLORS.borderSubtle, ...SHADOWS.sm }]}>
+          <Text style={[s.sectionTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
             {isFixed ? 'Installment Amount' : 'Enter Installment Amount'}
           </Text>
-          <Text style={[s.sectionSub, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+          <Text style={[s.sectionSub, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
             {isFixed
               ? 'This is a fixed instalment scheme. The amount is set from your first payment.'
               : 'This is a flexible instalment scheme. Enter any amount for this instalment.'}
@@ -383,13 +383,13 @@ export default function PayInstallmentScreen() {
 
           {isFixed ? (
             /* Fixed amount display */
-            <View style={[s.fixedAmountBox, { backgroundColor: COLORS.primary + '08', borderColor: COLORS.primary + '30' }]}>
-              <Ionicons name="cash-outline" size={22} color={COLORS.primary} />
+            <View style={[s.fixedAmountBox, { backgroundColor: COLORS.brand + '08', borderColor: COLORS.brand + '30' }]}>
+              <Ionicons name="cash-outline" size={22} color={COLORS.brand} />
               <View>
-                <Text style={[s.fixedAmountValue, { color: COLORS.primary, fontFamily: FONTS.family.bold }]}>
+                <Text style={[s.fixedAmountValue, { color: COLORS.brand, fontFamily: FONTS.family.bold }]}>
                   ₹{effectiveAmount.toLocaleString('en-IN')}
                 </Text>
-                <Text style={[s.fixedAmountLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+                <Text style={[s.fixedAmountLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
                   per instalment
                 </Text>
               </View>
@@ -397,15 +397,15 @@ export default function PayInstallmentScreen() {
           ) : (
             /* Flexible amount input */
             <View>
-              <Text style={[s.inputLabel, { color: COLORS.textSecondary, fontFamily: FONTS.family.medium }]}>
+              <Text style={[s.inputLabel, { color: COLORS.contentSecondary, fontFamily: FONTS.family.medium }]}>
                 Amount (₹) *
               </Text>
-              <View style={[s.inputBox, { borderColor: customAmount ? COLORS.primary : COLORS.borderLight, backgroundColor: customAmount ? COLORS.primary + '05' : COLORS.white }]}>
-                <Text style={[s.inputPrefix, { color: COLORS.textSecondary, fontFamily: FONTS.family.semiBold }]}>₹</Text>
+              <View style={[s.inputBox, { borderColor: customAmount ? COLORS.brand : COLORS.borderSubtle, backgroundColor: customAmount ? COLORS.brand + '05' : COLORS.white }]}>
+                <Text style={[s.inputPrefix, { color: COLORS.contentSecondary, fontFamily: FONTS.family.semiBold }]}>₹</Text>
                 <TextInput
-                  style={[s.input, { color: COLORS.textPrimary, fontFamily: FONTS.family.regular }]}
+                  style={[s.input, { color: COLORS.contentPrimary, fontFamily: FONTS.family.regular }]}
                   placeholder="Enter amount"
-                  placeholderTextColor={COLORS.textTertiary}
+                  placeholderTextColor={COLORS.contentMuted}
                   keyboardType="numeric"
                   value={customAmount}
                   onChangeText={(v) => setCustomAmount(v.replace(/[^0-9]/g, ''))}
@@ -417,25 +417,25 @@ export default function PayInstallmentScreen() {
 
         {/* ── Payment Summary ── */}
         {isReady && (
-          <View style={[s.card, { backgroundColor: COLORS.primary + '06', borderColor: COLORS.primary + '20', ...SHADOWS.sm }]}>
-            <Text style={[s.sectionTitle, { color: COLORS.primary, fontFamily: FONTS.family.bold }]}>
+          <View style={[s.card, { backgroundColor: COLORS.brand + '06', borderColor: COLORS.brand + '20', ...SHADOWS.sm }]}>
+            <Text style={[s.sectionTitle, { color: COLORS.brand, fontFamily: FONTS.family.bold }]}>
               Payment Summary
             </Text>
 
             <View style={s.summaryRow}>
-              <Text style={[s.summaryLabel, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>Scheme</Text>
-              <Text style={[s.summaryValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]} numberOfLines={1}>
+              <Text style={[s.summaryLabel, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>Scheme</Text>
+              <Text style={[s.summaryValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]} numberOfLines={1}>
                 {schemeName}
               </Text>
             </View>
             <View style={s.summaryRow}>
-              <Text style={[s.summaryLabel, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>Instalment No.</Text>
-              <Text style={[s.summaryValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>#{nextInstNum}</Text>
+              <Text style={[s.summaryLabel, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>Instalment No.</Text>
+              <Text style={[s.summaryValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>#{nextInstNum}</Text>
             </View>
-            <View style={[s.divider, { backgroundColor: COLORS.primary + '20', marginVertical: 10 }]} />
+            <View style={[s.divider, { backgroundColor: COLORS.brand + '20', marginVertical: 10 }]} />
             <View style={s.summaryRow}>
-              <Text style={[s.summaryLabel, { color: COLORS.primary, fontFamily: FONTS.family.bold, fontSize: 15 }]}>Total Payable</Text>
-              <Text style={[s.summaryValue, { color: COLORS.primary, fontFamily: FONTS.family.bold, fontSize: 18 }]}>
+              <Text style={[s.summaryLabel, { color: COLORS.brand, fontFamily: FONTS.family.bold, fontSize: 15 }]}>Total Payable</Text>
+              <Text style={[s.summaryValue, { color: COLORS.brand, fontFamily: FONTS.family.bold, fontSize: 18 }]}>
                 ₹{effectiveAmount.toLocaleString('en-IN')}
               </Text>
             </View>
@@ -446,12 +446,12 @@ export default function PayInstallmentScreen() {
       </ScrollView>
 
       {/* ── Fixed Footer Button ── */}
-      <View style={[s.footer, { backgroundColor: COLORS.background, borderTopColor: COLORS.borderLight, paddingBottom: Platform.OS === 'ios' ? 8 : 20 }]}>
+      <View style={[s.footer, { backgroundColor: COLORS.surfacePage, borderTopColor: COLORS.borderSubtle, paddingBottom: Platform.OS === 'ios' ? 8 : 20 }]}>
         <TouchableOpacity
           style={[
             s.payBtn,
             {
-              backgroundColor: isReady && !isProcessing ? COLORS.primary : COLORS.borderLight,
+              backgroundColor: isReady && !isProcessing ? COLORS.brand : COLORS.borderSubtle,
               ...(isReady && !isProcessing ? SHADOWS.md : {}),
             },
           ]}
@@ -473,9 +473,9 @@ export default function PayInstallmentScreen() {
               <Ionicons
                 name="card-outline"
                 size={20}
-                color={isReady ? COLORS.white : COLORS.textTertiary}
+                color={isReady ? COLORS.white : COLORS.contentMuted}
               />
-              <Text style={[s.payBtnText, { color: isReady ? COLORS.white : COLORS.textTertiary, fontFamily: FONTS.family.bold }]}>
+              <Text style={[s.payBtnText, { color: isReady ? COLORS.white : COLORS.contentMuted, fontFamily: FONTS.family.bold }]}>
                 Pay ₹{effectiveAmount > 0 ? effectiveAmount.toLocaleString('en-IN') : '—'} via Razorpay
               </Text>
             </>

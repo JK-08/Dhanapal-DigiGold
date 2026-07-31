@@ -150,11 +150,11 @@ function RateRow({ entry, isLast, colors, fonts }: {
   const upColor = colors.success;
   const downColor = colors.error;
   return (
-    <View style={[rr.row, !isLast && { borderBottomWidth: 1, borderBottomColor: colors.borderLight }]}>
-      <Text style={[rr.date, { color: colors.textSecondary, fontFamily: fonts.family.regular }]}>
+    <View style={[rr.row, !isLast && { borderBottomWidth: 1, borderBottomColor: colors.borderSubtle }]}>
+      <Text style={[rr.date, { color: colors.contentSecondary, fontFamily: fonts.family.regular }]}>
         {entry.date.slice(0, 6)}
       </Text>
-      <Text style={[rr.rate, { color: colors.textPrimary, fontFamily: fonts.family.semiBold }]}>
+      <Text style={[rr.rate, { color: colors.contentPrimary, fontFamily: fonts.family.semiBold }]}>
         ₹{entry.rate.toLocaleString('en-IN')}
       </Text>
       <View style={rr.changeCell}>
@@ -219,7 +219,7 @@ export default function RatesScreen() {
   const tabTranslate = tabAnim.interpolate({ inputRange: [0, 1], outputRange: [0, TAB_W] });
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: COLORS.background }]} edges={['bottom']}>
+    <SafeAreaView style={[s.safe, { backgroundColor: COLORS.surfacePage }]} edges={['bottom']}>
 
       {/* Header */}
       <AppHeader
@@ -228,7 +228,7 @@ export default function RatesScreen() {
         
         rightComponent={
           <TouchableOpacity onPress={load} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-            <Ionicons name="refresh-outline" size={22} color={COLORS.textSecondary} />
+            <Ionicons name="refresh-outline" size={22} color={COLORS.contentSecondary} />
           </TouchableOpacity>
         }
       />
@@ -236,7 +236,7 @@ export default function RatesScreen() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
 
         {/* Metal Tabs */}
-        <View style={[s.tabsOuter, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight }]}>
+        <View style={[s.tabsOuter, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle }]}>
           <Animated.View style={[s.tabPill, { width: TAB_W, backgroundColor: activeColor + '18',
             borderColor: activeColor + '50', transform: [{ translateX: tabTranslate }] }]} />
           {(['Gold', 'Silver'] as Metal[]).map(m => {
@@ -244,8 +244,8 @@ export default function RatesScreen() {
             const clr = m === 'Gold' ? goldColor : silverColor;
             return (
               <TouchableOpacity key={m} style={[s.tab, { width: TAB_W }]} onPress={() => switchMetal(m)} activeOpacity={0.8}>
-                <Ionicons name={m === 'Gold' ? 'diamond-outline' : 'ellipse-outline'} size={15} color={sel ? clr : COLORS.textTertiary} />
-                <Text style={[s.tabTxt, { color: sel ? clr : COLORS.textTertiary, fontFamily: sel ? FONTS.family.bold : FONTS.family.medium }]}>
+                <Ionicons name={m === 'Gold' ? 'diamond-outline' : 'ellipse-outline'} size={15} color={sel ? clr : COLORS.contentMuted} />
+                <Text style={[s.tabTxt, { color: sel ? clr : COLORS.contentMuted, fontFamily: sel ? FONTS.family.bold : FONTS.family.medium }]}>
                   {m} {m === 'Gold' ? '(916)' : '(999)'}
                 </Text>
               </TouchableOpacity>
@@ -260,7 +260,7 @@ export default function RatesScreen() {
         ) : (
           <>
             {/* Current Rate Card */}
-            <View style={[s.rateCard, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm, marginHorizontal: 16 }]}>
+            <View style={[s.rateCard, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, ...SHADOWS.sm, marginHorizontal: 16 }]}>
               <View style={s.rateCardTop}>
                 <View style={[s.metalBadge, { backgroundColor: activeColor + '18' }]}>
                   <Ionicons name={activeMetal === 'Gold' ? 'diamond-outline' : 'ellipse-outline'} size={14} color={activeColor} />
@@ -276,10 +276,10 @@ export default function RatesScreen() {
                 </View>
               </View>
 
-              <Text style={[s.rateLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+              <Text style={[s.rateLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
                 {metal.unit}
               </Text>
-              <Text style={[s.rateValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+              <Text style={[s.rateValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
                 ₹{metal.currentRate.toLocaleString('en-IN')}
               </Text>
               <View style={s.changeRow}>
@@ -287,34 +287,34 @@ export default function RatesScreen() {
                 <Text style={[s.changeAbs, { color: isUp ? COLORS.success : COLORS.error, fontFamily: FONTS.family.medium }]}>
                   {isUp ? '+' : ''}₹{Math.abs(metal.change).toLocaleString('en-IN')} today
                 </Text>
-                <Text style={[s.updatedAt, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+                <Text style={[s.updatedAt, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
                   · {metal.updatedAt}
                 </Text>
               </View>
             </View>
 
             {/* Chart Card */}
-            <View style={[s.chartCard, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm, marginHorizontal: 16 }]}>
+            <View style={[s.chartCard, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, ...SHADOWS.sm, marginHorizontal: 16 }]}>
               <View style={s.chartHeader}>
-                <Text style={[s.sectionTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+                <Text style={[s.sectionTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
                   10-Day Trend
                 </Text>
-                <Text style={[s.chartSub, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+                <Text style={[s.chartSub, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
                   Touch chart to see details
                 </Text>
               </View>
               <View style={{ marginTop: 8, marginLeft: -4 }}>
-                <RateChart data={metal.history} color={activeColor} labelColor={COLORS.textTertiary} />
+                <RateChart data={metal.history} color={activeColor} labelColor={COLORS.contentMuted} />
               </View>
             </View>
 
             {/* Rate List Card */}
-            <View style={[s.listCard, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm, marginHorizontal: 16 }]}>
+            <View style={[s.listCard, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, ...SHADOWS.sm, marginHorizontal: 16 }]}>
               {/* Table header */}
-              <View style={[s.tableHead, { backgroundColor: activeColor + '12', borderBottomColor: COLORS.borderLight }]}>
-                <Text style={[s.headTxt, { flex: 1.4, color: COLORS.textTertiary, fontFamily: FONTS.family.semiBold }]}>Date</Text>
-                <Text style={[s.headTxt, { flex: 1.6, textAlign: 'right', color: COLORS.textTertiary, fontFamily: FONTS.family.semiBold }]}>Rate/g</Text>
-                <Text style={[s.headTxt, { flex: 2.2, textAlign: 'right', color: COLORS.textTertiary, fontFamily: FONTS.family.semiBold }]}>Change</Text>
+              <View style={[s.tableHead, { backgroundColor: activeColor + '12', borderBottomColor: COLORS.borderSubtle }]}>
+                <Text style={[s.headTxt, { flex: 1.4, color: COLORS.contentMuted, fontFamily: FONTS.family.semiBold }]}>Date</Text>
+                <Text style={[s.headTxt, { flex: 1.6, textAlign: 'right', color: COLORS.contentMuted, fontFamily: FONTS.family.semiBold }]}>Rate/g</Text>
+                <Text style={[s.headTxt, { flex: 2.2, textAlign: 'right', color: COLORS.contentMuted, fontFamily: FONTS.family.semiBold }]}>Change</Text>
               </View>
 
               {[...metal.history].reverse().map((entry, i, arr) => (
@@ -323,9 +323,9 @@ export default function RatesScreen() {
             </View>
 
             {/* Disclaimer */}
-            <View style={[s.disclaimer, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, marginHorizontal: 16 }]}>
-              <Ionicons name="information-circle-outline" size={14} color={COLORS.textTertiary} />
-              <Text style={[s.disclaimerTxt, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+            <View style={[s.disclaimer, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, marginHorizontal: 16 }]}>
+              <Ionicons name="information-circle-outline" size={14} color={COLORS.contentMuted} />
+              <Text style={[s.disclaimerTxt, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
                 Rates are indicative and may vary slightly from actual transaction prices.
               </Text>
             </View>

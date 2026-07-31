@@ -696,19 +696,19 @@ export default function AppExportSheet({ visible, onClose, data, filename = 'exp
 
         {/* Header */}
         <View style={styles.sheetHeader}>
-          <View style={[styles.headerIcon, { backgroundColor: COLORS.primaryPale }]}>
-            <Ionicons name="share-social-outline" size={moderateScale(22)} color={COLORS.primary} />
+          <View style={[styles.headerIcon, { backgroundColor: COLORS.brandTint }]}>
+            <Ionicons name="share-social-outline" size={moderateScale(22)} color={COLORS.brand} />
           </View>
           <View style={{ flex: 1, marginLeft: 12 }}>
-            <Text style={[styles.sheetTitle, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.xl, color: COLORS.textPrimary }]}>
+            <Text style={[styles.sheetTitle, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.xl, color: COLORS.contentPrimary }]}>
               Export Report
             </Text>
-            <Text style={[styles.sheetSub, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.textTertiary }]}>
+            <Text style={[styles.sheetSub, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.contentMuted }]}>
               {data.rows.length} records · {data.title}
             </Text>
           </View>
           <TouchableOpacity onPress={onClose} style={[styles.closeBtn, { backgroundColor: COLORS.gray100 }]}>
-            <Ionicons name="close" size={moderateScale(18)} color={COLORS.textSecondary} />
+            <Ionicons name="close" size={moderateScale(18)} color={COLORS.contentSecondary} />
           </TouchableOpacity>
         </View>
 
@@ -716,27 +716,27 @@ export default function AppExportSheet({ visible, onClose, data, filename = 'exp
         {data.branding && (
           <View style={styles.brandingPills}>
             {data.branding.logoBase64 && (
-              <View style={[styles.pill, { backgroundColor: COLORS.primaryPale }]}>
-                <Ionicons name="image-outline" size={12} color={COLORS.primary} />
-                <Text style={[styles.pillText, { color: COLORS.primary, fontFamily: FONTS.family.medium, fontSize: SIZES.font.xxs }]}>Logo</Text>
+              <View style={[styles.pill, { backgroundColor: COLORS.brandTint }]}>
+                <Ionicons name="image-outline" size={12} color={COLORS.brand} />
+                <Text style={[styles.pillText, { color: COLORS.brand, fontFamily: FONTS.family.medium, fontSize: SIZES.font.xxs }]}>Logo</Text>
               </View>
             )}
             {data.branding.headerBgBase64 && (
-              <View style={[styles.pill, { backgroundColor: COLORS.primaryPale }]}>
-                <Ionicons name="layers-outline" size={12} color={COLORS.primary} />
-                <Text style={[styles.pillText, { color: COLORS.primary, fontFamily: FONTS.family.medium, fontSize: SIZES.font.xxs }]}>Header BG</Text>
+              <View style={[styles.pill, { backgroundColor: COLORS.brandTint }]}>
+                <Ionicons name="layers-outline" size={12} color={COLORS.brand} />
+                <Text style={[styles.pillText, { color: COLORS.brand, fontFamily: FONTS.family.medium, fontSize: SIZES.font.xxs }]}>Header BG</Text>
               </View>
             )}
             {data.branding.watermarkText && (
-              <View style={[styles.pill, { backgroundColor: COLORS.primaryPale }]}>
-                <Ionicons name="text-outline" size={12} color={COLORS.primary} />
-                <Text style={[styles.pillText, { color: COLORS.primary, fontFamily: FONTS.family.medium, fontSize: SIZES.font.xxs }]}>Watermark</Text>
+              <View style={[styles.pill, { backgroundColor: COLORS.brandTint }]}>
+                <Ionicons name="text-outline" size={12} color={COLORS.brand} />
+                <Text style={[styles.pillText, { color: COLORS.brand, fontFamily: FONTS.family.medium, fontSize: SIZES.font.xxs }]}>Watermark</Text>
               </View>
             )}
           </View>
         )}
 
-        <View style={[styles.divider, { backgroundColor: COLORS.borderLight }]} />
+        <View style={[styles.divider, { backgroundColor: COLORS.borderSubtle }]} />
 
         {/* Format cards */}
         <View style={styles.formatsWrap}>
@@ -767,13 +767,13 @@ export default function AppExportSheet({ visible, onClose, data, filename = 'exp
                   }
                 </View>
                 <View style={{ flex: 1, marginLeft: 14 }}>
-                  <Text style={[styles.fmtLabel, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.md, color: COLORS.textPrimary }]}>
+                  <Text style={[styles.fmtLabel, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.md, color: COLORS.contentPrimary }]}>
                     {fmt.label}
-                    <Text style={{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.textTertiary }}>
+                    <Text style={{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.contentMuted }}>
                       {'  .' + fmt.ext}
                     </Text>
                   </Text>
-                  <Text style={[styles.fmtDesc, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: isLoading ? COLORS.primary : isDone ? fmt.iconColor : COLORS.textTertiary }]}>
+                  <Text style={[styles.fmtDesc, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: isLoading ? COLORS.brand : isDone ? fmt.iconColor : COLORS.contentMuted }]}>
                     {isLoading ? 'Generating…' : isDone ? 'Shared ✓' : fmt.desc}
                   </Text>
                 </View>
@@ -788,18 +788,18 @@ export default function AppExportSheet({ visible, onClose, data, filename = 'exp
         {/* Summary preview */}
         {(data.summary ?? []).length > 0 && (
           <>
-            <View style={[styles.divider, { backgroundColor: COLORS.borderLight, marginHorizontal: 20 }]} />
+            <View style={[styles.divider, { backgroundColor: COLORS.borderSubtle, marginHorizontal: 20 }]} />
             <View style={styles.summaryWrap}>
-              <Text style={[styles.summaryTitle, { fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xs, color: COLORS.textTertiary, letterSpacing: 0.8 }]}>
+              <Text style={[styles.summaryTitle, { fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xs, color: COLORS.contentMuted, letterSpacing: 0.8 }]}>
                 EXPORT PREVIEW
               </Text>
               <View style={styles.summaryRow}>
                 {data.summary!.map((s, i) => (
                   <View key={i} style={styles.summaryItem}>
-                    <Text style={[styles.summaryValue, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.lg, color: COLORS.primary }]}>
+                    <Text style={[styles.summaryValue, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.lg, color: COLORS.brand }]}>
                       {s.value}
                     </Text>
-                    <Text style={[styles.summaryLabel, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.textTertiary }]}>
+                    <Text style={[styles.summaryLabel, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.contentMuted }]}>
                       {s.label}
                     </Text>
                   </View>
@@ -809,7 +809,7 @@ export default function AppExportSheet({ visible, onClose, data, filename = 'exp
           </>
         )}
 
-        <Text style={[styles.bottomNote, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.textDisabled }]}>
+        <Text style={[styles.bottomNote, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.contentDisabled }]}>
           Files are saved to your device and shared via your chosen app.
         </Text>
       </Animated.View>

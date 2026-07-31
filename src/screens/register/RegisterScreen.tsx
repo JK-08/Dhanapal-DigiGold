@@ -139,7 +139,7 @@ export default function RegisterScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.surfacePage }}>
     <ScrollView contentContainerStyle={{ paddingBottom: 32 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
 
       {/* Branded Header */}
@@ -205,7 +205,7 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   header: { gap: 6 },
   headerBg: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.brand,
     paddingTop: SIZES.xs,
     paddingBottom: SIZES.xs,
     paddingHorizontal: SIZES.padding.xl,
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 20,
-    backgroundColor: COLORS.primaryDark,
+    backgroundColor: COLORS.brandStrong,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: SIZES.xs,
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     marginBottom: SIZES.sm,
   },
   card: {
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.surfacePage,
     borderRadius: SIZES.radius.xl,
     padding: SIZES.padding.md,
     gap: SIZES.xs,
@@ -266,17 +266,17 @@ const styles = StyleSheet.create({
   dividerText: {
     fontFamily: FONTS.family.regular,
     fontSize: SIZES.font.md,
-    color: COLORS.textTertiary,
+    color: COLORS.contentMuted,
   },
   footerText: {
     fontFamily: FONTS.family.regular,
     fontSize: SIZES.font.md,
-    color: COLORS.textTertiary,
+    color: COLORS.contentMuted,
     textAlign: 'center',
   },
   footerLink: {
     fontFamily: FONTS.family.semiBold,
-    color: COLORS.primary,
+    color: COLORS.brand,
   },
   googleBtn: {
     flexDirection: 'row',
@@ -294,6 +294,6 @@ const styles = StyleSheet.create({
   googleText: {
     fontFamily: FONTS.family.semiBold,
     fontSize: SIZES.font.md,
-    color: COLORS.textPrimary,
+    color: COLORS.contentPrimary,
   },
 });

@@ -17,7 +17,7 @@ export default function FaqScreen() {
   const { html, loading, error, refetch } = useAppContent('FAQ');
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }} edges={[ 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.surfacePage }} edges={[ 'bottom']}>
       <AppHeader
         title="FAQ"
         showBack

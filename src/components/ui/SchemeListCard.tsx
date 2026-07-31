@@ -40,7 +40,7 @@ export default function SchemeListCard({
   const maxHeight  = anim.interpolate({ inputRange: [0, 1], outputRange: [0, 320] });
   const rotateIcon = anim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] });
 
-  const mColor  = METAL_COLOR[item.MetalType] ?? COLORS.primary;
+  const mColor  = METAL_COLOR[item.MetalType] ?? COLORS.brand;
   const mLabel  = METAL_LABEL[item.MetalType] ?? item.MetalType;
   const canJoin = item.ADDNEWMEMBER === 'Y';
 
@@ -48,7 +48,7 @@ export default function SchemeListCard({
     <Animated.View
       style={[
         styles.card,
-        { backgroundColor: COLORS.white, borderColor: COLORS.borderLight, ...SHADOWS.sm },
+        { backgroundColor: COLORS.white, borderColor: COLORS.borderSubtle, ...SHADOWS.sm },
         width ? { width, marginBottom: 0 } : null,
       ]}
     >
@@ -63,7 +63,7 @@ export default function SchemeListCard({
             )}
           </View>
           <View style={styles.cardTitleContainer}>
-            <Text style={[styles.cardTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]} numberOfLines={1}>
+            <Text style={[styles.cardTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]} numberOfLines={1}>
               {item.schemeName}
             </Text>
             <View style={[styles.statusBadge, { backgroundColor: mColor + '15' }]}>
@@ -73,28 +73,28 @@ export default function SchemeListCard({
           </View>
         </View>
         <Animated.View style={{ transform: [{ rotate: rotateIcon }] }}>
-          <Ionicons name="chevron-down" size={moderateScale(22)} color={COLORS.textTertiary} />
+          <Ionicons name="chevron-down" size={moderateScale(22)} color={COLORS.contentMuted} />
         </Animated.View>
       </TouchableOpacity>
 
       {/* Always-visible stats */}
       <View style={styles.cardContent}>
-        <Text style={[styles.description, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]} numberOfLines={2}>
+        <Text style={[styles.description, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]} numberOfLines={2}>
           {item.FixedIns === 'Y' ? 'Fixed' : 'Flexible'} instalment {mLabel.toLowerCase()} savings scheme.
           Code: {item.SchemeSName}
         </Text>
         <View style={styles.statsRow}>
           <View style={styles.statItem}>
-            <Text style={[styles.statLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Instalments</Text>
-            <Text style={[styles.statValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>{item.Instalment}</Text>
+            <Text style={[styles.statLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Instalments</Text>
+            <Text style={[styles.statValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>{item.Instalment}</Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={[styles.statLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Metal</Text>
+            <Text style={[styles.statLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Metal</Text>
             <Text style={[styles.statValue, { color: mColor, fontFamily: FONTS.family.semiBold }]}>{mLabel}</Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={[styles.statLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Amount</Text>
-            <Text style={[styles.statValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+            <Text style={[styles.statLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Amount</Text>
+            <Text style={[styles.statValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
               {item.FixedIns === 'Y' ? 'Fixed' : 'Flexible'}
             </Text>
           </View>
@@ -105,25 +105,25 @@ export default function SchemeListCard({
       <Animated.View style={[styles.expandableContent, { maxHeight }]}>
         {expanded && (
           <View style={styles.expandedDetails}>
-            <View style={[styles.divider, { backgroundColor: COLORS.borderLight }]} />
+            <View style={[styles.divider, { backgroundColor: COLORS.borderSubtle }]} />
             <View style={styles.detailRow}>
-              <Text style={[styles.detailLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Scheme Code</Text>
-              <Text style={[styles.detailValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>{item.SchemeSName}</Text>
+              <Text style={[styles.detailLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Scheme Code</Text>
+              <Text style={[styles.detailValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>{item.SchemeSName}</Text>
             </View>
             <View style={styles.detailRow}>
-              <Text style={[styles.detailLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Instalment Type</Text>
-              <Text style={[styles.detailValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+              <Text style={[styles.detailLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Instalment Type</Text>
+              <Text style={[styles.detailValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
                 {item.FixedIns === 'Y' ? 'Fixed Amount' : 'Flexible Amount'}
               </Text>
             </View>
             <View style={styles.detailRow}>
-              <Text style={[styles.detailLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Weight Ledger</Text>
-              <Text style={[styles.detailValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+              <Text style={[styles.detailLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Weight Ledger</Text>
+              <Text style={[styles.detailValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
                 {item.WeightLedger === 'Y' ? 'Maintained' : 'Not Maintained'}
               </Text>
             </View>
             <View style={styles.detailRow}>
-              <Text style={[styles.detailLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Enrolment</Text>
+              <Text style={[styles.detailLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Enrolment</Text>
               <Text style={[styles.detailValue, { color: canJoin ? COLORS.success : (COLORS.error ?? '#E53935'), fontFamily: FONTS.family.semiBold }]}>
                 {canJoin ? 'Open' : 'Closed'}
               </Text>
@@ -135,13 +135,13 @@ export default function SchemeListCard({
       {/* Action */}
       <View style={styles.cardFooter}>
         <TouchableOpacity
-          style={[styles.actionButton, { backgroundColor: canJoin ? COLORS.primary : COLORS.borderLight }]}
+          style={[styles.actionButton, { backgroundColor: canJoin ? COLORS.brand : COLORS.borderSubtle }]}
           onPress={() => canJoin && onJoin(item)}
           disabled={!canJoin}
           activeOpacity={canJoin ? 0.85 : 1}
         >
-          <Ionicons name={canJoin ? 'add-circle-outline' : 'lock-closed-outline'} size={20} color={canJoin ? COLORS.white : COLORS.textTertiary} />
-          <Text style={[styles.actionButtonText, { color: canJoin ? COLORS.white : COLORS.textTertiary, fontFamily: FONTS.family.semiBold }]}>
+          <Ionicons name={canJoin ? 'add-circle-outline' : 'lock-closed-outline'} size={20} color={canJoin ? COLORS.white : COLORS.contentMuted} />
+          <Text style={[styles.actionButtonText, { color: canJoin ? COLORS.white : COLORS.contentMuted, fontFamily: FONTS.family.semiBold }]}>
             {canJoin ? 'Join Scheme' : 'Enrolment Closed'}
           </Text>
         </TouchableOpacity>

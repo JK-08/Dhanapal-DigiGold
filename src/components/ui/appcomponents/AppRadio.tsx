@@ -37,7 +37,7 @@ export function AppRadioItem({
   const dims = { sm: 18, md: 22, lg: 26 }[size];
   const dotSz = dims * 0.45;
 
-  const activeColor = variant === 'gold' ? COLORS.secondary : COLORS.primary;
+  const activeColor = variant === 'gold' ? COLORS.secondary : COLORS.brand;
 
   const ringBorder = ringAnim.interpolate({
     inputRange: [0, 1],
@@ -70,12 +70,12 @@ export function AppRadioItem({
       {(label || sublabel) && (
         <View style={{ flex: 1, marginLeft: 10 }}>
           {label && (
-            <Text style={{ fontFamily: FONTS.family.medium, fontSize: SIZES.font.md, color: disabled ? COLORS.textDisabled : COLORS.textPrimary }}>
+            <Text style={{ fontFamily: FONTS.family.medium, fontSize: SIZES.font.md, color: disabled ? COLORS.contentDisabled : COLORS.contentPrimary }}>
               {label}
             </Text>
           )}
           {sublabel && (
-            <Text style={{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.textTertiary, marginTop: 1 }}>
+            <Text style={{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.contentMuted, marginTop: 1 }}>
               {sublabel}
             </Text>
           )}

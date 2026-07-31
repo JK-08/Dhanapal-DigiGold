@@ -350,7 +350,7 @@ const s = StyleSheet.create({
     padding: 6,
   },
   logo: { width: 110, height: 34 },
-  skipBtn: { borderRadius: 20, overflow: 'hidden',backgroundColor:COLORS.background },
+  skipBtn: { borderRadius: 20, overflow: 'hidden',backgroundColor:COLORS.surfacePage },
   skipBlur: { paddingHorizontal: 16, paddingVertical: 8 },
   skipTxt: {
     fontFamily: FONTS.family.medium,

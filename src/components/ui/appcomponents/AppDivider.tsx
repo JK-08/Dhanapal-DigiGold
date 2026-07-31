@@ -28,7 +28,7 @@ export default function AppDivider({
     return (
       <View style={[styles.row, { marginVertical }, style]}>
         <View style={[styles.line, { backgroundColor: lineColor, height: thickness }]} />
-        <Text style={[styles.label, { fontFamily: FONTS.family.medium, fontSize: SIZES.font.xs, color: COLORS.textTertiary, marginHorizontal: 12 }]}>
+        <Text style={[styles.label, { fontFamily: FONTS.family.medium, fontSize: SIZES.font.xs, color: COLORS.contentMuted, marginHorizontal: 12 }]}>
           {label}
         </Text>
         <View style={[styles.line, { backgroundColor: lineColor, height: thickness }]} />

@@ -163,13 +163,13 @@ export default function AppGoldPriceCard({
   const changeColor = isUp ? upColor : downColor;
 
   return (
-    <View style={[styles.card, { backgroundColor: COLORS.card, ...SHADOWS.gold }, style]}>
+    <View style={[styles.card, { backgroundColor: COLORS.surface, ...SHADOWS.gold }, style]}>
 
       {/* ── Top bar: title + refresh ── */}
       <View style={styles.topBar}>
         <View style={styles.titleRow}>
           <View style={[styles.goldDot, { backgroundColor: accentColor }]} />
-          <Text style={[styles.title, { fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.md, color: COLORS.textPrimary }]}>
+          <Text style={[styles.title, { fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.md, color: COLORS.contentPrimary }]}>
             Gold Rate
           </Text>
           <View style={[styles.livePill, { backgroundColor: upColor + '22', borderColor: upColor + '55' }]}>
@@ -179,7 +179,7 @@ export default function AppGoldPriceCard({
         </View>
         <TouchableOpacity onPress={handleRefresh} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
           <Animated.View style={{ transform: [{ rotate: spin }] }}>
-            <Ionicons name="refresh-outline" size={moderateScale(18)} color={COLORS.textTertiary} />
+            <Ionicons name="refresh-outline" size={moderateScale(18)} color={COLORS.contentMuted} />
           </Animated.View>
         </TouchableOpacity>
       </View>
@@ -192,7 +192,7 @@ export default function AppGoldPriceCard({
             styles.tabPill,
             {
               width: TAB_W,
-              backgroundColor: COLORS.card,
+              backgroundColor: COLORS.surface,
               transform: [{ translateX: tabAnim }],
               ...SHADOWS.sm,
               borderColor: accentColor + '40',
@@ -213,7 +213,7 @@ export default function AppGoldPriceCard({
                 {
                   fontFamily: isActive ? FONTS.family.bold : FONTS.family.medium,
                   fontSize: SIZES.font.sm,
-                  color: isActive ? accentColor : COLORS.textTertiary,
+                  color: isActive ? accentColor : COLORS.contentMuted,
                 },
               ]}>
                 {k}
@@ -223,7 +223,7 @@ export default function AppGoldPriceCard({
                 {
                   fontFamily: FONTS.family.regular,
                   fontSize: SIZES.font.xxs,
-                  color: isActive ? accentColor + 'BB' : COLORS.textDisabled,
+                  color: isActive ? accentColor + 'BB' : COLORS.contentDisabled,
                 },
               ]}>
                 {PURITY[k]}
@@ -242,10 +242,10 @@ export default function AppGoldPriceCard({
       ) : (
         <View style={styles.priceRow}>
           <Animated.View style={{ transform: [{ scale: priceScale }] }}>
-            <Text style={[styles.priceLabel, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.textTertiary }]}>
+            <Text style={[styles.priceLabel, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.contentMuted }]}>
               Per gram (incl. GST)
             </Text>
-            <Text style={[styles.price, { fontFamily: FONTS.family.bold, fontSize: SIZES.heading.h3, color: COLORS.textPrimary }]}>
+            <Text style={[styles.price, { fontFamily: FONTS.family.bold, fontSize: SIZES.heading.h3, color: COLORS.contentPrimary }]}>
               ₹{price.toLocaleString('en-IN')}
             </Text>
           </Animated.View>
@@ -276,8 +276,8 @@ export default function AppGoldPriceCard({
       {/* ── Updated at ── */}
       {updatedAt && !loading && (
         <View style={styles.updatedRow}>
-          <Ionicons name="time-outline" size={moderateScale(11)} color={COLORS.textDisabled} />
-          <Text style={[styles.updatedText, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xxs, color: COLORS.textDisabled }]}>
+          <Ionicons name="time-outline" size={moderateScale(11)} color={COLORS.contentDisabled} />
+          <Text style={[styles.updatedText, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xxs, color: COLORS.contentDisabled }]}>
             {' '}Updated {updatedAt}
           </Text>
         </View>

@@ -138,7 +138,7 @@ const CTAButton: React.FC<{
       case "primary":
         return {
           container: {
-            backgroundColor: COLORS.primary,
+            backgroundColor: COLORS.brand,
             ...SHADOWS.orange,
           },
           text: { color: COLORS.white },
@@ -146,21 +146,21 @@ const CTAButton: React.FC<{
       case "secondary":
         return {
           container: { backgroundColor: COLORS.gray100 },
-          text: { color: COLORS.textPrimary },
+          text: { color: COLORS.contentPrimary },
         };
       case "outline":
         return {
           container: {
             backgroundColor: "transparent",
             borderWidth: 1.5,
-            borderColor: COLORS.primary,
+            borderColor: COLORS.brand,
           },
-          text: { color: COLORS.primary },
+          text: { color: COLORS.brand },
         };
       case "ghost":
         return {
           container: { backgroundColor: "transparent" },
-          text: { color: COLORS.primary },
+          text: { color: COLORS.brand },
         };
     }
   };
@@ -266,7 +266,7 @@ const AppEmptyState: React.FC<AppEmptyStateProps> = ({
       ? COLORS.errorLight + "20"
       : variant === "no-internet"
       ? COLORS.infoLight + "20"
-      : COLORS.primaryPale);
+      : COLORS.brandTint);
 
   const styles = StyleSheet.create({
     container: {
@@ -317,7 +317,7 @@ const AppEmptyState: React.FC<AppEmptyStateProps> = ({
       height: sizeConfig.iconBg + 20,
       borderRadius: (sizeConfig.iconBg + 20) / 2,
       borderWidth: 1,
-      borderColor: COLORS.primary,
+      borderColor: COLORS.brand,
       opacity: 0.15,
     },
     ring2: {
@@ -326,7 +326,7 @@ const AppEmptyState: React.FC<AppEmptyStateProps> = ({
       height: sizeConfig.iconBg + 40,
       borderRadius: (sizeConfig.iconBg + 40) / 2,
       borderWidth: 1,
-      borderColor: COLORS.primary,
+      borderColor: COLORS.brand,
       opacity: 0.08,
     },
     title: {
@@ -337,7 +337,7 @@ const AppEmptyState: React.FC<AppEmptyStateProps> = ({
     subtitle: {
       ...FONTS.bodySmall,
       textAlign: "center",
-      color: COLORS.textSecondary,
+      color: COLORS.contentSecondary,
       lineHeight: 20,
       marginBottom: sizeConfig.gap * 2,
       maxWidth: 280,
@@ -371,7 +371,7 @@ const AppEmptyState: React.FC<AppEmptyStateProps> = ({
                 height: 80,
                 top: -20,
                 right: -20,
-                backgroundColor: COLORS.primaryPale,
+                backgroundColor: COLORS.brandTint,
               },
             ]}
           />

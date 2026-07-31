@@ -48,7 +48,7 @@ export default function ForgotMpinSendOtpScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }} edges={['bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.surfacePage }} edges={['bottom']}>
       <AppHeader title="Forgot MPIN" showBack/>
       <View style={styles.content}>
         {/* <StepIndicator activeIndex={0} /> */}
@@ -62,7 +62,7 @@ export default function ForgotMpinSendOtpScreen() {
           {!!maskedMobile && (
             <View style={styles.mobileRow}>
               <View style={styles.mobileIconWrap}>
-                <Ionicons name="call-outline" size={18} color={COLORS.primary} />
+                <Ionicons name="call-outline" size={18} color={COLORS.brand} />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={styles.mobileLabel}>OTP will be sent to</Text>
@@ -89,13 +89,13 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: FONTS.family.bold,
     fontSize:   SIZES.heading.h3,
-    color:      COLORS.textPrimary,
+    color:      COLORS.contentPrimary,
     letterSpacing: -0.3,
   },
   subtitle: {
     fontFamily: FONTS.family.regular,
     fontSize:   SIZES.font.sm,
-    color:      COLORS.textSecondary,
+    color:      COLORS.contentSecondary,
     lineHeight: 22,
   },
   card: {
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: COLORS.primaryPale,
+    backgroundColor: COLORS.brandTint,
     borderRadius: SIZES.radius.md,
     paddingHorizontal: SIZES.padding.md,
     paddingVertical: SIZES.padding.md,
@@ -127,12 +127,12 @@ const styles = StyleSheet.create({
   mobileLabel: {
     fontFamily: FONTS.family.regular,
     fontSize: SIZES.font.xs,
-    color: COLORS.textSecondary,
+    color: COLORS.contentSecondary,
   },
   mobileValue: {
     fontFamily: FONTS.family.bold,
     fontSize: SIZES.font.md,
-    color: COLORS.textPrimary,
+    color: COLORS.contentPrimary,
     marginTop: 2,
     letterSpacing: 0.3,
   },

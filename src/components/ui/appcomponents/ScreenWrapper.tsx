@@ -43,7 +43,7 @@ export default function ScreenWrapper({
 }: Props) {
   const { COLORS, SIZES } = useTheme();
 
-  const bg = backgroundColor ?? COLORS.background;
+  const bg = backgroundColor ?? COLORS.surfacePage;
   const ph = paddingHorizontal ?? SIZES.padding.container;
 
   return (
@@ -66,8 +66,8 @@ export default function ScreenWrapper({
               <RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
-                colors={[COLORS.primary]}
-                tintColor={COLORS.primary}
+                colors={[COLORS.brand]}
+                tintColor={COLORS.brand}
               />
             ) : undefined
           }

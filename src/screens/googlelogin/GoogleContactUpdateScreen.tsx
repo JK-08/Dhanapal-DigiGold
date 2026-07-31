@@ -72,7 +72,7 @@ export default function GoogleContactUpdateScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }} edges={['bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.surfacePage }} edges={['bottom']}>
       <AppHeader title="Add Mobile Number" showBack  />
       <View style={[styles.content, { paddingHorizontal: SIZES.padding.xl }]}>
         <View style={styles.header}>
@@ -118,13 +118,13 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: FONTS.family.bold,
     fontSize:   SIZES.heading.h3,
-    color:      COLORS.textPrimary,
+    color:      COLORS.contentPrimary,
     letterSpacing: -0.3,
   },
   subtitle: {
     fontFamily: FONTS.family.regular,
     fontSize:   SIZES.font.sm,
-    color:      COLORS.textSecondary,
+    color:      COLORS.contentSecondary,
     lineHeight: 22,
   },
   card: {

@@ -94,7 +94,7 @@ export default function Sidebar({ visible, onClose }: Props) {
           top: 0, left: 0, bottom: 0,
           width: SIDEBAR_WIDTH,
           zIndex: 11,
-          backgroundColor: COLORS.card,
+          backgroundColor: COLORS.surface,
           borderTopRightRadius: SIZES.radius.xxl,
           borderBottomRightRadius: SIZES.radius.xxl,
           overflow: 'hidden',
@@ -107,7 +107,7 @@ export default function Sidebar({ visible, onClose }: Props) {
           paddingTop: STATUS_BAR_H + 16,
           paddingBottom: SIZES.padding.xl,
           paddingHorizontal: SIZES.padding.xl,
-          backgroundColor: COLORS.primary,
+          backgroundColor: COLORS.brand,
         }}>
           {/* Gold accent bar */}
           <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, backgroundColor: COLORS.secondary }} />
@@ -178,8 +178,8 @@ export default function Sidebar({ visible, onClose }: Props) {
                     marginVertical: 2,
                     borderRadius: SIZES.radius.lg,
                     borderLeftWidth: 3,
-                    borderLeftColor: isActive ? COLORS.primary : 'transparent',
-                    backgroundColor: isActive ? COLORS.primaryPale : 'transparent',
+                    borderLeftColor: isActive ? COLORS.brand : 'transparent',
+                    backgroundColor: isActive ? COLORS.brandTint : 'transparent',
                     gap: 12,
                   }}
                 >
@@ -187,18 +187,18 @@ export default function Sidebar({ visible, onClose }: Props) {
                     width: 40, height: 40,
                     borderRadius: SIZES.radius.md,
                     alignItems: 'center', justifyContent: 'center',
-                    backgroundColor: isActive ? COLORS.primaryPale : isDark ? COLORS.blackOpacity20 : COLORS.gray100,
+                    backgroundColor: isActive ? COLORS.brandTint : isDark ? COLORS.blackOpacity20 : COLORS.gray100,
                   }}>
                     <Text style={{ fontSize: 18 }}>{item.icon}</Text>
                   </View>
                   <View style={{ flex: 1 }}>
                     <Text style={[
                       isActive ? FONTS.bodyBold : FONTS.bodyMedium,
-                      { color: isActive ? COLORS.primary : COLORS.textPrimary },
+                      { color: isActive ? COLORS.brand : COLORS.contentPrimary },
                     ]}>
                       {item.label}
                     </Text>
-                    <Text style={[FONTS.caption, { color: COLORS.textTertiary }]}>
+                    <Text style={[FONTS.caption, { color: COLORS.contentMuted }]}>
                       {item.description}
                     </Text>
                   </View>
@@ -206,9 +206,9 @@ export default function Sidebar({ visible, onClose }: Props) {
                     <View style={{
                       paddingHorizontal: 7, paddingVertical: 3,
                       borderRadius: SIZES.radius.sm,
-                      backgroundColor: item.badge === 'NEW' ? COLORS.primary : COLORS.primaryPale,
+                      backgroundColor: item.badge === 'NEW' ? COLORS.brand : COLORS.brandTint,
                     }}>
-                      <Text style={[FONTS.caption, { color: item.badge === 'NEW' ? COLORS.white : COLORS.primary }]}>
+                      <Text style={[FONTS.caption, { color: item.badge === 'NEW' ? COLORS.white : COLORS.brand }]}>
                         {item.badge}
                       </Text>
                     </View>
@@ -238,13 +238,13 @@ export default function Sidebar({ visible, onClose }: Props) {
               }}>
                 <Text style={{ fontSize: 16 }}>{isDark ? '🌙' : '☀️'}</Text>
               </View>
-              <Text style={[FONTS.bodyMedium, { flex: 1, color: COLORS.textPrimary }]}>
+              <Text style={[FONTS.bodyMedium, { flex: 1, color: COLORS.contentPrimary }]}>
                 {isDark ? t('darkMode') : t('lightMode')}
               </Text>
               <Switch
                 value={isDark}
                 onValueChange={toggleTheme}
-                trackColor={{ false: COLORS.border, true: COLORS.primary }}
+                trackColor={{ false: COLORS.border, true: COLORS.brand }}
                 thumbColor={isDark ? COLORS.secondary : COLORS.white}
               />
             </View>
@@ -265,8 +265,8 @@ export default function Sidebar({ visible, onClose }: Props) {
                 <Text style={{ fontSize: 16 }}>🌐</Text>
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={[FONTS.bodyMedium, { color: COLORS.textPrimary }]}>{t('language')}</Text>
-                <Text style={[FONTS.caption, { color: COLORS.textTertiary }]}>
+                <Text style={[FONTS.bodyMedium, { color: COLORS.contentPrimary }]}>{t('language')}</Text>
+                <Text style={[FONTS.caption, { color: COLORS.contentMuted }]}>
                   {selectedLang ? `${selectedLang.flag}  ${selectedLang.name}` : language.toUpperCase()}
                 </Text>
               </View>
@@ -289,7 +289,7 @@ export default function Sidebar({ visible, onClose }: Props) {
               <Text style={[FONTS.bodyMedium, { color: COLORS.error }]}>{t('signOut')}</Text>
             </TouchableOpacity>
 
-            <Text style={[FONTS.caption, { color: COLORS.textDisabled, textAlign: 'center', marginTop: 4 }]}>
+            <Text style={[FONTS.caption, { color: COLORS.contentDisabled, textAlign: 'center', marginTop: 4 }]}>
               DigiGold v1.0.0
             </Text>
           </View>

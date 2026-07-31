@@ -90,8 +90,8 @@ const Keypad: React.FC<KeypadProps> = ({ onPress, disabled }) => {
       alignItems: "center",
       justifyContent: "center",
     },
-    keyText: { ...FONTS.h4, color: COLORS.textPrimary },
-    deleteText: { ...FONTS.h4, color: COLORS.primary },
+    keyText: { ...FONTS.h4, color: COLORS.contentPrimary },
+    deleteText: { ...FONTS.h4, color: COLORS.brand },
     emptyKey: { width: 68, height: 68, backgroundColor: "transparent" },
   });
 
@@ -261,26 +261,26 @@ const AppPinInput = forwardRef<AppPinInputRef, AppPinInputProps>(
     const dotFillColor = (index: number) => {
       if (error) return COLORS.error;
       if (success && pin[index]) return COLORS.success;
-      if (pin[index]) return COLORS.primary;
+      if (pin[index]) return COLORS.brand;
       return "transparent";
     };
 
     const dotBorderColor = (index: number) => {
       if (error) return COLORS.error;
       if (success && pin[index]) return COLORS.success;
-      if (focused && pin.filter(Boolean).length === index) return COLORS.primary;
-      if (pin[index]) return COLORS.primaryDark;
-      return COLORS.borderMedium;
+      if (focused && pin.filter(Boolean).length === index) return COLORS.brand;
+      if (pin[index]) return COLORS.brandStrong;
+      return COLORS.borderStrong;
     };
 
     // ── Styles ────────────────────────────────────────────────────────────────
 
     const s = StyleSheet.create({
       container: { alignItems: "center" },
-      label: { ...FONTS.label, color: COLORS.textPrimary, marginBottom: 4 },
+      label: { ...FONTS.label, color: COLORS.contentPrimary, marginBottom: 4 },
       hint: {
         ...FONTS.bodySmall,
-        color: COLORS.textSecondary,
+        color: COLORS.contentSecondary,
         marginBottom: 16,
         textAlign: "center",
       },
@@ -309,7 +309,7 @@ const AppPinInput = forwardRef<AppPinInputRef, AppPinInputProps>(
         backgroundColor: COLORS.gray50,
         ...SHADOWS.sm,
       },
-      boxText: { ...FONTS.h4, color: COLORS.textPrimary },
+      boxText: { ...FONTS.h4, color: COLORS.contentPrimary },
       hiddenInput: {
         position: "absolute",
         width: 1,
@@ -385,7 +385,7 @@ const AppPinInput = forwardRef<AppPinInputRef, AppPinInputProps>(
                           : success && digit
                           ? COLORS.success + "22"
                           : digit
-                          ? COLORS.primaryPale
+                          ? COLORS.brandTint
                           : COLORS.gray50,
                     },
                   ]}
@@ -398,7 +398,7 @@ const AppPinInput = forwardRef<AppPinInputRef, AppPinInputProps>(
                           ? COLORS.error
                           : success
                           ? COLORS.success
-                          : COLORS.textPrimary,
+                          : COLORS.contentPrimary,
                         transform: [{ scale: dotAnims[i] }],
                         opacity: dotAnims[i],
                       },

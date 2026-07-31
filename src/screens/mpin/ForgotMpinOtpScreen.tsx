@@ -81,7 +81,7 @@ export default function ForgotMpinOtpScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }} edges={['bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.surfacePage }} edges={['bottom']}>
       <AppHeader title="Verify OTP" showBack />
       <View style={styles.content}>
         {/* <StepIndicator activeIndex={1} /> */}
@@ -144,13 +144,13 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: FONTS.family.bold,
     fontSize:   SIZES.heading.h3,
-    color:      COLORS.textPrimary,
+    color:      COLORS.contentPrimary,
     letterSpacing: -0.3,
   },
   subtitle: {
     fontFamily: FONTS.family.regular,
     fontSize:   SIZES.font.sm,
-    color:      COLORS.textSecondary,
+    color:      COLORS.contentSecondary,
     lineHeight: 22,
   },
   card: {
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     ...SHADOWS.md,
   },
   autoDetectRow: {
-    backgroundColor: COLORS.primaryPale,
+    backgroundColor: COLORS.brandTint,
     borderRadius:    SIZES.radius.sm,
     paddingHorizontal: SIZES.padding.md,
     paddingVertical:   SIZES.padding.sm,
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   autoDetectText: {
     fontFamily: FONTS.family.regular,
     fontSize:   SIZES.font.xs,
-    color:      COLORS.primaryDark,
+    color:      COLORS.brandStrong,
   },
   footerRow: { flexDirection: 'row', gap: SIZES.md },
 });

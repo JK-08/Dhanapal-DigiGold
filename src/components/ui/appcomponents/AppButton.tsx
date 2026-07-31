@@ -47,10 +47,10 @@ export default function AppButton({
   // ── Variant colors ──
   type VC = { bg: string; border: string; text: string; loaderColor: string };
   const variants: Record<ButtonVariant, VC> = {
-    primary:   { bg: COLORS.primary,   border: COLORS.primary,     text: COLORS.white,       loaderColor: COLORS.white       },
-    secondary: { bg: COLORS.gray100,   border: COLORS.gray100,     text: COLORS.textPrimary,  loaderColor: COLORS.primary     },
-    outline:   { bg: 'transparent',    border: COLORS.primary,     text: COLORS.primary,      loaderColor: COLORS.primary     },
-    ghost:     { bg: 'transparent',    border: 'transparent',      text: COLORS.textSecondary,loaderColor: COLORS.primary     },
+    primary:   { bg: COLORS.brand,   border: COLORS.brand,     text: COLORS.white,       loaderColor: COLORS.white       },
+    secondary: { bg: COLORS.gray100,   border: COLORS.gray100,     text: COLORS.contentPrimary,  loaderColor: COLORS.brand     },
+    outline:   { bg: 'transparent',    border: COLORS.brand,     text: COLORS.brand,      loaderColor: COLORS.brand     },
+    ghost:     { bg: 'transparent',    border: 'transparent',      text: COLORS.contentSecondary,loaderColor: COLORS.brand     },
     danger:    { bg: COLORS.error,     border: COLORS.error,       text: COLORS.white,        loaderColor: COLORS.white       },
     gold:      { bg: COLORS.secondary, border: COLORS.secondary,   text: COLORS.white,        loaderColor: COLORS.white       },
   };
@@ -85,17 +85,17 @@ export default function AppButton({
         ) : (
           <>
             {leftIcon && (
-              <Ionicons name={leftIcon as any} size={iSize} color={isDisabled ? COLORS.textDisabled : vc.text} style={{ marginRight: 6 }} />
+              <Ionicons name={leftIcon as any} size={iSize} color={isDisabled ? COLORS.contentDisabled : vc.text} style={{ marginRight: 6 }} />
             )}
             <Text style={[
               styles.label,
-              { fontSize: fontSizes[size], color: isDisabled ? COLORS.textDisabled : vc.text, fontFamily: FONTS.family.semiBold },
+              { fontSize: fontSizes[size], color: isDisabled ? COLORS.contentDisabled : vc.text, fontFamily: FONTS.family.semiBold },
               textStyle,
             ]}>
               {label}
             </Text>
             {rightIcon && (
-              <Ionicons name={rightIcon as any} size={iSize} color={isDisabled ? COLORS.textDisabled : vc.text} style={{ marginLeft: 6 }} />
+              <Ionicons name={rightIcon as any} size={iSize} color={isDisabled ? COLORS.contentDisabled : vc.text} style={{ marginLeft: 6 }} />
             )}
           </>
         )}

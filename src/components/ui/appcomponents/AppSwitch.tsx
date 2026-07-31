@@ -40,7 +40,7 @@ export default function AppSwitch({
 
   const activeColor =
     variant === 'gold'    ? COLORS.secondary :
-    variant === 'success' ? COLORS.success   : COLORS.primary;
+    variant === 'success' ? COLORS.success   : COLORS.brand;
 
   const trackBg = bgAnim.interpolate({
     inputRange: [0, 1],
@@ -70,12 +70,12 @@ export default function AppSwitch({
       {(label || sublabel) && (
         <View style={{ flex: 1, marginRight: 12 }}>
           {label && (
-            <Text style={[styles.label, { fontFamily: FONTS.family.medium, fontSize: SIZES.font.md, color: disabled ? COLORS.textDisabled : COLORS.textPrimary }]}>
+            <Text style={[styles.label, { fontFamily: FONTS.family.medium, fontSize: SIZES.font.md, color: disabled ? COLORS.contentDisabled : COLORS.contentPrimary }]}>
               {label}
             </Text>
           )}
           {sublabel && (
-            <Text style={[styles.sublabel, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.textTertiary }]}>
+            <Text style={[styles.sublabel, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.contentMuted }]}>
               {sublabel}
             </Text>
           )}

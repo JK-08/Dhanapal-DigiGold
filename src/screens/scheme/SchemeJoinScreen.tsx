@@ -28,7 +28,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 
 import { useTheme } from '../../theme';
 import { RootStackParamList } from '../../navigation/RootNavigator';
-import { METAL_COLOR, METAL_LABEL } from '../../types/Scheme/Scheme';
+import { METAL_LABEL } from '../../types/Scheme/Scheme';
 import { useRazorpay } from '../../api/hooks/Razorpay/useRazorpay';
 import { UserDetails, RazorpaySuccessPayment } from '../../types/Razorpay/Razorpay';
 import { useMemberScheme } from '../../api/hooks/Member/useMemberScheme';
@@ -77,21 +77,21 @@ const Field = React.forwardRef<View, FieldProps>(function Field({ label, icon, v
     }
   }, [error]);
 
-  const borderCol = error ? '#E53935' : focused ? colors.primary : colors.borderLight;
-  const bgCol     = error ? '#FFEBEE' : focused ? colors.primary + '05' : editable ? colors.card : colors.borderLight + '60';
+  const borderCol = error ? '#E53935' : focused ? colors.brand : colors.borderSubtle;
+  const bgCol     = error ? '#FFEBEE' : focused ? colors.brand + '05' : editable ? colors.surface : colors.borderSubtle + '60';
 
   return (
     <Animated.View ref={ref as any} collapsable={false} style={[styles.fieldWrap, { transform: [{ translateX: shakeAnim }] }]}>
-      <Text style={[styles.fieldLabel, { color: error ? '#E53935' : colors.textSecondary, fontFamily: fonts.family.medium }]}>
+      <Text style={[styles.fieldLabel, { color: error ? '#E53935' : colors.contentSecondary, fontFamily: fonts.family.medium }]}>
         {label}
         {indicator === 'required' && <Text style={{ color: '#E53935' }}> *</Text>}
       </Text>
       <View style={[styles.fieldBox, { borderColor: borderCol, backgroundColor: bgCol }]}>
-        <Ionicons name={icon} size={18} color={error ? '#E53935' : focused ? colors.primary : colors.textTertiary} style={styles.fieldIcon} />
+        <Ionicons name={icon} size={18} color={error ? '#E53935' : focused ? colors.brand : colors.contentMuted} style={styles.fieldIcon} />
         <TextInput
-          style={[styles.fieldInput, { color: colors.textPrimary, fontFamily: fonts.family.regular }]}
+          style={[styles.fieldInput, { color: colors.contentPrimary, fontFamily: fonts.family.regular }]}
           placeholder={placeholder}
-          placeholderTextColor={colors.textTertiary}
+          placeholderTextColor={colors.contentMuted}
           value={value}
           onChangeText={onChangeText}
           keyboardType={keyboardType}
@@ -102,7 +102,7 @@ const Field = React.forwardRef<View, FieldProps>(function Field({ label, icon, v
         />
         {rightIcon && (
           <TouchableOpacity onPress={onRightIconPress} style={{ padding: 4 }}>
-            <Ionicons name={rightIcon} size={18} color={colors.primary} />
+            <Ionicons name={rightIcon} size={18} color={colors.brand} />
           </TouchableOpacity>
         )}
       </View>
@@ -178,7 +178,7 @@ function DrumColumn({ data, selectedIndex, onSelect, colors, fonts }: {
   return (
     <View style={{ flex: 1, height: ITEM_H * 5, overflow: 'hidden' }}>
       {/* selection highlight */}
-      <View pointerEvents="none" style={[dp.highlight, { top: ITEM_H * 2, borderColor: colors.primary + '40', backgroundColor: colors.primary + '0A' }]} />
+      <View pointerEvents="none" style={[dp.highlight, { top: ITEM_H * 2, borderColor: colors.brand + '40', backgroundColor: colors.brand + '0A' }]} />
       <FlatList
         ref={ref}
         data={data}
@@ -195,7 +195,7 @@ function DrumColumn({ data, selectedIndex, onSelect, colors, fonts }: {
             ref.current?.scrollToIndex({ index, animated: true, viewPosition: 0.5 });
           }} style={dp.drumItem}>
             <Text style={[dp.drumText, {
-              color: index === selectedIndex ? colors.primary : colors.textTertiary,
+              color: index === selectedIndex ? colors.brand : colors.contentMuted,
               fontFamily: index === selectedIndex ? fonts.family.bold : fonts.family.regular,
               fontSize: index === selectedIndex ? 17 : 14,
               opacity: Math.abs(index - selectedIndex) > 1 ? 0.35 : 1,
@@ -251,20 +251,20 @@ function DatePickerModal({ visible, day, month, year, onConfirm, onCancel, color
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
       <TouchableOpacity style={dpModal.overlay} activeOpacity={1} onPress={onCancel}>
-        <TouchableOpacity activeOpacity={1} style={[dpModal.sheet, { backgroundColor: colors.background, ...shadows.lg }]}>
+        <TouchableOpacity activeOpacity={1} style={[dpModal.sheet, { backgroundColor: colors.surfacePage, ...shadows.lg }]}>
 
           {/* Header */}
-          <View style={[dpModal.header, { borderBottomColor: colors.borderLight }]}>
-            <Text style={[dpModal.title, { color: colors.textPrimary, fontFamily: fonts.family.bold }]}>Date of Birth</Text>
+          <View style={[dpModal.header, { borderBottomColor: colors.borderSubtle }]}>
+            <Text style={[dpModal.title, { color: colors.contentPrimary, fontFamily: fonts.family.bold }]}>Date of Birth</Text>
             <TouchableOpacity onPress={onCancel}>
-              <Ionicons name="close" size={22} color={colors.textSecondary} />
+              <Ionicons name="close" size={22} color={colors.contentSecondary} />
             </TouchableOpacity>
           </View>
 
           {/* Labels */}
           <View style={dpModal.colLabels}>
             {['Day', 'Month', 'Year'].map(l => (
-              <Text key={l} style={[dpModal.colLabel, { color: colors.textTertiary, fontFamily: fonts.family.medium }]}>{l}</Text>
+              <Text key={l} style={[dpModal.colLabel, { color: colors.contentMuted, fontFamily: fonts.family.medium }]}>{l}</Text>
             ))}
           </View>
 
@@ -292,11 +292,11 @@ function DatePickerModal({ visible, day, month, year, onConfirm, onCancel, color
 
           {/* Confirm */}
           <TouchableOpacity
-            style={[dpModal.confirmBtn, { backgroundColor: valid ? colors.primary : colors.borderLight }]}
+            style={[dpModal.confirmBtn, { backgroundColor: valid ? colors.brand : colors.borderSubtle }]}
             onPress={() => valid && onConfirm(selDay, selMonth, selYear)}
             disabled={!valid}
           >
-            <Text style={[dpModal.confirmTxt, { color: valid ? colors.white : colors.textTertiary, fontFamily: fonts.family.bold }]}>
+            <Text style={[dpModal.confirmTxt, { color: valid ? colors.white : colors.contentMuted, fontFamily: fonts.family.bold }]}>
               Confirm
             </Text>
           </TouchableOpacity>
@@ -336,7 +336,7 @@ function GenderSelector({ value, onChange, colors, fonts }: {
 }) {
   return (
     <View style={styles.fieldWrap}>
-      <Text style={[styles.fieldLabel, { color: colors.textSecondary, fontFamily: fonts.family.medium }]}>
+      <Text style={[styles.fieldLabel, { color: colors.contentSecondary, fontFamily: fonts.family.medium }]}>
         Gender *
       </Text>
       <View style={{ flexDirection: 'row', gap: 10 }}>
@@ -346,15 +346,15 @@ function GenderSelector({ value, onChange, colors, fonts }: {
             <TouchableOpacity
               key={label}
               style={[gStyles.chip, {
-                borderColor:     sel ? colors.primary : colors.borderLight,
-                backgroundColor: sel ? colors.primary + '0D' : colors.card,
+                borderColor:     sel ? colors.brand : colors.borderSubtle,
+                backgroundColor: sel ? colors.brand + '0D' : colors.surface,
                 flex: 1,
               }]}
               onPress={() => onChange(label)}
               activeOpacity={0.8}
             >
-              <Ionicons name={icon} size={16} color={sel ? colors.primary : colors.textTertiary} />
-              <Text style={[gStyles.chipTxt, { color: sel ? colors.primary : colors.textSecondary, fontFamily: sel ? fonts.family.semiBold : fonts.family.regular }]}>
+              <Ionicons name={icon} size={16} color={sel ? colors.brand : colors.contentMuted} />
+              <Text style={[gStyles.chipTxt, { color: sel ? colors.brand : colors.contentSecondary, fontFamily: sel ? fonts.family.semiBold : fonts.family.regular }]}>
                 {label}
               </Text>
             </TouchableOpacity>
@@ -387,17 +387,17 @@ function AmountDropdown({
 
   if (loading) {
     return (
-      <View style={[styles.dropdownBtn, { borderColor: colors.borderLight, backgroundColor: colors.card }]}>
-        <ActivityIndicator size="small" color={colors.primary} />
-        <Text style={[styles.dropdownBtnText, { color: colors.textTertiary, fontFamily: fonts.family.regular }]}>
+      <View style={[styles.dropdownBtn, { borderColor: colors.borderSubtle, backgroundColor: colors.surface }]}>
+        <ActivityIndicator size="small" color={colors.brand} />
+        <Text style={[styles.dropdownBtnText, { color: colors.contentMuted, fontFamily: fonts.family.regular }]}>
           Loading amounts…
         </Text>
       </View>
     );
   }
 
-  const borderCol = error ? '#E53935' : selected ? colors.primary : colors.borderLight;
-  const bgCol     = error ? '#FFEBEE' : selected ? colors.primary + '05' : colors.card;
+  const borderCol = error ? '#E53935' : selected ? colors.brand : colors.borderSubtle;
+  const bgCol     = error ? '#FFEBEE' : selected ? colors.brand + '05' : colors.surface;
 
   return (
     <>
@@ -407,23 +407,23 @@ function AmountDropdown({
         onPress={() => setOpen(true)}
         activeOpacity={0.8}
       >
-        <Ionicons name="cash-outline" size={18} color={selected ? colors.primary : colors.textTertiary} />
-        <Text style={[styles.dropdownBtnText, { color: selected ? colors.primary : colors.textTertiary, fontFamily: selected ? fonts.family.semiBold : fonts.family.regular }]}>
+        <Ionicons name="cash-outline" size={18} color={selected ? colors.brand : colors.contentMuted} />
+        <Text style={[styles.dropdownBtnText, { color: selected ? colors.brand : colors.contentMuted, fontFamily: selected ? fonts.family.semiBold : fonts.family.regular }]}>
           {selected ? `₹${selected.AMOUNT.toLocaleString('en-IN')} / month` : 'Select amount…'}
         </Text>
-        <Ionicons name={open ? 'chevron-up' : 'chevron-down'} size={16} color={selected ? colors.primary : colors.textTertiary} />
+        <Ionicons name={open ? 'chevron-up' : 'chevron-down'} size={16} color={selected ? colors.brand : colors.contentMuted} />
       </TouchableOpacity>
 
       {/* Selected group info */}
       {selected && (
-        <View style={[styles.groupInfo, { backgroundColor: colors.primary + '08', borderColor: colors.primary + '25' }]}>
+        <View style={[styles.groupInfo, { backgroundColor: colors.brand + '08', borderColor: colors.brand + '25' }]}>
           <View style={styles.groupInfoRow}>
-            <Text style={[styles.groupInfoLabel, { color: colors.textTertiary, fontFamily: fonts.family.regular }]}>Group Code</Text>
-            <Text style={[styles.groupInfoValue, { color: colors.primary, fontFamily: fonts.family.bold }]}>{selected.GROUPCODE}</Text>
+            <Text style={[styles.groupInfoLabel, { color: colors.contentMuted, fontFamily: fonts.family.regular }]}>Group Code</Text>
+            <Text style={[styles.groupInfoValue, { color: colors.brand, fontFamily: fonts.family.bold }]}>{selected.GROUPCODE}</Text>
           </View>
           <View style={styles.groupInfoRow}>
-            <Text style={[styles.groupInfoLabel, { color: colors.textTertiary, fontFamily: fonts.family.regular }]}>Registration No.</Text>
-            <Text style={[styles.groupInfoValue, { color: colors.textPrimary, fontFamily: fonts.family.semiBold }]}>{selected.CURRENTREGNO}</Text>
+            <Text style={[styles.groupInfoLabel, { color: colors.contentMuted, fontFamily: fonts.family.regular }]}>Registration No.</Text>
+            <Text style={[styles.groupInfoValue, { color: colors.contentPrimary, fontFamily: fonts.family.semiBold }]}>{selected.CURRENTREGNO}</Text>
           </View>
         </View>
       )}
@@ -431,13 +431,13 @@ function AmountDropdown({
       {/* Dropdown Modal */}
       <Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
         <TouchableOpacity style={styles.dropdownOverlay} activeOpacity={1} onPress={() => setOpen(false)}>
-          <View style={[styles.dropdownSheet, { backgroundColor: colors.background, ...shadows.lg }]}>
-            <View style={[styles.dropdownHeader, { borderBottomColor: colors.borderLight }]}>
-              <Text style={[styles.dropdownHeaderTitle, { color: colors.textPrimary, fontFamily: fonts.family.bold }]}>
+          <View style={[styles.dropdownSheet, { backgroundColor: colors.surfacePage, ...shadows.lg }]}>
+            <View style={[styles.dropdownHeader, { borderBottomColor: colors.borderSubtle }]}>
+              <Text style={[styles.dropdownHeaderTitle, { color: colors.contentPrimary, fontFamily: fonts.family.bold }]}>
                 Select Installment Amount
               </Text>
               <TouchableOpacity onPress={() => setOpen(false)}>
-                <Ionicons name="close" size={22} color={colors.textSecondary} />
+                <Ionicons name="close" size={22} color={colors.contentSecondary} />
               </TouchableOpacity>
             </View>
             <FlatList
@@ -447,20 +447,20 @@ function AmountDropdown({
                 const isSel = selected?.GROUPCODE === item.GROUPCODE;
                 return (
                   <TouchableOpacity
-                    style={[styles.dropdownItem, { backgroundColor: isSel ? colors.primary + '0D' : 'transparent', borderBottomColor: colors.borderLight }]}
+                    style={[styles.dropdownItem, { backgroundColor: isSel ? colors.brand + '0D' : 'transparent', borderBottomColor: colors.borderSubtle }]}
                     onPress={() => { onSelect(item); setOpen(false); }}
                     activeOpacity={0.7}
                   >
                     <View style={{ flex: 1 }}>
-                      <Text style={[styles.dropdownItemAmount, { color: isSel ? colors.primary : colors.textPrimary, fontFamily: fonts.family.bold }]}>
+                      <Text style={[styles.dropdownItemAmount, { color: isSel ? colors.brand : colors.contentPrimary, fontFamily: fonts.family.bold }]}>
                         ₹{item.AMOUNT.toLocaleString('en-IN')}
-                        <Text style={[styles.dropdownItemSub, { color: colors.textTertiary, fontFamily: fonts.family.regular }]}> / month</Text>
+                        <Text style={[styles.dropdownItemSub, { color: colors.contentMuted, fontFamily: fonts.family.regular }]}> / month</Text>
                       </Text>
-                      <Text style={[styles.dropdownItemMeta, { color: colors.textTertiary, fontFamily: fonts.family.regular }]}>
+                      <Text style={[styles.dropdownItemMeta, { color: colors.contentMuted, fontFamily: fonts.family.regular }]}>
                         Group: {item.GROUPCODE}  ·  Reg No: {item.CURRENTREGNO}
                       </Text>
                     </View>
-                    {isSel && <Ionicons name="checkmark-circle" size={20} color={colors.primary} />}
+                    {isSel && <Ionicons name="checkmark-circle" size={20} color={colors.brand} />}
                   </TouchableOpacity>
                 );
               }}
@@ -483,19 +483,19 @@ function FailureModal({ visible, message, onRetry, onCancel }: {
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.successOverlay}>
-        <View style={[styles.successCard, { backgroundColor: COLORS.background }]}>
+        <View style={[styles.successCard, { backgroundColor: COLORS.surfacePage }]}>
           <View style={[styles.successIconWrap, { backgroundColor: '#E5393518' }]}>
             <Ionicons name="close-circle" size={64} color="#E53935" />
           </View>
-          <Text style={[styles.successTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>Payment Failed</Text>
-          <Text style={[styles.successDesc, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+          <Text style={[styles.successTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>Payment Failed</Text>
+          <Text style={[styles.successDesc, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
             {message || 'Something went wrong. Please try again.'}
           </Text>
-          <TouchableOpacity style={[styles.successBtn, { backgroundColor: COLORS.primary, marginBottom: 10 }]} onPress={onRetry}>
+          <TouchableOpacity style={[styles.successBtn, { backgroundColor: COLORS.brand, marginBottom: 10 }]} onPress={onRetry}>
             <Text style={[styles.successBtnText, { color: COLORS.white, fontFamily: FONTS.family.bold }]}>Try Again</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.successBtn, { backgroundColor: COLORS.borderLight }]} onPress={onCancel}>
-            <Text style={[styles.successBtnText, { color: COLORS.textSecondary, fontFamily: FONTS.family.semiBold }]}>Cancel</Text>
+          <TouchableOpacity style={[styles.successBtn, { backgroundColor: COLORS.borderSubtle }]} onPress={onCancel}>
+            <Text style={[styles.successBtnText, { color: COLORS.contentSecondary, fontFamily: FONTS.family.semiBold }]}>Cancel</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -529,28 +529,28 @@ function SuccessModal({ visible, schemeName, amount, onClose }: {
   return (
     <Modal visible={visible} transparent animationType="none">
       <View style={styles.successOverlay}>
-        <Animated.View style={[styles.successCard, { backgroundColor: COLORS.background, transform: [{ scale }], opacity }]}>
+        <Animated.View style={[styles.successCard, { backgroundColor: COLORS.surfacePage, transform: [{ scale }], opacity }]}>
           <View style={[styles.successIconWrap, { backgroundColor: COLORS.success + '18' }]}>
             <Ionicons name="checkmark-circle" size={64} color={COLORS.success} />
           </View>
-          <Text style={[styles.successTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+          <Text style={[styles.successTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
             Successfully Joined!
           </Text>
-          <Text style={[styles.successDesc, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+          <Text style={[styles.successDesc, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
             You have successfully enrolled in{'\n'}
-            <Text style={{ color: COLORS.primary, fontFamily: FONTS.family.semiBold }}>{schemeName}</Text>
+            <Text style={{ color: COLORS.brand, fontFamily: FONTS.family.semiBold }}>{schemeName}</Text>
           </Text>
           {amount > 0 && (
-            <View style={[styles.amountChip, { backgroundColor: COLORS.primary + '12', borderColor: COLORS.primary + '30' }]}>
-              <Text style={[styles.amountChipText, { color: COLORS.primary, fontFamily: FONTS.family.bold }]}>
+            <View style={[styles.amountChip, { backgroundColor: COLORS.brand + '12', borderColor: COLORS.brand + '30' }]}>
+              <Text style={[styles.amountChipText, { color: COLORS.brand, fontFamily: FONTS.family.bold }]}>
                 ₹{amount.toLocaleString('en-IN')} / month
               </Text>
             </View>
           )}
-          <Text style={[styles.successNote, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+          <Text style={[styles.successNote, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
             Your scheme details have been sent to your registered mobile number.
           </Text>
-          <TouchableOpacity style={[styles.successBtn, { backgroundColor: COLORS.primary }]} onPress={onClose}>
+          <TouchableOpacity style={[styles.successBtn, { backgroundColor: COLORS.brand }]} onPress={onClose}>
             <Text style={[styles.successBtnText, { color: COLORS.white, fontFamily: FONTS.family.bold }]}>Go to Home</Text>
           </TouchableOpacity>
         </Animated.View>
@@ -564,6 +564,13 @@ const DRAFT_KEY = 'SCHEME_JOIN_DRAFT';
 
 export default function SchemeJoinScreen() {
   const { COLORS, FONTS, SHADOWS, moderateScale } = useTheme();
+
+  const METAL_COLOR: Record<string, string> = {
+    G: COLORS.goldPrimary,
+    S: COLORS.gray400,
+    P: COLORS.gray500,
+    D: COLORS.infoLight,
+  };
   const navigation = useNavigation<NavProps>();
   const route      = useRoute<RouteProps>();
   const { scheme } = route.params;
@@ -576,7 +583,7 @@ export default function SchemeJoinScreen() {
   // API: fetch groups for this scheme (gives AMOUNT, GROUPCODE, CURRENTREGNO)
   const { groups, loading: groupsLoading } = useMemberScheme(scheme.SchemeId);
 
-  const mColor  = METAL_COLOR[scheme.MetalType] ?? COLORS.primary;
+  const mColor  = METAL_COLOR[scheme.MetalType] ?? COLORS.brand;
   const mLabel  = METAL_LABEL[scheme.MetalType] ?? scheme.MetalType;
   const isFixed = scheme.FixedIns === 'Y';
 
@@ -1071,7 +1078,7 @@ export default function SchemeJoinScreen() {
   }, [status]);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: COLORS.background }]} edges={['bottom']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: COLORS.surfacePage }]} edges={['bottom']}>
 
       {/* ── Header ── */}
       <AppHeader title="Join Scheme" subtitle={scheme.schemeName} showBack  />
@@ -1086,34 +1093,34 @@ export default function SchemeJoinScreen() {
               <View style={[
                 styles.stepDot,
                 {
-                  backgroundColor: step >= 1 ? COLORS.primary : COLORS.borderLight,
-                  borderColor: step >= 1 ? COLORS.primary : COLORS.borderMedium,
+                  backgroundColor: step >= 1 ? COLORS.brand : COLORS.borderSubtle,
+                  borderColor: step >= 1 ? COLORS.brand : COLORS.borderStrong,
                 },
               ]}>
                 {step > 1 ? (
                   <Ionicons name="checkmark" size={13} color={COLORS.white} />
                 ) : (
-                  <Text style={[styles.stepDotText, { color: step === 1 ? COLORS.white : COLORS.textTertiary, fontFamily: FONTS.family.bold }]}>1</Text>
+                  <Text style={[styles.stepDotText, { color: step === 1 ? COLORS.white : COLORS.contentMuted, fontFamily: FONTS.family.bold }]}>1</Text>
                 )}
               </View>
-              <Text style={[styles.stepLabel, { color: step === 1 ? COLORS.primary : COLORS.textTertiary, fontFamily: FONTS.family.semiBold }]}>
+              <Text style={[styles.stepLabel, { color: step === 1 ? COLORS.brand : COLORS.contentMuted, fontFamily: FONTS.family.semiBold }]}>
                 Scheme & Amount
               </Text>
             </View>
 
-            <View style={[styles.stepConnector, { backgroundColor: step > 1 ? COLORS.primary : COLORS.borderLight }]} />
+            <View style={[styles.stepConnector, { backgroundColor: step > 1 ? COLORS.brand : COLORS.borderSubtle }]} />
 
             <View style={styles.stepIndicatorItem}>
               <View style={[
                 styles.stepDot,
                 {
-                  backgroundColor: step === 2 ? COLORS.primary : COLORS.borderLight,
-                  borderColor: step === 2 ? COLORS.primary : COLORS.borderMedium,
+                  backgroundColor: step === 2 ? COLORS.brand : COLORS.borderSubtle,
+                  borderColor: step === 2 ? COLORS.brand : COLORS.borderStrong,
                 },
               ]}>
-                <Text style={[styles.stepDotText, { color: step === 2 ? COLORS.white : COLORS.textTertiary, fontFamily: FONTS.family.bold }]}>2</Text>
+                <Text style={[styles.stepDotText, { color: step === 2 ? COLORS.white : COLORS.contentMuted, fontFamily: FONTS.family.bold }]}>2</Text>
               </View>
-              <Text style={[styles.stepLabel, { color: step === 2 ? COLORS.primary : COLORS.textTertiary, fontFamily: FONTS.family.semiBold }]}>
+              <Text style={[styles.stepLabel, { color: step === 2 ? COLORS.brand : COLORS.contentMuted, fontFamily: FONTS.family.semiBold }]}>
                 Your Details
               </Text>
             </View>
@@ -1127,10 +1134,10 @@ export default function SchemeJoinScreen() {
               <Ionicons name="diamond-outline" size={22} color={mColor} />
             </View>
             <View style={styles.schemeSummaryInfo}>
-              <Text style={[styles.schemeSummaryTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+              <Text style={[styles.schemeSummaryTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
                 {scheme.schemeName}
               </Text>
-              <Text style={[styles.schemeSummaryMeta, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+              <Text style={[styles.schemeSummaryMeta, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
                 {scheme.Instalment} Instalments · {mLabel} · {isFixed ? 'Fixed Amount' : 'Flexible Amount'}
               </Text>
             </View>
@@ -1142,10 +1149,10 @@ export default function SchemeJoinScreen() {
 
           {/* ── Installment Amount ── */}
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+            <Text style={[styles.sectionTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
               {isFixed ? 'Select Installment Amount' : 'Enter Installment Amount'}
             </Text>
-            <Text style={[styles.sectionSubtitle, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+            <Text style={[styles.sectionSubtitle, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
               {isFixed
                 ? 'Choose your monthly installment from the available options.'
                 : 'Enter any amount you wish to invest each month.'}
@@ -1192,8 +1199,8 @@ export default function SchemeJoinScreen() {
           <>
           {/* ── Customer Details ── */}
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>Customer Details</Text>
-            <Text style={[styles.sectionSubtitle, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+            <Text style={[styles.sectionTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>Customer Details</Text>
+            <Text style={[styles.sectionSubtitle, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
               Please fill in accurate details. These will be used for KYC verification.
             </Text>
             <Field
@@ -1260,16 +1267,16 @@ export default function SchemeJoinScreen() {
 
             {/* ── Date of Birth Picker ── */}
             <View ref={registerField('dob')} collapsable={false} style={styles.fieldWrap}>
-              <Text style={[styles.fieldLabel, { color: COLORS.textSecondary, fontFamily: FONTS.family.medium }]}>
+              <Text style={[styles.fieldLabel, { color: COLORS.contentSecondary, fontFamily: FONTS.family.medium }]}>
                 Date of Birth * <Text style={{ fontSize: 11, opacity: 0.7 }}>(Must be 18+)</Text>
               </Text>
               <TouchableOpacity
-                style={[styles.fieldBox, { borderColor: dobSet ? (dobAge >= 18 ? COLORS.primary : '#E53935') : COLORS.borderLight, backgroundColor: dobSet ? COLORS.primary + '05' : COLORS.card }]}
+                style={[styles.fieldBox, { borderColor: dobSet ? (dobAge >= 18 ? COLORS.brand : '#E53935') : COLORS.borderSubtle, backgroundColor: dobSet ? COLORS.brand + '05' : COLORS.surface }]}
                 onPress={openDobPicker}
                 activeOpacity={0.8}
               >
-                <Ionicons name="calendar-outline" size={18} color={dobSet ? COLORS.primary : COLORS.textTertiary} style={{ marginRight: 10 }} />
-                <Text style={[{ flex: 1, fontSize: 15 }, { color: dobSet ? COLORS.textPrimary : COLORS.textTertiary, fontFamily: dobSet ? FONTS.family.medium : FONTS.family.regular }]}>
+                <Ionicons name="calendar-outline" size={18} color={dobSet ? COLORS.brand : COLORS.contentMuted} style={{ marginRight: 10 }} />
+                <Text style={[{ flex: 1, fontSize: 15 }, { color: dobSet ? COLORS.contentPrimary : COLORS.contentMuted, fontFamily: dobSet ? FONTS.family.medium : FONTS.family.regular }]}>
                   {dobSet ? dobLabel : 'Select date of birth'}
                 </Text>
                 {dobSet && (
@@ -1277,7 +1284,7 @@ export default function SchemeJoinScreen() {
                     {dobAge}y
                   </Text>
                 )}
-                <Ionicons name="chevron-down" size={16} color={COLORS.textTertiary} style={{ marginLeft: 6 }} />
+                <Ionicons name="chevron-down" size={16} color={COLORS.contentMuted} style={{ marginLeft: 6 }} />
               </TouchableOpacity>
               {dobSet && dobAge < 18 && (
                 <Text style={{ fontSize: 11, color: '#E53935', marginTop: 4, fontFamily: FONTS.family.regular }}>
@@ -1288,22 +1295,22 @@ export default function SchemeJoinScreen() {
 
             {/* ── Gender Selector (dropdown) ── */}
             <View ref={registerField('gender')} collapsable={false} style={styles.fieldWrap}>
-              <Text style={[styles.fieldLabel, { color: COLORS.textSecondary, fontFamily: FONTS.family.medium }]}>
+              <Text style={[styles.fieldLabel, { color: COLORS.contentSecondary, fontFamily: FONTS.family.medium }]}>
                 Gender *
               </Text>
               <Dropdown
-                style={[styles.fieldBox, { borderColor: gender ? COLORS.primary : COLORS.borderLight, backgroundColor: gender ? COLORS.primary + '05' : COLORS.card }]}
+                style={[styles.fieldBox, { borderColor: gender ? COLORS.brand : COLORS.borderSubtle, backgroundColor: gender ? COLORS.brand + '05' : COLORS.surface }]}
                 data={GENDER_OPTIONS}
                 labelField="label"
                 valueField="value"
                 placeholder="Select gender"
                 value={gender}
                 onChange={(item) => setGender(item.value)}
-                placeholderStyle={{ color: COLORS.textTertiary, fontFamily: FONTS.family.regular, fontSize: 15 }}
-                selectedTextStyle={{ color: COLORS.textPrimary, fontFamily: FONTS.family.medium, fontSize: 15 }}
-                itemTextStyle={{ color: COLORS.textPrimary, fontFamily: FONTS.family.regular, fontSize: 15 }}
+                placeholderStyle={{ color: COLORS.contentMuted, fontFamily: FONTS.family.regular, fontSize: 15 }}
+                selectedTextStyle={{ color: COLORS.contentPrimary, fontFamily: FONTS.family.medium, fontSize: 15 }}
+                itemTextStyle={{ color: COLORS.contentPrimary, fontFamily: FONTS.family.regular, fontSize: 15 }}
                 renderLeftIcon={() => (
-                  <Ionicons name="people-outline" size={18} color={gender ? COLORS.primary : COLORS.textTertiary} style={{ marginRight: 10 }} />
+                  <Ionicons name="people-outline" size={18} color={gender ? COLORS.brand : COLORS.contentMuted} style={{ marginRight: 10 }} />
                 )}
               />
             </View>
@@ -1349,15 +1356,15 @@ export default function SchemeJoinScreen() {
             {/* ── Multiple localities share this pincode — make the member pick theirs ── */}
             {postOffices.length > 1 && (
               <View ref={registerField('area')} collapsable={false} style={styles.fieldWrap}>
-                <Text style={[styles.fieldLabel, { color: fieldErrors.area ? '#E53935' : COLORS.textSecondary, fontFamily: FONTS.family.medium }]}>
+                <Text style={[styles.fieldLabel, { color: fieldErrors.area ? '#E53935' : COLORS.contentSecondary, fontFamily: FONTS.family.medium }]}>
                   Select Your Area / Locality *
                 </Text>
                 <Dropdown
                   style={[
                     styles.fieldBox,
                     {
-                      borderColor: fieldErrors.area ? '#E53935' : area ? COLORS.primary : COLORS.borderLight,
-                      backgroundColor: fieldErrors.area ? '#FFEBEE' : area ? COLORS.primary + '05' : COLORS.card,
+                      borderColor: fieldErrors.area ? '#E53935' : area ? COLORS.brand : COLORS.borderSubtle,
+                      backgroundColor: fieldErrors.area ? '#FFEBEE' : area ? COLORS.brand + '05' : COLORS.surface,
                     },
                   ]}
                   data={postOffices.map((p) => ({ label: `${p.Name}${p.Block ? ` (${p.Block})` : ''}`, value: p.Name }))}
@@ -1371,11 +1378,11 @@ export default function SchemeJoinScreen() {
                     setCity(match?.Block ?? match?.District ?? '');
                     clearErr('area');
                   }}
-                  placeholderStyle={{ color: COLORS.textTertiary, fontFamily: FONTS.family.regular, fontSize: 15 }}
-                  selectedTextStyle={{ color: COLORS.textPrimary, fontFamily: FONTS.family.medium, fontSize: 15 }}
-                  itemTextStyle={{ color: COLORS.textPrimary, fontFamily: FONTS.family.regular, fontSize: 15 }}
+                  placeholderStyle={{ color: COLORS.contentMuted, fontFamily: FONTS.family.regular, fontSize: 15 }}
+                  selectedTextStyle={{ color: COLORS.contentPrimary, fontFamily: FONTS.family.medium, fontSize: 15 }}
+                  itemTextStyle={{ color: COLORS.contentPrimary, fontFamily: FONTS.family.regular, fontSize: 15 }}
                   renderLeftIcon={() => (
-                    <Ionicons name="location-outline" size={18} color={area ? COLORS.primary : COLORS.textTertiary} style={{ marginRight: 10 }} />
+                    <Ionicons name="location-outline" size={18} color={area ? COLORS.brand : COLORS.contentMuted} style={{ marginRight: 10 }} />
                   )}
                 />
                 {fieldErrors.area && (
@@ -1389,48 +1396,48 @@ export default function SchemeJoinScreen() {
 
             {(area || city || district || stateVal) && (
               <View style={{
-                backgroundColor: COLORS.primary + '08',
+                backgroundColor: COLORS.brand + '08',
                 borderRadius: 10,
                 padding: 12,
                 marginBottom: 4,
                 borderWidth: 1,
-                borderColor: COLORS.primary + '20',
+                borderColor: COLORS.brand + '20',
                 gap: 4,
               }}>
                 {area ? (
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ color: COLORS.textTertiary, fontFamily: FONTS.family.regular, fontSize: 12 }}>Area</Text>
-                    <Text style={{ color: COLORS.textPrimary, fontFamily: FONTS.family.medium, fontSize: 12 }}>{area}</Text>
+                    <Text style={{ color: COLORS.contentMuted, fontFamily: FONTS.family.regular, fontSize: 12 }}>Area</Text>
+                    <Text style={{ color: COLORS.contentPrimary, fontFamily: FONTS.family.medium, fontSize: 12 }}>{area}</Text>
                   </View>
                 ) : null}
                 {city ? (
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ color: COLORS.textTertiary, fontFamily: FONTS.family.regular, fontSize: 12 }}>City</Text>
-                    <Text style={{ color: COLORS.textPrimary, fontFamily: FONTS.family.medium, fontSize: 12 }}>{city}</Text>
+                    <Text style={{ color: COLORS.contentMuted, fontFamily: FONTS.family.regular, fontSize: 12 }}>City</Text>
+                    <Text style={{ color: COLORS.contentPrimary, fontFamily: FONTS.family.medium, fontSize: 12 }}>{city}</Text>
                   </View>
                 ) : null}
                 {district ? (
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ color: COLORS.textTertiary, fontFamily: FONTS.family.regular, fontSize: 12 }}>District</Text>
-                    <Text style={{ color: COLORS.textPrimary, fontFamily: FONTS.family.medium, fontSize: 12 }}>{district}</Text>
+                    <Text style={{ color: COLORS.contentMuted, fontFamily: FONTS.family.regular, fontSize: 12 }}>District</Text>
+                    <Text style={{ color: COLORS.contentPrimary, fontFamily: FONTS.family.medium, fontSize: 12 }}>{district}</Text>
                   </View>
                 ) : null}
                 {stateVal ? (
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ color: COLORS.textTertiary, fontFamily: FONTS.family.regular, fontSize: 12 }}>State</Text>
-                    <Text style={{ color: COLORS.textPrimary, fontFamily: FONTS.family.medium, fontSize: 12 }}>{stateVal}</Text>
+                    <Text style={{ color: COLORS.contentMuted, fontFamily: FONTS.family.regular, fontSize: 12 }}>State</Text>
+                    <Text style={{ color: COLORS.contentPrimary, fontFamily: FONTS.family.medium, fontSize: 12 }}>{stateVal}</Text>
                   </View>
                 ) : null}
               </View>
             )}
           </View>
 
-          <View style={[styles.divider, { backgroundColor: COLORS.borderLight }]} />
+          <View style={[styles.divider, { backgroundColor: COLORS.borderSubtle }]} />
 
           {/* ── Nominee Details ── */}
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>Nominee Details</Text>
-            <Text style={[styles.sectionSubtitle, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+            <Text style={[styles.sectionTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>Nominee Details</Text>
+            <Text style={[styles.sectionSubtitle, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
               Nominee information is mandatory for scheme enrolment.
             </Text>
             <Field
@@ -1484,10 +1491,10 @@ export default function SchemeJoinScreen() {
         </ScrollView>
 
         {/* ── Fixed Footer ── */}
-        <View style={[styles.footer, { backgroundColor: COLORS.background, borderTopColor: COLORS.borderLight, paddingBottom: Platform.OS === 'ios' ? 4 : 16 }]}>
+        <View style={[styles.footer, { backgroundColor: COLORS.surfacePage, borderTopColor: COLORS.borderSubtle, paddingBottom: Platform.OS === 'ios' ? 4 : 16 }]}>
         {step === 1 ? (
           <TouchableOpacity
-            style={[styles.submitBtn, { backgroundColor: COLORS.primary, ...SHADOWS.md }]}
+            style={[styles.submitBtn, { backgroundColor: COLORS.brand, ...SHADOWS.md }]}
             onPress={handleNextStep}
             activeOpacity={0.85}
           >
@@ -1498,16 +1505,16 @@ export default function SchemeJoinScreen() {
           </TouchableOpacity>
         ) : (
         <>
-          <View style={[styles.footerSummary, { backgroundColor: COLORS.primary + '0D', borderRadius: 12, marginBottom: 12 }]}>
+          <View style={[styles.footerSummary, { backgroundColor: COLORS.brand + '0D', borderRadius: 12, marginBottom: 12 }]}>
             <View>
-              <Text style={[styles.footerSummaryLabel, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>Selected Installment</Text>
-              <Text style={[styles.footerSummaryValue, { color: COLORS.primary, fontFamily: FONTS.family.bold }]}>
+              <Text style={[styles.footerSummaryLabel, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>Selected Installment</Text>
+              <Text style={[styles.footerSummaryValue, { color: COLORS.brand, fontFamily: FONTS.family.bold }]}>
                 {effectiveAmount > 0 ? `₹${effectiveAmount.toLocaleString('en-IN')}/month` : '—'}
               </Text>
             </View>
             <View style={styles.footerSummaryRight}>
-              <Text style={[styles.footerSummaryLabel, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>Duration</Text>
-              <Text style={[styles.footerSummaryValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+              <Text style={[styles.footerSummaryLabel, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>Duration</Text>
+              <Text style={[styles.footerSummaryValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
                 {scheme.Instalment} Instalments
               </Text>
             </View>
@@ -1515,16 +1522,16 @@ export default function SchemeJoinScreen() {
 
           <View style={styles.footerActionsRow}>
             <TouchableOpacity
-              style={[styles.backBtnFooter, { borderColor: COLORS.borderLight }]}
+              style={[styles.backBtnFooter, { borderColor: COLORS.borderSubtle }]}
               onPress={() => setStep(1)}
               disabled={isProcessing}
               activeOpacity={0.8}
             >
-              <Ionicons name="arrow-back" size={moderateScale(18)} color={COLORS.textSecondary} />
+              <Ionicons name="arrow-back" size={moderateScale(18)} color={COLORS.contentSecondary} />
             </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.submitBtn, { flex: 1, backgroundColor: isProcessing ? COLORS.borderLight : COLORS.primary, ...(!isProcessing ? SHADOWS.md : {}) }]}
+            style={[styles.submitBtn, { flex: 1, backgroundColor: isProcessing ? COLORS.borderSubtle : COLORS.brand, ...(!isProcessing ? SHADOWS.md : {}) }]}
             onPress={handleSubmit}
             disabled={isProcessing}
             activeOpacity={0.85}
@@ -1565,11 +1572,11 @@ export default function SchemeJoinScreen() {
       {Platform.OS === 'ios' && (
         <Modal visible={showDob} transparent animationType="slide" onRequestClose={() => setShowDob(false)}>
           <TouchableOpacity style={iosDob.overlay} activeOpacity={1} onPress={() => setShowDob(false)}>
-            <TouchableOpacity activeOpacity={1} style={[iosDob.sheet, { backgroundColor: COLORS.background }]}>
-              <View style={[iosDob.header, { borderBottomColor: COLORS.borderLight }]}>
-                <Text style={[iosDob.title, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>Date of Birth</Text>
+            <TouchableOpacity activeOpacity={1} style={[iosDob.sheet, { backgroundColor: COLORS.surfacePage }]}>
+              <View style={[iosDob.header, { borderBottomColor: COLORS.borderSubtle }]}>
+                <Text style={[iosDob.title, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>Date of Birth</Text>
                 <TouchableOpacity onPress={() => { applyDob(tempDob); setShowDob(false); }}>
-                  <Text style={[iosDob.done, { color: COLORS.primary, fontFamily: FONTS.family.bold }]}>Done</Text>
+                  <Text style={[iosDob.done, { color: COLORS.brand, fontFamily: FONTS.family.bold }]}>Done</Text>
                 </TouchableOpacity>
               </View>
               <DateTimePicker

@@ -31,18 +31,18 @@ export default function AppChip({
   const fs = size === 'sm' ? SIZES.font.xs     : SIZES.font.sm;
 
   const bg = selected
-    ? variant === 'gold' ? COLORS.secondary : COLORS.primary
+    ? variant === 'gold' ? COLORS.secondary : COLORS.brand
     : variant === 'outlined' ? 'transparent' : COLORS.gray100;
 
   const textColor = selected
     ? COLORS.white
-    : variant === 'gold' ? COLORS.secondary : COLORS.textSecondary;
+    : variant === 'gold' ? COLORS.secondary : COLORS.contentSecondary;
 
   const borderColor = variant === 'outlined'
-    ? (selected ? COLORS.primary : COLORS.border)
+    ? (selected ? COLORS.brand : COLORS.border)
     : 'transparent';
 
-  const iconColor = selected ? COLORS.white : COLORS.textTertiary;
+  const iconColor = selected ? COLORS.white : COLORS.contentMuted;
 
   return (
     <TouchableOpacity

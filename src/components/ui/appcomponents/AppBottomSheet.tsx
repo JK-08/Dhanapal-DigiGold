@@ -260,7 +260,7 @@ const AppBottomSheet = forwardRef<AppBottomSheetRef, AppBottomSheetProps>(
         paddingHorizontal: SIZES.padding.xxl,
         paddingBottom: SIZES.padding.md,
         borderBottomWidth: visible && (title || subtitle || headerComponent) ? 1 : 0,
-        borderBottomColor: COLORS.borderLight,
+        borderBottomColor: COLORS.borderSubtle,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
@@ -270,11 +270,11 @@ const AppBottomSheet = forwardRef<AppBottomSheetRef, AppBottomSheetProps>(
       },
       titleText: {
         ...FONTS.h4,
-        color: COLORS.textPrimary,
+        color: COLORS.contentPrimary,
       },
       subtitleText: {
         ...FONTS.bodySmall,
-        color: COLORS.textSecondary,
+        color: COLORS.contentSecondary,
         marginTop: 2,
       },
       closeBtn: {
@@ -288,7 +288,7 @@ const AppBottomSheet = forwardRef<AppBottomSheetRef, AppBottomSheetProps>(
       },
       closeBtnText: {
         fontSize: 16,
-        color: COLORS.textSecondary,
+        color: COLORS.contentSecondary,
         fontWeight: "600",
       },
       content: {
@@ -307,7 +307,7 @@ const AppBottomSheet = forwardRef<AppBottomSheetRef, AppBottomSheetProps>(
       },
       footer: {
         borderTopWidth: 1,
-        borderTopColor: COLORS.borderLight,
+        borderTopColor: COLORS.borderSubtle,
         paddingHorizontal: SIZES.padding.xxl,
         paddingTop: SIZES.padding.md,
         paddingBottom: Platform.OS === "ios" ? SIZES.padding.xl : SIZES.padding.md,
@@ -367,7 +367,7 @@ const AppBottomSheet = forwardRef<AppBottomSheetRef, AppBottomSheetProps>(
                             {
                               backgroundColor:
                                 i === currentSnapIndex
-                                  ? COLORS.primary
+                                  ? COLORS.brand
                                   : COLORS.gray200,
                               width: i === currentSnapIndex ? 16 : 6,
                             },

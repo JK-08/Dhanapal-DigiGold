@@ -5,11 +5,16 @@ const lightTheme = {
   mode: "light",
   COLORS: {
     ...baseTheme.COLORS,
-    backgroundSecondary: "#F8F9FB",
+    // Aligned to the magenta/cream palette in theme.js (slate050 / white / ink / slate700 / slate200)
+    backgroundSecondary: "#F8F9FC",
+    surfaceMuted: "#F8F9FC",
     card: "#FFFFFF",
-    textPrimary: "#1A1D23",
-    textSecondary: "#5F6368",
-    border: "#E5E7EB",
+    surface: "#FFFFFF",
+    textPrimary: "#14161F",
+    contentPrimary: "#14161F",
+    textSecondary: "#3C4152",
+    contentSecondary: "#3C4152",
+    border: "#E6E9EF",
   },
 };
 

@@ -76,7 +76,7 @@ export default function CreateMpinScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }} edges={[ 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.surfacePage }} edges={[ 'bottom']}>
       <AppLoader visible={loading} message="Creating MPIN..." />
       <AppHeader title="Create MPIN"  />
 
@@ -136,14 +136,14 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: FONTS.family.bold,
     fontSize:   SIZES.heading.h3,
-    color:      COLORS.textPrimary,
+    color:      COLORS.contentPrimary,
     letterSpacing: -0.3,
     textAlign: 'center',
   },
   subtitle: {
     fontFamily: FONTS.family.regular,
     fontSize:   SIZES.font.sm,
-    color:      COLORS.textSecondary,
+    color:      COLORS.contentSecondary,
     textAlign:  'center',
   },
   stepRow: {
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.gray200,
   },
   stepDotActive: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.brand,
   },
   stepLine: {
     width: 40,
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.gray200,
   },
   stepLineActive: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.brand,
   },
   card: {
     backgroundColor: COLORS.white,

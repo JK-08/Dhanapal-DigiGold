@@ -26,3 +26,7 @@ export { default as PaymentReceiptScreen }         from '../screens/PaymentRecei
 export { default as RatesScreen } from '../screens/rates/RatesScreen';
 export { default as LoginLog } from '../screens/login/LoginLogs';
 export { default as FaqScreen } from '../screens/faq/FaqScreen';
+export { default as TermsScreen }          from '../screens/legal/TermsScreen';
+export { default as PrivacyPolicyScreen }  from '../screens/legal/PrivacyPolicyScreen';
+export { default as RefundPolicyScreen }   from '../screens/legal/RefundPolicyScreen';
+export { default as AboutUsScreen }        from '../screens/legal/AboutUsScreen';

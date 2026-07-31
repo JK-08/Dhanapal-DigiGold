@@ -108,7 +108,7 @@ export default function MainHeader({ onProfilePress, onNotificationPress, onRate
                   <Text style={{
                     fontFamily: FONTS.family.trajanBold,
                     fontSize: SIZES.font.xs,
-                    color: COLORS.primaryPale,
+                    color: COLORS.brandTint,
                     textTransform: 'uppercase',
                     letterSpacing: 1.5,
                   }}>

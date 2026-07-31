@@ -50,18 +50,18 @@ function LogCard({ item, index }: { item: LoginLog; index: number }) {
   const ago = timeAgo(item.CREATED_AT);
 
   return (
-    <View style={[s.card, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
+    <View style={[s.card, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, ...SHADOWS.sm }]}>
       <View style={[s.avatar, { backgroundColor: avatarBg }]}>
         <Text style={[s.avatarTxt, { fontFamily: FONTS.family.bold }]}>{initial}</Text>
       </View>
 
       <View style={{ flex: 1 }}>
         <View style={s.titleRow}>
-          <Text style={[s.name, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]} numberOfLines={1}>
+          <Text style={[s.name, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]} numberOfLines={1}>
             {item.USERNAME || 'Unknown'}
           </Text>
           {ago ? (
-            <Text style={[s.ago, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>{ago}</Text>
+            <Text style={[s.ago, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>{ago}</Text>
           ) : null}
         </View>
 
@@ -71,23 +71,23 @@ function LogCard({ item, index }: { item: LoginLog; index: number }) {
             activeOpacity={0.7}
             onPress={() => Linking.openURL(`tel:${item.MOBILE_NUMBER}`)}
           >
-            <Ionicons name="call-outline" size={13} color={COLORS.primary} />
-            <Text style={[s.metaTxt, { color: COLORS.primary, fontFamily: FONTS.family.medium }]}>
+            <Ionicons name="call-outline" size={13} color={COLORS.brand} />
+            <Text style={[s.metaTxt, { color: COLORS.brand, fontFamily: FONTS.family.medium }]}>
               {item.MOBILE_NUMBER}
             </Text>
           </TouchableOpacity>
         ) : null}
 
         <View style={s.metaRow}>
-          <Ionicons name="time-outline" size={13} color={COLORS.textTertiary} />
-          <Text style={[s.metaTxt, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+          <Ionicons name="time-outline" size={13} color={COLORS.contentMuted} />
+          <Text style={[s.metaTxt, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
             {formatDateTime(item.CREATED_AT)}
           </Text>
         </View>
       </View>
 
-      <View style={[s.idChip, { backgroundColor: COLORS.primary + '12' }]}>
-        <Text style={[s.idTxt, { color: COLORS.primary, fontFamily: FONTS.family.semiBold }]}>#{item.ID}</Text>
+      <View style={[s.idChip, { backgroundColor: COLORS.brand + '12' }]}>
+        <Text style={[s.idTxt, { color: COLORS.brand, fontFamily: FONTS.family.semiBold }]}>#{item.ID}</Text>
       </View>
     </View>
   );
@@ -135,24 +135,24 @@ export default function LoginLogsScreen() {
   }, [users, query]);
 
   return (
-    <SafeAreaView style={[s.container, { backgroundColor: COLORS.background }]} edges={['bottom']}>
+    <SafeAreaView style={[s.container, { backgroundColor: COLORS.surfacePage }]} edges={['bottom']}>
       <AppHeader title="Login Logs" subtitle={`${users.length} record${users.length !== 1 ? 's' : ''}`} showBack  />
 
       {/* Search */}
       <View style={s.searchWrap}>
-        <View style={[s.searchBox, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight }]}>
-          <Ionicons name="search-outline" size={18} color={COLORS.textTertiary} />
+        <View style={[s.searchBox, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle }]}>
+          <Ionicons name="search-outline" size={18} color={COLORS.contentMuted} />
           <TextInput
-            style={[s.searchInput, { color: COLORS.textPrimary, fontFamily: FONTS.family.regular }]}
+            style={[s.searchInput, { color: COLORS.contentPrimary, fontFamily: FONTS.family.regular }]}
             placeholder="Search by name or mobile"
-            placeholderTextColor={COLORS.textTertiary}
+            placeholderTextColor={COLORS.contentMuted}
             value={query}
             onChangeText={setQuery}
             autoCapitalize="none"
           />
           {query ? (
             <TouchableOpacity onPress={() => setQuery('')} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-              <Ionicons name="close-circle" size={18} color={COLORS.textTertiary} />
+              <Ionicons name="close-circle" size={18} color={COLORS.contentMuted} />
             </TouchableOpacity>
           ) : null}
         </View>
@@ -160,16 +160,16 @@ export default function LoginLogsScreen() {
 
       {loading ? (
         <View style={s.center}>
-          <ActivityIndicator size="large" color={COLORS.primary} />
-          <Text style={[s.muted, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Loading logs…</Text>
+          <ActivityIndicator size="large" color={COLORS.brand} />
+          <Text style={[s.muted, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Loading logs…</Text>
         </View>
       ) : error ? (
         <View style={s.center}>
-          <Ionicons name="cloud-offline-outline" size={40} color={COLORS.textTertiary} />
-          <Text style={[s.muted, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>{error}</Text>
-          <TouchableOpacity style={[s.retryBtn, { borderColor: COLORS.primary }]} onPress={() => { setLoading(true); fetchUsers(); }}>
-            <Ionicons name="refresh" size={15} color={COLORS.primary} />
-            <Text style={[s.retryTxt, { color: COLORS.primary, fontFamily: FONTS.family.semiBold }]}>Retry</Text>
+          <Ionicons name="cloud-offline-outline" size={40} color={COLORS.contentMuted} />
+          <Text style={[s.muted, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>{error}</Text>
+          <TouchableOpacity style={[s.retryBtn, { borderColor: COLORS.brand }]} onPress={() => { setLoading(true); fetchUsers(); }}>
+            <Ionicons name="refresh" size={15} color={COLORS.brand} />
+            <Text style={[s.retryTxt, { color: COLORS.brand, fontFamily: FONTS.family.semiBold }]}>Retry</Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -179,11 +179,11 @@ export default function LoginLogsScreen() {
           renderItem={({ item, index }) => <LogCard item={item} index={index} />}
           contentContainerStyle={s.listContent}
           showsVerticalScrollIndicator={false}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[COLORS.primary]} tintColor={COLORS.primary} />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[COLORS.brand]} tintColor={COLORS.brand} />}
           ListEmptyComponent={
             <View style={s.center}>
-              <Ionicons name="document-text-outline" size={40} color={COLORS.textTertiary} />
-              <Text style={[s.muted, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+              <Ionicons name="document-text-outline" size={40} color={COLORS.contentMuted} />
+              <Text style={[s.muted, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
                 {query ? 'No matching logs' : 'No login logs yet'}
               </Text>
             </View>

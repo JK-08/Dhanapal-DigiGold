@@ -126,7 +126,7 @@ export const AppProgressBar: React.FC<AppProgressBarProps> = ({
   const animatedWidth = useRef(new Animated.Value(0)).current;
   const shimmerAnim = useRef(new Animated.Value(0)).current;
 
-  const barColor = color ?? COLORS.primary;
+  const barColor = color ?? COLORS.brand;
   const trackBg = trackColor ?? COLORS.gray100;
   const barHeight = BAR_HEIGHTS[size];
   const radius = borderRadius ?? barHeight / 2;
@@ -175,7 +175,7 @@ export const AppProgressBar: React.FC<AppProgressBarProps> = ({
     },
     labelTop: {
       ...FONTS.caption,
-      color: COLORS.textSecondary,
+      color: COLORS.contentSecondary,
     },
     rangeRow: {
       flexDirection: "row",
@@ -184,7 +184,7 @@ export const AppProgressBar: React.FC<AppProgressBarProps> = ({
     },
     rangeText: {
       ...FONTS.caption,
-      color: COLORS.textTertiary,
+      color: COLORS.contentMuted,
     },
     row: {
       flexDirection: "row",
@@ -205,7 +205,7 @@ export const AppProgressBar: React.FC<AppProgressBarProps> = ({
     },
     labelRight: {
       ...FONTS.caption,
-      color: COLORS.textSecondary,
+      color: COLORS.contentSecondary,
       minWidth: 36,
       textAlign: "right",
     },
@@ -312,7 +312,7 @@ export const AppProgressSteps: React.FC<AppProgressStepsProps> = ({
 }) => {
   const { COLORS, FONTS, SIZES, SHADOWS } = useTheme();
 
-  const activeC = activeColor ?? COLORS.primary;
+  const activeC = activeColor ?? COLORS.brand;
   const completedC = completedColor ?? COLORS.success;
   const errorC = errorColor ?? COLORS.error;
 
@@ -435,7 +435,7 @@ export const AppProgressSteps: React.FC<AppProgressStepsProps> = ({
     },
     stepDesc: {
       ...FONTS.caption,
-      color: COLORS.textTertiary,
+      color: COLORS.contentMuted,
       textAlign: "center",
       marginTop: 2,
     },
@@ -595,7 +595,7 @@ export const AppProgressSteps: React.FC<AppProgressStepsProps> = ({
               <Text
                 style={[
                   styles.stepLabel,
-                  { color: status === "upcoming" ? COLORS.textTertiary : stepColor, fontFamily: status === "active" ? FONTS.family.semiBold : FONTS.family.regular },
+                  { color: status === "upcoming" ? COLORS.contentMuted : stepColor, fontFamily: status === "active" ? FONTS.family.semiBold : FONTS.family.regular },
                 ]}
                 numberOfLines={2}
               >
@@ -621,7 +621,7 @@ export default { AppProgressBar, AppProgressSteps };
 // ============================================================
 /*
 // Progress Bar
-<AppProgressBar progress={65} size="md" showLabel animated color={COLORS.primary} />
+<AppProgressBar progress={65} size="md" showLabel animated color={COLORS.brand} />
 <AppProgressBar progress={40} variant="segmented" size="lg" showLabel labelPosition="outside-top" />
 <AppProgressBar progress={80} showRange rangeStart="₹0" rangeEnd="₹10L" />
 

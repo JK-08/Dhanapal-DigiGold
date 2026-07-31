@@ -47,6 +47,10 @@ export type RootStackParamList = {
   PaymentReceipt:          { ppData: PPData; payment: PaymentHistory };
   Rates:                   { metal?: 'Gold' | 'Silver' };
   Faq:                     undefined;
+  Terms:                   undefined;
+  PrivacyPolicy:           undefined;
+  RefundPolicy:            undefined;
+  AboutUs:                 undefined;
 };
 
 type InitialRoute = 'Onboarding' | 'Register' | 'Login' | 'CreateMpin' | 'MpinLogin' | 'Main';
@@ -89,10 +93,10 @@ export default function RootNavigator() {
     ...(isDark ? DarkTheme : DefaultTheme),
     colors: {
       ...(isDark ? DarkTheme.colors : DefaultTheme.colors),
-      primary:      COLORS.primary,
-      background:   COLORS.background,
-      card:         COLORS.card,
-      text:         COLORS.textPrimary,
+      primary:      COLORS.brand,
+      background:   COLORS.surfacePage,
+      card:         COLORS.surface,
+      text:         COLORS.contentPrimary,
       border:       COLORS.border,
       notification: COLORS.secondary,
     },
@@ -100,8 +104,8 @@ export default function RootNavigator() {
 
   if (!initialRoute) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.background }}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.surfacePage }}>
+        <ActivityIndicator size="large" color={COLORS.brand} />
       </View>
     );
   }
@@ -110,7 +114,7 @@ export default function RootNavigator() {
     <NavigationContainer theme={navigationTheme} ref={navigationRef} onReady={onNavigationReady}>
       <Stack.Navigator
         initialRouteName={initialRoute}
-        screenOptions={{ headerShown: false, contentStyle: { backgroundColor: COLORS.background }, animation: 'fade' }}
+        screenOptions={{ headerShown: false, contentStyle: { backgroundColor: COLORS.surfacePage }, animation: 'fade' }}
       >
         <Stack.Screen name="Onboarding"             component={Screens.OnboardingScreen} />
         <Stack.Screen name="Register"                component={Screens.RegisterScreen} />
@@ -140,6 +144,10 @@ export default function RootNavigator() {
         <Stack.Screen name="Rates"            component={Screens.RatesScreen}            options={{ animation: 'slide_from_bottom', headerShown: false }} />
         <Stack.Screen name="LoginLog"            component={Screens.LoginLog} />
         <Stack.Screen name="Faq"              component={Screens.FaqScreen}              options={{ animation: 'slide_from_right' }} />
+        <Stack.Screen name="Terms"            component={Screens.TermsScreen}            options={{ animation: 'slide_from_right' }} />
+        <Stack.Screen name="PrivacyPolicy"    component={Screens.PrivacyPolicyScreen}    options={{ animation: 'slide_from_right' }} />
+        <Stack.Screen name="RefundPolicy"     component={Screens.RefundPolicyScreen}     options={{ animation: 'slide_from_right' }} />
+        <Stack.Screen name="AboutUs"          component={Screens.AboutUsScreen}          options={{ animation: 'slide_from_right' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -266,7 +266,7 @@ export default function InAppMessageModal() {
 
   const cardStyle = {
     width: CARD_W,
-    backgroundColor: COLORS.card,
+    backgroundColor: COLORS.surface,
     borderRadius: SIZES.radius?.xxl ?? 20,
     ...SHADOWS.xl,
   };
@@ -297,7 +297,7 @@ export default function InAppMessageModal() {
               accessibilityLabel="Dismiss notification"
               accessibilityRole="button"
             >
-              <Text style={[styles.closeBtnText, { color: COLORS.textSecondary }]}>✕</Text>
+              <Text style={[styles.closeBtnText, { color: COLORS.contentSecondary }]}>✕</Text>
             </TouchableOpacity>
           </Animated.View>
 
@@ -308,7 +308,7 @@ export default function InAppMessageModal() {
             accessibilityLiveRegion="assertive"
           >
             {/* Accent bar */}
-            <View style={[styles.accentBar, { backgroundColor: COLORS.primary }]} />
+            <View style={[styles.accentBar, { backgroundColor: COLORS.brand }]} />
 
             {/* Hero image */}
             {hasImage && (
@@ -323,14 +323,14 @@ export default function InAppMessageModal() {
             {/* Text content */}
             <View style={[styles.body, !hasImage && styles.bodyNoImage]}>
               <Text
-                style={[FONTS.h5, styles.title, { color: COLORS.textPrimary }]}
+                style={[FONTS.h5, styles.title, { color: COLORS.contentPrimary }]}
                 numberOfLines={2}
                 accessibilityRole="header"
               >
                 {currentMsg.title}
               </Text>
               <Text
-                style={[FONTS.body, styles.message, { color: COLORS.textSecondary }]}
+                style={[FONTS.body, styles.message, { color: COLORS.contentSecondary }]}
                 numberOfLines={5}
               >
                 {currentMsg.message}
@@ -339,7 +339,7 @@ export default function InAppMessageModal() {
 
             {/* Queue indicator */}
             {remaining > 0 && (
-              <Text style={[FONTS.caption, styles.queueHint, { color: COLORS.textTertiary }]}>
+              <Text style={[FONTS.caption, styles.queueHint, { color: COLORS.contentMuted }]}>
                 {remaining} more message{remaining > 1 ? 's' : ''}
               </Text>
             )}
@@ -350,7 +350,7 @@ export default function InAppMessageModal() {
             {/* CTA button */}
             <TouchableOpacity
               onPress={() => dismiss(hasAction)}
-              style={[styles.btn, { backgroundColor: COLORS.primary }]}
+              style={[styles.btn, { backgroundColor: COLORS.brand }]}
               activeOpacity={0.82}
               accessibilityRole="button"
               accessibilityLabel={hasAction ? `View ${currentMsg.screenName}` : 'Dismiss'}

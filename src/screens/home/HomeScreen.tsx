@@ -38,12 +38,12 @@ function SectionHeader({ title, subtitle, onViewAll }: { title: string; subtitle
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
       <View>
-        <Text style={{ color: COLORS.textPrimary, fontFamily: FONTS.family.bold, fontSize: 17 }}>{title}</Text>
-        {subtitle ? <Text style={{ color: COLORS.textTertiary, fontFamily: FONTS.family.regular, fontSize: 12, marginTop: 2 }}>{subtitle}</Text> : null}
+        <Text style={{ color: COLORS.contentPrimary, fontFamily: FONTS.family.bold, fontSize: 17 }}>{title}</Text>
+        {subtitle ? <Text style={{ color: COLORS.contentMuted, fontFamily: FONTS.family.regular, fontSize: 12, marginTop: 2 }}>{subtitle}</Text> : null}
       </View>
       {onViewAll && (
         <TouchableOpacity onPress={onViewAll}>
-          <Text style={{ color: COLORS.primary, fontFamily: FONTS.family.semiBold, fontSize: 13 }}>View All</Text>
+          <Text style={{ color: COLORS.brand, fontFamily: FONTS.family.semiBold, fontSize: 13 }}>View All</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -83,7 +83,7 @@ function DotIndicator({
           style={[
             dotsStyles.dot,
             {
-              backgroundColor: i === activeIndex ? activeColor : COLORS.borderLight,
+              backgroundColor: i === activeIndex ? activeColor : COLORS.borderSubtle,
               width: i === activeIndex ? activeDotSize : dotSize,
               height: dotSize,
               borderRadius: dotSize / 2,
@@ -92,7 +92,7 @@ function DotIndicator({
         />
       ))}
       {remaining > 0 && (
-        <Text style={[dotsStyles.count, { color: COLORS.textTertiary }]}>
+        <Text style={[dotsStyles.count, { color: COLORS.contentMuted }]}>
           +{remaining}
         </Text>
       )}
@@ -175,7 +175,7 @@ export default function HomeScreen() {
   const SLIDE_W = SCREEN_W - PAD * 2;
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.background }}>
+    <View style={{ flex: 1, backgroundColor: COLORS.surfacePage }}>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
 
@@ -201,7 +201,7 @@ export default function HomeScreen() {
 
           {mySchemesLoading ? (
             <View style={{ paddingVertical: 28, alignItems: 'center', justifyContent: 'center' }}>
-              <ActivityIndicator color={COLORS.primary} />
+              <ActivityIndicator color={COLORS.brand} />
             </View>
           ) : (
             <>
@@ -244,20 +244,20 @@ export default function HomeScreen() {
                         width: SCREEN_W,
                         alignItems: 'center',
                         justifyContent: 'center',
-                        borderColor: COLORS.borderLight,
+                        borderColor: COLORS.borderSubtle,
                       },
                     ]}
                   >
                     <Ionicons
                       name="diamond-outline"
                       size={28}
-                      color={COLORS.textTertiary}
+                      color={COLORS.contentMuted}
                     />
                     <Text
                       style={[
                         pageS.emptyTxt,
                         {
-                          color: COLORS.textTertiary,
+                          color: COLORS.contentMuted,
                           fontFamily: FONTS.family.regular,
                         },
                       ]}
@@ -290,7 +290,7 @@ export default function HomeScreen() {
           </View>
           {schemesLoading ? (
             <View style={{ paddingVertical: 28, alignItems: 'center', justifyContent: 'center' }}>
-              <ActivityIndicator color={COLORS.primary} />
+              <ActivityIndicator color={COLORS.brand} />
             </View>
           ) : (
             <>
@@ -320,7 +320,7 @@ export default function HomeScreen() {
                 }}
                 ListEmptyComponent={
                   <View style={{ paddingHorizontal: SIZES.padding.container }}>
-                    <Text style={{ color: COLORS.textTertiary, fontFamily: FONTS.family.regular }}>
+                    <Text style={{ color: COLORS.contentMuted, fontFamily: FONTS.family.regular }}>
                       No schemes available
                     </Text>
                   </View>
@@ -332,7 +332,7 @@ export default function HomeScreen() {
                 <DotIndicator
                   total={activeSchemes.length}
                   activeIndex={allSchemesIndex}
-                  color={COLORS.primary}
+                  color={COLORS.brand}
                 />
               )}
             </>

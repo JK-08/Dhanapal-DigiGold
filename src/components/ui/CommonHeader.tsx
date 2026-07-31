@@ -184,16 +184,16 @@ export default function CommonHeader({
   const resolvedBg: string = isTransparent
     ? 'transparent'
     : backgroundColor ?? (
-        variant === 'gold'  ? COLORS.primaryDark
+        variant === 'gold'  ? COLORS.brandStrong
       : variant === 'white' ? COLORS.white
-      : COLORS.primary
+      : COLORS.brand
     );
 
   const onDark           = variant === 'primary' || variant === 'gold' || isTransparent;
-  const iconFallbackColor = onDark ? COLORS.white          : COLORS.textPrimary;
+  const iconFallbackColor = onDark ? COLORS.white          : COLORS.contentPrimary;
   const iconFallbackBg    = onDark ? COLORS.whiteOpacity20 : COLORS.gray100;
-  const titleColor        = onDark ? COLORS.white          : COLORS.textPrimary;
-  const subColor          = onDark ? COLORS.whiteOpacity70 : COLORS.textSecondary;
+  const titleColor        = onDark ? COLORS.white          : COLORS.contentPrimary;
+  const subColor          = onDark ? COLORS.whiteOpacity70 : COLORS.contentSecondary;
 
   const backItem: ActionItem = {
     iconName:  leftIconName,
@@ -289,9 +289,9 @@ export default function CommonHeader({
                 )}
                 {!title && !subtitle && !centerComponent && (
                   <View style={styles.iconRow}>
-                    <Text style={{ fontSize: SIZES.font.sm, color: onDark ? COLORS.secondary : COLORS.primary }}>✦</Text>
+                    <Text style={{ fontSize: SIZES.font.sm, color: onDark ? COLORS.secondary : COLORS.brand }}>✦</Text>
                     <Text style={{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.xl, letterSpacing: -0.3, color: titleColor }}>
-                      Digi<Text style={{ color: onDark ? COLORS.secondary : COLORS.primary }}>Gold</Text>
+                      Digi<Text style={{ color: onDark ? COLORS.secondary : COLORS.brand }}>Gold</Text>
                     </Text>
                   </View>
                 )}

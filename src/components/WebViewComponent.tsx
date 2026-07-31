@@ -19,7 +19,7 @@ export default function WebViewComponent() {
   const [error, setError] = useState(false);
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.background }}>
+    <View style={{ flex: 1, backgroundColor: COLORS.surfacePage }}>
 
       <AppHeader
         title={'Dhanapal Jewellery'}
@@ -44,8 +44,8 @@ export default function WebViewComponent() {
 
       {error && (
         <View style={styles.overlay}>
-          <Ionicons name="wifi-outline" size={40} color={COLORS.textTertiary} />
-          <Text style={{ color: COLORS.textSecondary, marginTop: 8 }}>Failed to load page</Text>
+          <Ionicons name="wifi-outline" size={40} color={COLORS.contentMuted} />
+          <Text style={{ color: COLORS.contentSecondary, marginTop: 8 }}>Failed to load page</Text>
         </View>
       )}
 

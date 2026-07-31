@@ -122,7 +122,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }} edges={['bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.surfacePage }} edges={['bottom']}>
       <ScrollView contentContainerStyle={{ paddingBottom: 32 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
 
         {/* Branded Header */}
@@ -204,20 +204,20 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  headerBg:     { backgroundColor: COLORS.primary, paddingTop: SIZES.md, paddingBottom: SIZES.lg, paddingHorizontal: SIZES.padding.xl, borderBottomLeftRadius: 32, borderBottomRightRadius: 32, ...SHADOWS.orange },
+  headerBg:     { backgroundColor: COLORS.brand, paddingTop: SIZES.md, paddingBottom: SIZES.lg, paddingHorizontal: SIZES.padding.xl, borderBottomLeftRadius: 32, borderBottomRightRadius: 32, ...SHADOWS.orange },
   headerInner:  { alignItems: 'center', gap: SIZES.sm },
-  logoCircle:   { width: 64, height: 64, borderRadius: 20, backgroundColor: COLORS.primaryDark, alignItems: 'center', justifyContent: 'center', marginBottom: SIZES.xs },
+  logoCircle:   { width: 64, height: 64, borderRadius: 20, backgroundColor: COLORS.brandStrong, alignItems: 'center', justifyContent: 'center', marginBottom: SIZES.xs },
   title:        { fontFamily: FONTS.family.bold, fontSize: SIZES.heading.h3, color: COLORS.white, letterSpacing: -0.3 },
   subtitle:     { fontFamily: FONTS.family.regular, fontSize: SIZES.font.md, color: COLORS.whiteOpacity70, marginBottom: SIZES.xs },
-  card:         { backgroundColor: COLORS.background, borderRadius: SIZES.radius.xl, padding: SIZES.padding.xl, gap: SIZES.md, borderWidth: 1, borderColor: COLORS.border },
+  card:         { backgroundColor: COLORS.surfacePage, borderRadius: SIZES.radius.xl, padding: SIZES.padding.xl, gap: SIZES.md, borderWidth: 1, borderColor: COLORS.border },
   forgotRow:    { alignSelf: 'flex-end', marginTop: -SIZES.xs },
-  forgotText:   { fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.sm, color: COLORS.primary },
+  forgotText:   { fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.sm, color: COLORS.brand },
   dividerRow:   { flexDirection: 'row', alignItems: 'center', gap: SIZES.sm, marginVertical: SIZES.sm },
   dividerLine:  { flex: 1, height: 1, backgroundColor: COLORS.border },
-  dividerText:  { fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.textTertiary },
+  dividerText:  { fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.contentMuted },
   googleBtn:    { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: SIZES.sm, backgroundColor: COLORS.white, borderRadius: SIZES.radius.lg, borderWidth: 1.5, borderColor: COLORS.border, height: SIZES.button.height.lg, ...SHADOWS.sm },
-  googleText:   { fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.md, color: COLORS.textPrimary },
+  googleText:   { fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.md, color: COLORS.contentPrimary },
   registerBtn:  { alignItems: 'center', marginTop: SIZES.md },
-  registerText: { fontFamily: FONTS.family.regular, fontSize: SIZES.font.md, color: COLORS.textTertiary },
-  registerLink: { fontFamily: FONTS.family.semiBold, color: COLORS.primary },
+  registerText: { fontFamily: FONTS.family.regular, fontSize: SIZES.font.md, color: COLORS.contentMuted },
+  registerLink: { fontFamily: FONTS.family.semiBold, color: COLORS.brand },
 });

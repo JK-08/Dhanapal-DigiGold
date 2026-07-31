@@ -212,8 +212,8 @@ const AppSearchBar = forwardRef<AppSearchBarRef, AppSearchBarProps>(
     };
 
     const borderColor = () => {
-      if (isFocused) return COLORS.primary;
-      if (variant === "outlined") return COLORS.borderMedium;
+      if (isFocused) return COLORS.brand;
+      if (variant === "outlined") return COLORS.borderStrong;
       return "transparent";
     };
 
@@ -236,7 +236,7 @@ const AppSearchBar = forwardRef<AppSearchBarRef, AppSearchBarProps>(
       input: {
         flex: 1,
         ...FONTS.body,
-        color: COLORS.textPrimary,
+        color: COLORS.contentPrimary,
         padding: 0,
         margin: 0,
       },
@@ -245,14 +245,14 @@ const AppSearchBar = forwardRef<AppSearchBarRef, AppSearchBarProps>(
         alignItems: "center",
         justifyContent: "center",
       },
-      cancelText: { ...FONTS.bodyMedium, color: COLORS.primary },
+      cancelText: { ...FONTS.bodyMedium, color: COLORS.brand },
       filterBtn: {
         width: 44,
         height: 44,
         borderRadius: SIZES.radius.md,
-        backgroundColor: filterActive ? COLORS.primaryPale : COLORS.gray100,
+        backgroundColor: filterActive ? COLORS.brandTint : COLORS.gray100,
         borderWidth: 1,
-        borderColor: filterActive ? COLORS.primary : COLORS.borderLight,
+        borderColor: filterActive ? COLORS.brand : COLORS.borderSubtle,
         alignItems: "center",
         justifyContent: "center",
       },
@@ -263,18 +263,18 @@ const AppSearchBar = forwardRef<AppSearchBarRef, AppSearchBarProps>(
         width: 8,
         height: 8,
         borderRadius: 4,
-        backgroundColor: COLORS.primary,
+        backgroundColor: COLORS.brand,
         borderWidth: 1.5,
         borderColor: COLORS.white,
       },
       countBadge: {
-        backgroundColor: COLORS.primaryPale,
+        backgroundColor: COLORS.brandTint,
         borderRadius: SIZES.radius.full,
         paddingHorizontal: 8,
         paddingVertical: 2,
         marginLeft: 4,
       },
-      countText: { ...FONTS.caption, color: COLORS.primary },
+      countText: { ...FONTS.caption, color: COLORS.brand },
       suggestionsRow: {
         flexDirection: "row",
         flexWrap: "wrap",
@@ -285,12 +285,12 @@ const AppSearchBar = forwardRef<AppSearchBarRef, AppSearchBarProps>(
       chip: {
         paddingHorizontal: 12,
         paddingVertical: 6,
-        backgroundColor: COLORS.primaryPale,
+        backgroundColor: COLORS.brandTint,
         borderRadius: SIZES.radius.full,
         borderWidth: 1,
-        borderColor: COLORS.primaryLighter,
+        borderColor: COLORS.brandSoft,
       },
-      chipText: { ...FONTS.caption, color: COLORS.primary },
+      chipText: { ...FONTS.caption, color: COLORS.brand },
     });
 
     return (
@@ -301,7 +301,7 @@ const AppSearchBar = forwardRef<AppSearchBarRef, AppSearchBarProps>(
             style={s.bar}
             onPress={() => inputRef.current?.focus()}
           >
-            <Icon name="search" color={isFocused ? COLORS.primary : COLORS.textSecondary} size={18} />
+            <Icon name="search" color={isFocused ? COLORS.brand : COLORS.contentSecondary} size={18} />
 
             <TextInput
               ref={inputRef}
@@ -330,13 +330,13 @@ const AppSearchBar = forwardRef<AppSearchBarRef, AppSearchBarProps>(
 
             {/* Loading */}
             {loading && (
-              <ActivityIndicator size="small" color={COLORS.primary} />
+              <ActivityIndicator size="small" color={COLORS.brand} />
             )}
 
             {/* Voice search */}
             {onVoiceSearch && !loading && !query && (
               <Pressable onPress={onVoiceSearch} hitSlop={8}>
-                <Icon name="mic" color={COLORS.textSecondary} size={16} />
+                <Icon name="mic" color={COLORS.contentSecondary} size={16} />
               </Pressable>
             )}
 
@@ -378,7 +378,7 @@ const AppSearchBar = forwardRef<AppSearchBarRef, AppSearchBarProps>(
             <Pressable style={s.filterBtn} onPress={onFilter}>
               <Icon
                 name="filter"
-                color={filterActive ? COLORS.primary : COLORS.textSecondary}
+                color={filterActive ? COLORS.brand : COLORS.contentSecondary}
                 size={18}
               />
               {filterActive && <View style={s.filterDot} />}

@@ -49,15 +49,15 @@ export default function AppHeader({
 
   const onDark = variant === 'primary' || variant === 'gold';
   const bg =
-    variant === 'gold'        ? COLORS.primaryDark
+    variant === 'gold'        ? COLORS.brandStrong
     : variant === 'white'     ? COLORS.white
     : variant === 'transparent'? 'transparent'
-    : COLORS.primary;
+    : COLORS.brand;
 
-  const iconColor    = onDark ? COLORS.white        : COLORS.textPrimary;
+  const iconColor    = onDark ? COLORS.white        : COLORS.contentPrimary;
   const iconBg       = onDark ? COLORS.whiteOpacity20: COLORS.gray100;
-  const titleColor   = onDark ? COLORS.white        : COLORS.textPrimary;
-  const subtitleColor= onDark ? COLORS.whiteOpacity70: COLORS.textSecondary;
+  const titleColor   = onDark ? COLORS.white        : COLORS.contentPrimary;
+  const subtitleColor= onDark ? COLORS.whiteOpacity70: COLORS.contentSecondary;
 
   const handleBack = () => { onBackPress ? onBackPress() : navigation.canGoBack() && navigation.goBack(); };
 
@@ -122,7 +122,7 @@ export default function AppHeader({
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
                     <Text style={{ color: COLORS.secondary, fontSize: SIZES.font.sm }}>✦</Text>
                     <Text style={{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.xl, color: titleColor }}>
-                      Digi<Text style={{ color: onDark ? COLORS.secondary : COLORS.primary }}>Gold</Text>
+                      Digi<Text style={{ color: onDark ? COLORS.secondary : COLORS.brand }}>Gold</Text>
                     </Text>
                   </View>
                 )}

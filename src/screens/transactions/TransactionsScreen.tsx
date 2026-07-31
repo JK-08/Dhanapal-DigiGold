@@ -5,11 +5,11 @@ import { useTheme } from '../../theme';
 export default function TransactionsScreen() {
   const { COLORS, FONTS, SIZES } = useTheme();
   return (
-    <View style={[styles.container, { backgroundColor: COLORS.background }]}>
-      <Text style={{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.xl, color: COLORS.textPrimary }}>
+    <View style={[styles.container, { backgroundColor: COLORS.surfacePage }]}>
+      <Text style={{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.xl, color: COLORS.contentPrimary }}>
         Transactions
       </Text>
-      <Text style={{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.textSecondary, marginTop: 8 }}>
+      <Text style={{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.contentSecondary, marginTop: 8 }}>
         Your transaction history will appear here.
       </Text>
     </View>

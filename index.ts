@@ -10,7 +10,7 @@ import App from './App';
 
 // ── Background FCM handler ────────────────────────────────────────
 messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-  console.log('[FCM] Background message received:', JSON.stringify(remoteMessage));
+  // console.log('[FCM] Background message received:', JSON.stringify(remoteMessage));
   const { notification, data } = remoteMessage;
   if (notification) {
     await displayNotification(
@@ -25,7 +25,7 @@ messaging().setBackgroundMessageHandler(async (remoteMessage) => {
 // ── Background notifee handler ────────────────────────────────────
 notifee.onBackgroundEvent(async ({ type, detail }) => {
   if (type === EventType.PRESS) {
-    console.log('[Notifee] Background press:', detail.notification?.data);
+    // console.log('[Notifee] Background press:', detail.notification?.data);
   }
 });
 

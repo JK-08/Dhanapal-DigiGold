@@ -16,9 +16,7 @@ export const useSchemeSliders = () => {
       .getSliders()
       .then((res) => {
         const list: SchemeSlider[] = Array.isArray(res?.sliders) ? res.sliders : [];
-        list.forEach((slider) =>
-          console.log('[Scheme Slider URL]', getImageUrl(slider.image_path)),
-        );
+        
         setSliders(list);
       })
       .catch((err) => setError(err.message))

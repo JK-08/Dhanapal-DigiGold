@@ -65,20 +65,20 @@ function FormField({
   const [focused, setFocused] = useState(false);
   return (
     <View style={fStyles.wrap}>
-      <Text style={[fStyles.label, { color: colors.textSecondary, fontFamily: fonts.family.medium }]}>{label}</Text>
+      <Text style={[fStyles.label, { color: colors.contentSecondary, fontFamily: fonts.family.medium }]}>{label}</Text>
       <View style={[
         fStyles.box,
         {
-          borderColor: focused ? colors.primary : colors.borderLight,
-          backgroundColor: focused ? colors.primary + '05' : colors.card,
+          borderColor: focused ? colors.brand : colors.borderSubtle,
+          backgroundColor: focused ? colors.brand + '05' : colors.surface,
           height: multiline ? 100 : 50,
           alignItems: multiline ? 'flex-start' : 'center',
         }
       ]}>
-        <Ionicons name={icon} size={18} color={focused ? colors.primary : colors.textTertiary} style={[fStyles.icon, multiline && { marginTop: 14 }]} />
+        <Ionicons name={icon} size={18} color={focused ? colors.brand : colors.contentMuted} style={[fStyles.icon, multiline && { marginTop: 14 }]} />
         <TextInput
-          style={[fStyles.input, { color: colors.textPrimary, fontFamily: fonts.family.regular }, multiline && { textAlignVertical: 'top', paddingTop: 14 }]}
-          placeholder={placeholder} placeholderTextColor={colors.textTertiary}
+          style={[fStyles.input, { color: colors.contentPrimary, fontFamily: fonts.family.regular }, multiline && { textAlignVertical: 'top', paddingTop: 14 }]}
+          placeholder={placeholder} placeholderTextColor={colors.contentMuted}
           value={value} onChangeText={onChangeText} multiline={multiline}
           numberOfLines={multiline ? 4 : 1} keyboardType={keyboardType}
           onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
@@ -135,23 +135,23 @@ export default function ContactScreen() {
 
           {/* ── Our Branches (from /api/v1/company/all) ── */}
           <View style={s.branchSec}>
-            {/* <Text style={[s.sectionHead, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+            {/* <Text style={[s.sectionHead, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
               Our Branches
             </Text> */}
 
             {companiesLoading ? (
-              <View style={[s.branchCard, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, alignItems: 'center' }]}>
-                <ActivityIndicator color={COLORS.primary} />
+              <View style={[s.branchCard, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, alignItems: 'center' }]}>
+                <ActivityIndicator color={COLORS.brand} />
               </View>
             ) : companiesError ? (
-              <View style={[s.branchCard, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight }]}>
-                <Text style={[s.cardValue, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+              <View style={[s.branchCard, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle }]}>
+                <Text style={[s.cardValue, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
                   {companiesError}
                 </Text>
               </View>
             ) : companies.length === 0 ? (
-              <View style={[s.branchCard, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight }]}>
-                <Text style={[s.cardValue, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+              <View style={[s.branchCard, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle }]}>
+                <Text style={[s.cardValue, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
                   No branch details available.
                 </Text>
               </View>
@@ -159,13 +159,13 @@ export default function ContactScreen() {
               companies.map((c) => {
                 const addr = companyAddress(c);
                 return (
-                  <View key={c.COMPANYID} style={[s.branchCard, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
+                  <View key={c.COMPANYID} style={[s.branchCard, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, ...SHADOWS.sm }]}>
                     {/* Name */}
                     <View style={s.branchHead}>
-                      <View style={[s.branchIcon, { backgroundColor: COLORS.primary + '15' }]}>
-                        <Ionicons name="business-outline" size={20} color={COLORS.primary} />
+                      <View style={[s.branchIcon, { backgroundColor: COLORS.brand + '15' }]}>
+                        <Ionicons name="business-outline" size={20} color={COLORS.brand} />
                       </View>
-                      <Text style={[s.branchName, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]} numberOfLines={2}>
+                      <Text style={[s.branchName, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]} numberOfLines={2}>
                         {c.COMPANYNAME}
                       </Text>
                     </View>
@@ -173,8 +173,8 @@ export default function ContactScreen() {
                     {/* Address */}
                     {addr ? (
                       <View style={s.branchRow}>
-                        <Ionicons name="location-outline" size={16} color={COLORS.textTertiary} style={s.branchRowIcon} />
-                        <Text style={[s.branchRowTxt, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+                        <Ionicons name="location-outline" size={16} color={COLORS.contentMuted} style={s.branchRowIcon} />
+                        <Text style={[s.branchRowTxt, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
                           {addr}
                         </Text>
                       </View>
@@ -183,22 +183,22 @@ export default function ContactScreen() {
                     {/* Phone */}
                     {c.PHONE ? (
                       <TouchableOpacity style={s.branchRow} onPress={() => Linking.openURL(telHref(c.PHONE!))} activeOpacity={0.7}>
-                        <Ionicons name="call-outline" size={16} color={COLORS.primary} style={s.branchRowIcon} />
-                        <Text style={[s.branchRowTxt, { color: COLORS.primary, fontFamily: FONTS.family.medium }]}>{c.PHONE}</Text>
+                        <Ionicons name="call-outline" size={16} color={COLORS.brand} style={s.branchRowIcon} />
+                        <Text style={[s.branchRowTxt, { color: COLORS.brand, fontFamily: FONTS.family.medium }]}>{c.PHONE}</Text>
                       </TouchableOpacity>
                     ) : null}
 
                     {/* Email */}
                     {c.EMAIL ? (
                       <TouchableOpacity style={s.branchRow} onPress={() => Linking.openURL(`mailto:${c.EMAIL}`)} activeOpacity={0.7}>
-                        <Ionicons name="mail-outline" size={16} color={COLORS.primary} style={s.branchRowIcon} />
-                        <Text style={[s.branchRowTxt, { color: COLORS.primary, fontFamily: FONTS.family.medium }]} numberOfLines={1}>{c.EMAIL}</Text>
+                        <Ionicons name="mail-outline" size={16} color={COLORS.brand} style={s.branchRowIcon} />
+                        <Text style={[s.branchRowTxt, { color: COLORS.brand, fontFamily: FONTS.family.medium }]} numberOfLines={1}>{c.EMAIL}</Text>
                       </TouchableOpacity>
                     ) : null}
 
                     {/* Directions */}
                     {addr ? (
-                      <TouchableOpacity style={[s.branchBtn, { backgroundColor: COLORS.primary }]} onPress={() => Linking.openURL(mapsHref(c))} activeOpacity={0.85}>
+                      <TouchableOpacity style={[s.branchBtn, { backgroundColor: COLORS.brand }]} onPress={() => Linking.openURL(mapsHref(c))} activeOpacity={0.85}>
                         <Ionicons name="navigate-outline" size={14} color={COLORS.white} />
                         <Text style={[s.branchBtnTxt, { color: COLORS.white, fontFamily: FONTS.family.semiBold }]}>Get Directions</Text>
                       </TouchableOpacity>
@@ -210,14 +210,14 @@ export default function ContactScreen() {
           </View>
 
           {/* Working hours */}
-          {/* <View style={[s.branchCard, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
+          {/* <View style={[s.branchCard, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, ...SHADOWS.sm }]}>
             <View style={s.branchHead}>
-              <View style={[s.branchIcon, { backgroundColor: COLORS.primary + '15' }]}>
-                <Ionicons name="time-outline" size={20} color={COLORS.primary} />
+              <View style={[s.branchIcon, { backgroundColor: COLORS.brand + '15' }]}>
+                <Ionicons name="time-outline" size={20} color={COLORS.brand} />
               </View>
-              <Text style={[s.branchName, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>Working Hours</Text>
+              <Text style={[s.branchName, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>Working Hours</Text>
             </View>
-            <Text style={[s.cardValue, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+            <Text style={[s.cardValue, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
               Mon – Sat: 9 AM – 7 PM{'\n'}
             </Text>
           </View> */}
@@ -225,7 +225,7 @@ export default function ContactScreen() {
           {/* Social / store links (only those present in the API) */}
           {socialLinks.length > 0 && (
             <View style={s.socialSec}>
-              <Text style={[s.socialTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>Connect With Us</Text>
+              <Text style={[s.socialTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>Connect With Us</Text>
               <View style={s.socialRow}>
                 {socialLinks.map(sl => (
                   <TouchableOpacity key={sl.key} style={[s.socialBtn, { backgroundColor: sl.color + '15', borderColor: sl.color + '30' }]} onPress={() => Linking.openURL(sl.url)} activeOpacity={0.8}>
@@ -238,14 +238,14 @@ export default function ContactScreen() {
           )}
 
           {/* Contact form */}
-          {/* <View style={[s.formBox, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight, ...SHADOWS.sm }]}>
+          {/* <View style={[s.formBox, { backgroundColor: COLORS.surface, borderColor: COLORS.borderSubtle, ...SHADOWS.sm }]}>
             <View style={s.formHead}>
-              <View style={[s.formHeadIcon, { backgroundColor: COLORS.primary + '15' }]}>
-                <Ionicons name="chatbubble-ellipses-outline" size={20} color={COLORS.primary} />
+              <View style={[s.formHeadIcon, { backgroundColor: COLORS.brand + '15' }]}>
+                <Ionicons name="chatbubble-ellipses-outline" size={20} color={COLORS.brand} />
               </View>
               <View>
-                <Text style={[s.formTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>Send a Message</Text>
-                <Text style={[s.formSub, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>We'll reply within 24 hours</Text>
+                <Text style={[s.formTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>Send a Message</Text>
+                <Text style={[s.formSub, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>We'll reply within 24 hours</Text>
               </View>
             </View>
 
@@ -253,7 +253,7 @@ export default function ContactScreen() {
               <View style={[s.sentBox, { backgroundColor: COLORS.success + '12', borderColor: COLORS.success + '30' }]}>
                 <Ionicons name="checkmark-circle" size={36} color={COLORS.success} />
                 <Text style={[s.sentTitle, { color: COLORS.success, fontFamily: FONTS.family.bold }]}>Message Sent!</Text>
-                <Text style={[s.sentSub, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>
+                <Text style={[s.sentSub, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
                   Thank you for reaching out. We'll get back to you soon.
                 </Text>
               </View>
@@ -264,11 +264,11 @@ export default function ContactScreen() {
                 <FormField label="Phone" icon="call-outline" value={cPhone} placeholder="Mobile number" onChangeText={setCPhone} keyboardType="phone-pad" colors={COLORS} fonts={FONTS} />
                 <FormField label="Message *" icon="chatbubble-outline" value={cMessage} placeholder="How can we help you?" onChangeText={setCMessage} multiline colors={COLORS} fonts={FONTS} />
                 <TouchableOpacity
-                  style={[s.sendBtn, { backgroundColor: isFormValid ? COLORS.primary : COLORS.borderLight, ...(isFormValid ? SHADOWS.sm : {}) }]}
+                  style={[s.sendBtn, { backgroundColor: isFormValid ? COLORS.brand : COLORS.borderSubtle, ...(isFormValid ? SHADOWS.sm : {}) }]}
                   onPress={handleSend} disabled={!isFormValid} activeOpacity={0.85}
                 >
-                  <Ionicons name="send-outline" size={18} color={isFormValid ? COLORS.white : COLORS.textTertiary} />
-                  <Text style={[s.sendBtnTxt, { color: isFormValid ? COLORS.white : COLORS.textTertiary, fontFamily: FONTS.family.bold }]}>
+                  <Ionicons name="send-outline" size={18} color={isFormValid ? COLORS.white : COLORS.contentMuted} />
+                  <Text style={[s.sendBtnTxt, { color: isFormValid ? COLORS.white : COLORS.contentMuted, fontFamily: FONTS.family.bold }]}>
                     Send Message
                   </Text>
                 </TouchableOpacity>
@@ -278,16 +278,16 @@ export default function ContactScreen() {
 
           {/* FAQ teaser */}
           <TouchableOpacity
-            style={[s.faqCard, { backgroundColor: COLORS.primary + '08', borderColor: COLORS.primary + '25' }]}
+            style={[s.faqCard, { backgroundColor: COLORS.brand + '08', borderColor: COLORS.brand + '25' }]}
             onPress={() => navigation.navigate('Faq')}
             activeOpacity={0.8}
           >
-            <Ionicons name="help-circle-outline" size={28} color={COLORS.primary} />
+            <Ionicons name="help-circle-outline" size={28} color={COLORS.brand} />
             <View style={{ flex: 1 }}>
-              <Text style={[s.faqTitle, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>Have more questions?</Text>
-              <Text style={[s.faqSub, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>Check our FAQ or visit a branch near you.</Text>
+              <Text style={[s.faqTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>Have more questions?</Text>
+              <Text style={[s.faqSub, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>Check our FAQ or visit a branch near you.</Text>
             </View>
-            <Ionicons name="chevron-forward" size={18} color={COLORS.primary} />
+            <Ionicons name="chevron-forward" size={18} color={COLORS.brand} />
           </TouchableOpacity>
 
           <PoweredByFooter />

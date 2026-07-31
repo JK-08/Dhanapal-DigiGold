@@ -96,26 +96,26 @@ export default function AppModal({
             <View style={styles.headerRow}>
               <View style={{ flex: 1 }}>
                 {title && (
-                  <Text style={[styles.title, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.xl, color: COLORS.textPrimary }]}>
+                  <Text style={[styles.title, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.xl, color: COLORS.contentPrimary }]}>
                     {title}
                   </Text>
                 )}
                 {subtitle && (
-                  <Text style={[styles.subtitle, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.textSecondary }]}>
+                  <Text style={[styles.subtitle, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.contentSecondary }]}>
                     {subtitle}
                   </Text>
                 )}
               </View>
               {showClose && (
                 <TouchableOpacity onPress={onClose} style={[styles.closeBtn, { backgroundColor: COLORS.gray100 }]}>
-                  <Ionicons name="close" size={moderateScale(18)} color={COLORS.textSecondary} />
+                  <Ionicons name="close" size={moderateScale(18)} color={COLORS.contentSecondary} />
                 </TouchableOpacity>
               )}
             </View>
           )}
 
           {/* Divider if header exists */}
-          {title && <View style={[styles.divider, { backgroundColor: COLORS.borderLight }]} />}
+          {title && <View style={[styles.divider, { backgroundColor: COLORS.borderSubtle }]} />}
 
           {/* Body */}
           {children}

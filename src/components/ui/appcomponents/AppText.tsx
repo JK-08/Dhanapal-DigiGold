@@ -33,7 +33,7 @@ export default function AppText({
       numberOfLines={numberOfLines}
       style={[
         variantStyle,
-        { textAlign: align, color: color ?? variantStyle.color ?? COLORS.textPrimary },
+        { textAlign: align, color: color ?? variantStyle.color ?? COLORS.contentPrimary },
         style,
       ]}
     >

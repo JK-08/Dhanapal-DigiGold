@@ -269,24 +269,24 @@ const AppOTPInput = forwardRef<AppOTPInputRef, AppOTPInputProps>(
       if (disabled) return COLORS.gray100;
       if (error) return COLORS.errorLight;
       if (success && otp[index]) return COLORS.success + '22';
-      if (otp[index] && focusedIndex === index) return COLORS.primaryPale;
-      if (focusedIndex === index) return COLORS.primaryPale;
-      if (otp[index]) return COLORS.primaryPale;
+      if (otp[index] && focusedIndex === index) return COLORS.brandTint;
+      if (focusedIndex === index) return COLORS.brandTint;
+      if (otp[index]) return COLORS.brandTint;
       return COLORS.gray100;
     };
 
     const boxBorderColor = (index: number) => {
       if (error) return COLORS.error;
       if (success && otp[index]) return COLORS.success;
-      if (focusedIndex === index) return COLORS.primary;
-      if (otp[index]) return COLORS.primary;
-      return COLORS.borderMedium;
+      if (focusedIndex === index) return COLORS.brand;
+      if (otp[index]) return COLORS.brand;
+      return COLORS.borderStrong;
     };
 
     const styles = StyleSheet.create({
       container: { alignItems: "center" },
-      label: { ...FONTS.label, color: COLORS.textPrimary, marginBottom: 4 },
-      hint: { ...FONTS.bodySmall, color: COLORS.textSecondary, marginBottom: 12 },
+      label: { ...FONTS.label, color: COLORS.contentPrimary, marginBottom: 4 },
+      hint: { ...FONTS.bodySmall, color: COLORS.contentSecondary, marginBottom: 12 },
       row: {
         flexDirection: "row",
         alignItems: "center",
@@ -314,7 +314,7 @@ const AppOTPInput = forwardRef<AppOTPInputRef, AppOTPInputProps>(
       cursor: {
         width: 2,
         height: BOX_SIZE * 0.45,
-        backgroundColor: COLORS.primary,
+        backgroundColor: COLORS.brand,
         borderRadius: 1,
       },
       errorMsg: {
@@ -329,9 +329,9 @@ const AppOTPInput = forwardRef<AppOTPInputRef, AppOTPInputProps>(
         marginTop: 16,
         gap: 4,
       },
-      resendLabel: { ...FONTS.bodySmall, color: COLORS.textSecondary },
-      resendBtn: { ...FONTS.bodySmall, color: COLORS.primary },
-      resendDisabled: { ...FONTS.bodySmall, color: COLORS.textTertiary },
+      resendLabel: { ...FONTS.bodySmall, color: COLORS.contentSecondary },
+      resendBtn: { ...FONTS.bodySmall, color: COLORS.brand },
+      resendDisabled: { ...FONTS.bodySmall, color: COLORS.contentMuted },
     });
 
     const [cursorVisible, setCursorVisible] = useState(true);
@@ -397,7 +397,7 @@ const AppOTPInput = forwardRef<AppOTPInputRef, AppOTPInputProps>(
                               ? COLORS.error
                               : success
                               ? COLORS.success
-                              : COLORS.textPrimary,
+                              : COLORS.contentPrimary,
                           },
                         ]}
                       >

@@ -135,8 +135,8 @@ function LangRow({
     Animated.timing(bgAnim, { toValue: selected ? 1 : 0, duration: 180, useNativeDriver: false }).start();
   }, [selected]);
 
-  const bg = bgAnim.interpolate({ inputRange: [0, 1], outputRange: ['transparent', COLORS.primaryPale] });
-  const border = bgAnim.interpolate({ inputRange: [0, 1], outputRange: ['transparent', COLORS.primaryLighter] });
+  const bg = bgAnim.interpolate({ inputRange: [0, 1], outputRange: ['transparent', COLORS.brandTint] });
+  const border = bgAnim.interpolate({ inputRange: [0, 1], outputRange: ['transparent', COLORS.brandSoft] });
 
   const onIn  = () => Animated.spring(scale, { toValue: 0.97, useNativeDriver: true, speed: 40 }).start();
   const onOut = () => Animated.spring(scale, { toValue: 1,    useNativeDriver: true, speed: 24 }).start();
@@ -158,27 +158,27 @@ function LangRow({
             <Text style={[styles.langName, {
               fontFamily: FONTS.family.semiBold,
               fontSize:   SIZES.font.md,
-              color:      selected ? COLORS.primary : COLORS.textPrimary,
+              color:      selected ? COLORS.brand : COLORS.contentPrimary,
             }]}>
               {lang.name}
             </Text>
             {lang.rtl && (
               <View style={[styles.rtlBadge, { backgroundColor: COLORS.orangeOpacity10 }]}>
-                <Text style={[styles.rtlText, { color: COLORS.primary, fontFamily: FONTS.family.bold, fontSize: SIZES.font.xxs }]}>RTL</Text>
+                <Text style={[styles.rtlText, { color: COLORS.brand, fontFamily: FONTS.family.bold, fontSize: SIZES.font.xxs }]}>RTL</Text>
               </View>
             )}
           </View>
           <Text style={[styles.langNative, {
             fontFamily: FONTS.family.regular,
             fontSize:   SIZES.font.sm,
-            color:      selected ? COLORS.primaryLight : COLORS.textSecondary,
+            color:      selected ? COLORS.brandMuted : COLORS.contentSecondary,
           }]}>
             {lang.nativeName}
           </Text>
           <Text style={[styles.langRegion, {
             fontFamily: FONTS.family.regular,
             fontSize:   SIZES.font.xs,
-            color:      COLORS.textTertiary,
+            color:      COLORS.contentMuted,
           }]}>
             {lang.script} · {lang.region}
           </Text>
@@ -188,8 +188,8 @@ function LangRow({
         <Animated.View style={[
           styles.tickCircle,
           {
-            backgroundColor: selected ? COLORS.primary : 'transparent',
-            borderColor:     selected ? COLORS.primary : COLORS.border,
+            backgroundColor: selected ? COLORS.brand : 'transparent',
+            borderColor:     selected ? COLORS.brand : COLORS.border,
           },
         ]}>
           {selected && <Ionicons name="checkmark" size={moderateScale(13)} color="#fff" />}
@@ -222,8 +222,8 @@ function LangCard({
         styles.langCard,
         {
           width:           cardW,
-          backgroundColor: selected ? COLORS.primaryPale  : COLORS.white,
-          borderColor:     selected ? COLORS.primary       : COLORS.border,
+          backgroundColor: selected ? COLORS.brandTint  : COLORS.white,
+          borderColor:     selected ? COLORS.brand       : COLORS.border,
           transform:       [{ scale }],
           ...(selected ? SHADOWS.orange : SHADOWS.sm),
         },
@@ -232,19 +232,19 @@ function LangCard({
         <Text style={[styles.cardNative, {
           fontFamily: FONTS.family.semiBold,
           fontSize:   SIZES.font.sm,
-          color:      selected ? COLORS.primary : COLORS.textPrimary,
+          color:      selected ? COLORS.brand : COLORS.contentPrimary,
         }]} numberOfLines={1}>
           {lang.nativeName}
         </Text>
         <Text style={[styles.cardName, {
           fontFamily: FONTS.family.regular,
           fontSize:   SIZES.font.xs,
-          color:      COLORS.textTertiary,
+          color:      COLORS.contentMuted,
         }]} numberOfLines={1}>
           {lang.name}
         </Text>
         {selected && (
-          <View style={[styles.cardTick, { backgroundColor: COLORS.primary }]}>
+          <View style={[styles.cardTick, { backgroundColor: COLORS.brand }]}>
             <Ionicons name="checkmark" size={10} color="#fff" />
           </View>
         )}
@@ -274,8 +274,8 @@ function LangChip({
       <Animated.View style={[
         styles.chip,
         {
-          backgroundColor: selected ? COLORS.primary      : COLORS.white,
-          borderColor:     selected ? COLORS.primary       : COLORS.border,
+          backgroundColor: selected ? COLORS.brand      : COLORS.white,
+          borderColor:     selected ? COLORS.brand       : COLORS.border,
           transform:       [{ scale }],
           ...(selected ? SHADOWS.orange : {}),
         },
@@ -284,14 +284,14 @@ function LangChip({
         <Text style={[styles.chipLabel, {
           fontFamily: FONTS.family.semiBold,
           fontSize:   SIZES.font.xs,
-          color:      selected ? COLORS.white : COLORS.textPrimary,
+          color:      selected ? COLORS.white : COLORS.contentPrimary,
         }]}>
           {lang.name}
         </Text>
         <Text style={[styles.chipNative, {
           fontFamily: FONTS.family.regular,
           fontSize:   SIZES.font.xs,
-          color:      selected ? 'rgba(255,255,255,0.75)' : COLORS.textTertiary,
+          color:      selected ? 'rgba(255,255,255,0.75)' : COLORS.contentMuted,
         }]}>
           {lang.nativeName}
         </Text>
@@ -312,17 +312,17 @@ function SearchBar({
   const { COLORS, FONTS, SIZES, moderateScale } = useTheme();
   return (
     <View style={[styles.searchWrap, { backgroundColor: COLORS.gray100, borderColor: COLORS.border }]}>
-      <Ionicons name="search-outline" size={moderateScale(16)} color={COLORS.textTertiary} />
+      <Ionicons name="search-outline" size={moderateScale(16)} color={COLORS.contentMuted} />
       <TextInput
         value={value}
         onChangeText={onChange}
         placeholder="Search language…"
-        placeholderTextColor={COLORS.textTertiary}
-        style={[styles.searchInput, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.textPrimary }]}
+        placeholderTextColor={COLORS.contentMuted}
+        style={[styles.searchInput, { fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.contentPrimary }]}
       />
       {value.length > 0 && (
         <TouchableOpacity onPress={() => onChange('')}>
-          <Ionicons name="close-circle" size={moderateScale(16)} color={COLORS.textTertiary} />
+          <Ionicons name="close-circle" size={moderateScale(16)} color={COLORS.contentMuted} />
         </TouchableOpacity>
       )}
     </View>
@@ -459,21 +459,21 @@ export default function AppLanguagePicker({
 
         {/* Header */}
         <View style={styles.sheetHeader}>
-          <View style={[styles.headerIcon, { backgroundColor: COLORS.primaryPale }]}>
+          <View style={[styles.headerIcon, { backgroundColor: COLORS.brandTint }]}>
             <Text style={{ fontSize: 22 }}>🌐</Text>
           </View>
           <View style={{ flex: 1, marginLeft: 12 }}>
-            <Text style={[styles.sheetTitle, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.xl, color: COLORS.textPrimary }]}>
+            <Text style={[styles.sheetTitle, { fontFamily: FONTS.family.bold, fontSize: SIZES.font.xl, color: COLORS.contentPrimary }]}>
               {title}
             </Text>
             {selectedLang && (
-              <Text style={[{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.textTertiary }]}>
+              <Text style={[{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.contentMuted }]}>
                 Current: {selectedLang.flag}  {selectedLang.name} ({selectedLang.nativeName})
               </Text>
             )}
           </View>
           <TouchableOpacity onPress={onClose} style={[styles.closeBtn, { backgroundColor: COLORS.gray100 }]}>
-            <Ionicons name="close" size={moderateScale(18)} color={COLORS.textSecondary} />
+            <Ionicons name="close" size={moderateScale(18)} color={COLORS.contentSecondary} />
           </TouchableOpacity>
         </View>
 
@@ -486,13 +486,13 @@ export default function AppLanguagePicker({
 
         {/* Language count */}
         <View style={{ paddingHorizontal: 16, paddingBottom: 6 }}>
-          <Text style={[{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.textTertiary }]}>
+          <Text style={[{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.xs, color: COLORS.contentMuted }]}>
             {langs.length} language{langs.length !== 1 ? 's' : ''} available
           </Text>
         </View>
 
         {/* Divider */}
-        <View style={[styles.divider, { backgroundColor: COLORS.borderLight }]} />
+        <View style={[styles.divider, { backgroundColor: COLORS.borderSubtle }]} />
 
         {/* List */}
         <FlatList

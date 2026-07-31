@@ -136,7 +136,7 @@ export default function RegisterOTPVerifyScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.surfacePage,
   },
   content: {
     flex: 1,
@@ -148,12 +148,12 @@ const styles = StyleSheet.create({
   subtitle: {
     fontFamily: FONTS.family.regular,
     fontSize: SIZES.font.md,
-    color: COLORS.textSecondary,
+    color: COLORS.contentSecondary,
     lineHeight: 22,
   },
   phone: {
     fontFamily: FONTS.family.semiBold,
-    color: COLORS.textPrimary,
+    color: COLORS.contentPrimary,
   },
   card: {
     backgroundColor: COLORS.white,
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     ...SHADOWS.md,
   },
   autoDetectRow: {
-    backgroundColor: COLORS.primaryPale,
+    backgroundColor: COLORS.brandTint,
     borderRadius: SIZES.radius.sm,
     paddingHorizontal: SIZES.padding.md,
     paddingVertical: SIZES.padding.sm,
@@ -172,6 +172,6 @@ const styles = StyleSheet.create({
   autoDetectText: {
     fontFamily: FONTS.family.regular,
     fontSize: SIZES.font.xs,
-    color: COLORS.primaryDark,
+    color: COLORS.brandStrong,
   },
 });

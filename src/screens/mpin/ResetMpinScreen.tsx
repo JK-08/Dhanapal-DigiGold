@@ -104,7 +104,7 @@ export default function ResetMpinScreen() {
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: COLORS.background,
+        backgroundColor: COLORS.surfacePage,
       }}
     >
       <AppHeader
@@ -227,14 +227,14 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: FONTS.family.bold,
     fontSize: SIZES.heading.h3,
-    color: COLORS.textPrimary,
+    color: COLORS.contentPrimary,
     letterSpacing: -0.3,
   },
 
   subtitle: {
     fontFamily: FONTS.family.regular,
     fontSize: SIZES.font.sm,
-    color: COLORS.textSecondary,
+    color: COLORS.contentSecondary,
   },
 
   card: {

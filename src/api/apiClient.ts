@@ -41,11 +41,11 @@ export const callApi = async <T, R>({
             },
         });
 
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log(`✅ API SUCCESS [${method.toUpperCase()}] ${url}`);
-        console.log('📦 Request    :', JSON.stringify(data ?? params ?? null, null, 2));
-        console.log('📨 Response   :', JSON.stringify(response.data, null, 2));
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        // console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        // console.log(`✅ API SUCCESS [${method.toUpperCase()}] ${url}`);
+        // console.log('📦 Request    :', JSON.stringify(data ?? params ?? null, null, 2));
+        // console.log('📨 Response   :', JSON.stringify(response.data, null, 2));
+        // console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
         if ((response.data as any)?.status === 'error') {
             throw {
@@ -61,13 +61,13 @@ export const callApi = async <T, R>({
         const status   = error?.response?.status;
         const resData  = error?.response?.data;
 
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log(`❌ API FAILED [${method.toUpperCase()}] ${url}`);
-        console.log('📌 Status     :', status ?? 'No response');
-        console.log('📦 Request    :', JSON.stringify(data ?? params ?? null, null, 2));
-        console.log('📨 Response   :', JSON.stringify(resData, null, 2));
-        console.log('💬 Message    :', resData?.message ?? resData ?? error?.message ?? 'Unknown error');
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        // console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        // console.log(`❌ API FAILED [${method.toUpperCase()}] ${url}`);
+        // console.log('📌 Status     :', status ?? 'No response');
+        // console.log('📦 Request    :', JSON.stringify(data ?? params ?? null, null, 2));
+        // console.log('📨 Response   :', JSON.stringify(resData, null, 2));
+        // console.log('💬 Message    :', resData?.message ?? resData ?? error?.message ?? 'Unknown error');
+        // console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
         throw {
             status: 'error',
