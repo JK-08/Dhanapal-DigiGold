@@ -27,6 +27,7 @@ import { useMySchemes } from '../../api/hooks/Account/useMySchemes';
 import { ApiScheme, METAL_LABEL, METAL_COLOR } from '../../types/Scheme/Scheme';
 import { PPData } from '../../types/Account/PhoneDetails';
 import AppHeader from '../../components/ui/appcomponents/AppHeader';
+import GlassSchemeCard from '../../components/ui/GlassSchemeCard';
 
 const { width } = Dimensions.get('window');
 
@@ -238,6 +239,8 @@ function MySchemeCard({
   const paid     = parseInt(item.schemeSummary?.schemaSummaryTransBalance?.insPaid ?? '0');
   const total    = parseInt(item.schemeSummary?.instalment ?? '1');
   const pct      = total > 0 ? Math.min(paid / total, 1) : 0;
+  const remaining = Math.max(total - paid, 0);
+  const done     = status === 'completed';
 
   return (
 
@@ -281,9 +284,9 @@ function MySchemeCard({
             </Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={[styles.statLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>With Bonus</Text>
-            <Text style={[styles.statValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
-              ₹{item.totalAmountWithBonus.toLocaleString('en-IN')}
+            <Text style={[styles.statLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>{done ? 'Status' : 'Remaining'}</Text>
+            <Text style={[styles.statValue, { color: done ? COLORS.success : COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+              {done ? 'Completed' : `${remaining} EMI${remaining === 1 ? '' : 's'}`}
             </Text>
           </View>
         </View>
@@ -301,20 +304,14 @@ function MySchemeCard({
               </Text>
             </View>
             <View style={styles.detailRow}>
-              <Text style={[styles.detailLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Bonus Amount</Text>
-              <Text style={[styles.detailValue, { color: COLORS.success, fontFamily: FONTS.family.semiBold }]}>
-                ₹{item.bonusAmount.toLocaleString('en-IN')} ({item.bonusPercent}%)
-              </Text>
-            </View>
-            <View style={styles.detailRow}>
-              <Text style={[styles.detailLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Total with Bonus</Text>
-              <Text style={[styles.detailValue, { color: COLORS.success, fontFamily: FONTS.family.semiBold }]}>
-                ₹{item.totalAmountWithBonus.toLocaleString('en-IN')}
-              </Text>
-            </View>
-            <View style={styles.detailRow}>
               <Text style={[styles.detailLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>EMIs Paid</Text>
               <Text style={[styles.detailValue, { color: COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>{paid} / {total}</Text>
+            </View>
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>{done ? 'Status' : 'Installments Remaining'}</Text>
+              <Text style={[styles.detailValue, { color: done ? COLORS.success : COLORS.textPrimary, fontFamily: FONTS.family.semiBold }]}>
+                {done ? 'Completed' : `${remaining} EMI${remaining === 1 ? '' : 's'}`}
+              </Text>
             </View>
             {item.nextDueDate ? (
               <View style={styles.detailRow}>
@@ -486,8 +483,8 @@ export default function SchemeScreen() {
               <Text style={[styles.errorText, { color: COLORS.textSecondary, fontFamily: FONTS.family.regular }]}>No schemes available</Text>
             </View>
           ) : (
-            activeSchemes.map((item) => (
-              <AllSchemeCard key={item.SchemeId} item={item} onJoin={handleJoin} />
+            activeSchemes.map((item, index) => (
+              <AllSchemeCard key={`${item.SchemeId ?? 'scheme'}-${index}`} item={item} onJoin={handleJoin} />
             ))
           )
         )}
@@ -511,7 +508,9 @@ export default function SchemeScreen() {
             </View>
           ) : (
             mySchemes.map((item, index) => (
-              <MySchemeCard key={item.regNo} item={item} index={index} />
+              <View key={`${item.regNo ?? 'scheme'}-${index}`} style={{ marginBottom: 16, alignItems: 'center' }}>
+                <GlassSchemeCard item={item} width={width - 32} />
+              </View>
             ))
           )
         )}

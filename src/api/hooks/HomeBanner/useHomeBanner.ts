@@ -15,14 +15,11 @@ export const useSchemeSliders = () => {
     schemeSliderService
       .getSliders()
       .then((res) => {
-        res.sliders.forEach((slider) =>
-          console.log(
-            '[Scheme Slider URL]',
-            getImageUrl(slider.image_path),
-          ),
+        const list: SchemeSlider[] = Array.isArray(res?.sliders) ? res.sliders : [];
+        list.forEach((slider) =>
+          console.log('[Scheme Slider URL]', getImageUrl(slider.image_path)),
         );
-
-        setSliders(res.sliders);
+        setSliders(list);
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));

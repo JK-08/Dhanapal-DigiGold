@@ -209,7 +209,7 @@ export default function HomeScreen() {
                 ref={mySchemesFlatListRef}
                 horizontal
                 data={mySchemes}
-                keyExtractor={(item) => String(item.regNo)}
+                keyExtractor={(item, index) => `${item.regNo ?? 'scheme'}-${index}`}
                 renderItem={({ item }) => (
                   <View
                     style={{
@@ -298,7 +298,7 @@ export default function HomeScreen() {
                 ref={allSchemesFlatListRef}
                 horizontal
                 data={activeSchemes}
-                keyExtractor={(item) => String(item.SchemeId)}
+                keyExtractor={(item, index) => `${item.SchemeId ?? 'scheme'}-${index}`}
                 renderItem={({ item }) => (
                   <SchemeListCard
                     item={item}

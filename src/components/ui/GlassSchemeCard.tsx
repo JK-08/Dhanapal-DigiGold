@@ -1,15 +1,16 @@
 // src/components/ui/GlassSchemeCard.tsx
 //
-// Frosted-glass / "blur mirror" card for a member's joined scheme.
-// Base colour follows the app header gradient. Full-width (use inside a slider).
-// Two actions: "Pay" (opens Pay Installment) and "Installments" (opens a modal
-// listing the paid installment history).
+// "Ticket stub" style card for a member's joined scheme — a deliberately
+// different look from the frosted-glass card this replaces: a solid colour
+// header band, a punched-out perforation seam, and a white statement body
+// with a circular progress ring instead of a linear bar.
+// (Filename / export names kept as-is so existing imports don't break.)
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, Dimensions,
 } from 'react-native';
-import { BlurView } from 'expo-blur';
+import Svg, { Circle } from 'react-native-svg';
 import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
@@ -25,7 +26,11 @@ type NavProps = NativeStackNavigationProp<RootStackParamList>;
 // Full width minus the home container padding (16 each side)
 export const GLASS_CARD_WIDTH = SCREEN_W - 32;
 
-// Status colours mapped to theme tokens — resolved inside component where COLORS is available
+const RADIUS = 20;
+const RING_SIZE = 62;
+const RING_STROKE = 6;
+const RING_R = (RING_SIZE - RING_STROKE) / 2;
+const RING_CIRC = 2 * Math.PI * RING_R;
 
 function formatDate(raw: string): string {
   if (!raw) return '—';
@@ -44,29 +49,7 @@ function schemeStatus(pp: PPData): 'active' | 'pending' | 'completed' {
 export default function GlassSchemeCard({ item, width }: { item: PPData; index?: number; width?: number }) {
   const { COLORS, FONTS } = useTheme();
   const navigation = useNavigation<NavProps>();
-  useEffect(() => {
-    console.log('[GlassSchemeCard] Phone Details Data:', {
-      regNo:              item.regNo,
-      name:               item.pName,
-      schemeName:         item.schemeSummary?.schemeName,
-      totalAmount:        item.totalAmount,
-      totalAmountWithBonus: item.totalAmountWithBonus,
-      bonusAmount:        item.bonusAmount,
-      bonusPercent:       item.bonusPercent,
-      instalmentsPaid:    item.schemeSummary?.schemaSummaryTransBalance?.insPaid,
-      totalInstalments:   item.schemeSummary?.instalment,
-      paymentHistoryCount: item.paymentHistoryList?.length ?? 0,
-      remainingDueDatesCount: item.remainingDueDates?.length ?? 0,
-      joinDate:           item.joinDate,
-      maturityDate:       item.maturityDate,
-      nextDueDate:        item.nextDueDate,
-      lastPaidDate:       item.lastPaidDate,
-      remainingDays:      item.remainingDays,
-      status:             schemeStatus(item),
-    });
-  }, [item]);
 
-  // Header gradient colours from theme
   const hg: string[] = (COLORS as any)?.gradient?.orangeDeep ?? [COLORS.primaryDark, COLORS.primary];
   const deep: string = (COLORS as any)?.orangeDeep ?? COLORS.primaryDark;
   const gradColors: [string, string, string] = [hg[1] ?? COLORS.primary, hg[0] ?? COLORS.primaryDark, deep];
@@ -77,173 +60,199 @@ export default function GlassSchemeCard({ item, width }: { item: PPData; index?:
     completed: COLORS.goldSecondary,
   };
 
-  const paid    = parseInt(item.schemeSummary?.schemaSummaryTransBalance?.insPaid ?? '0');
-  const total   = parseInt(item.schemeSummary?.instalment ?? '1');
-  const pct     = total > 0 ? Math.min(paid / total, 1) : 0;
-  const status  = schemeStatus(item);
-  const done    = status === 'completed';
+  const paid      = parseInt(item.schemeSummary?.schemaSummaryTransBalance?.insPaid ?? '0');
+  const total     = parseInt(item.schemeSummary?.instalment ?? '1');
+  const pct       = total > 0 ? Math.min(paid / total, 1) : 0;
+  const status    = schemeStatus(item);
+  const done      = status === 'completed';
+  const remaining = Math.max(total - paid, 0);
+  const ringOffset = RING_CIRC * (1 - pct);
+
+  const cardWidth = width ?? GLASS_CARD_WIDTH;
 
   return (
-    <View style={[glass.shadowWrap, width ? { width } : null]}>
-      <View style={glass.card}>
-        {/* 1) Header-colour gradient base */}
-        <LinearGradient
-          colors={gradColors}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={StyleSheet.absoluteFill}
-        />
+    <View style={[card.shadowWrap, { width: cardWidth }]}>
 
-        {/* 2) Light "reflection" blobs for the mirror feel */}
-        <View style={[glass.blob, glass.blobTop]} />
-        <View style={[glass.blob, glass.blobBottom]} />
-
-        {/* 3) Frosted glass blur */}
-        <BlurView intensity={26} tint="light" style={StyleSheet.absoluteFill} />
-
-        {/* 4) Glass sheet + light border */}
-        <View style={glass.sheet} />
-        <LinearGradient
-          colors={['rgba(255,255,255,0.28)', 'rgba(255,255,255,0.04)', 'rgba(255,255,255,0)']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 0.6 }}
-          style={StyleSheet.absoluteFill}
-          pointerEvents="none"
-        />
-
-        {/* 5) Content */}
-        <View style={glass.content}>
-          <View style={glass.topRow}>
-            <View style={glass.iconWrap}>
-              <Ionicons name="diamond-outline" size={18} color={COLORS.white} />
-            </View>
-            <View style={[glass.badge, { backgroundColor: STATUS_CLR[status] + 'E6' }]}>
-              <Text style={[glass.badgeTxt, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
-                {status.toUpperCase()}
-              </Text>
-            </View>
+      {/* ── Header band (solid gradient, no blur) ── */}
+      <LinearGradient colors={gradColors} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={card.band}>
+        <View style={card.bandRow}>
+          <View style={card.iconWrap}>
+            <Ionicons name="diamond-outline" size={18} color="#fff" />
           </View>
-
-          <Text style={[glass.title, { fontFamily: FONTS.family.bold }]} numberOfLines={1}>
-            {item.schemeSummary?.schemeName ?? item.pName}
-          </Text>
-          <Text style={[glass.regNo, { fontFamily: FONTS.family.regular }]} numberOfLines={1}>
-            Reg No: {item.regNo}
-          </Text>
-
-          <View style={glass.statsRow}>
-            <View style={{ flex: 1 }}>
-              <Text style={[glass.val, { fontFamily: FONTS.family.bold }]}>
-                ₹{item.totalAmount.toLocaleString('en-IN')}
-              </Text>
-              <Text style={[glass.lbl, { fontFamily: FONTS.family.regular }]}>Invested</Text>
-            </View>
-            <View style={glass.div} />
-            <View style={{ flex: 1 }}>
-              <Text style={[glass.val, { fontFamily: FONTS.family.bold }]}>
-                ₹{item.totalAmountWithBonus.toLocaleString('en-IN')}
-              </Text>
-              <Text style={[glass.lbl, { fontFamily: FONTS.family.regular }]}>With Bonus</Text>
-            </View>
-            <View style={glass.div} />
-            <View style={{ flex: 1 }}>
-              <Text style={[glass.val, { fontFamily: FONTS.family.bold }]}>{paid}/{total}</Text>
-              <Text style={[glass.lbl, { fontFamily: FONTS.family.regular }]}>EMIs</Text>
-            </View>
-          </View>
-
-          {/* Progress */}
-          <View style={glass.track}>
-            <View style={[glass.fill, { width: `${Math.min(pct * 100, 100)}%` as any }]} />
-          </View>
-          <View style={glass.metaRow}>
-            <Text style={[glass.next, { fontFamily: FONTS.family.regular }]} numberOfLines={1}>
-              {done ? 'Scheme completed' : `Next: ${formatDate(item.nextDueDate ?? '')}`}
+          <View style={{ flex: 1, marginLeft: 10 }}>
+            <Text style={[card.title, { fontFamily: FONTS.family.bold }]} numberOfLines={1}>
+              {item.schemeSummary?.schemeName ?? item.pName}
             </Text>
-            <Text style={[glass.pct, { fontFamily: FONTS.family.semiBold }]}>{Math.round(pct * 100)}%</Text>
+            <Text style={[card.regNo, { fontFamily: FONTS.family.regular }]} numberOfLines={1}>
+              Reg No: {item.regNo}{item.groupCode ? `  •  Group: ${item.groupCode}` : ''}
+            </Text>
           </View>
-
-          {/* Actions: Passbook (+ Pay when scheme is still open) */}
-          <View style={glass.actionRow}>
-            <TouchableOpacity
-              style={[glass.btn, glass.btnGhost]}
-              activeOpacity={0.9}
-              onPress={() => navigation.navigate('SchemePassbook', { ppData: item })}
-            >
-              <Ionicons name="book-outline" size={15} color={COLORS.white} />
-              <Text style={[glass.btnGhostTxt, { fontFamily: FONTS.family.bold }]}>
-                View Details
-              </Text>
-            </TouchableOpacity>
-            {!done && (
-              <TouchableOpacity
-                style={[glass.btn, glass.btnSolid]}
-                activeOpacity={0.9}
-                onPress={() => navigation.navigate('PayInstallment', { ppData: item })}
-              >
-                <Ionicons name="card-outline" size={15} color={COLORS.primaryDark} />
-                <Text style={[glass.btnSolidTxt, { color: COLORS.primaryDark, fontFamily: FONTS.family.bold }]}>
-                  Pay
-                </Text>
-              </TouchableOpacity>
-            )}
+          <View style={[card.badge, { backgroundColor: STATUS_CLR[status] + 'E6' }]}>
+            <Text style={[card.badgeTxt, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+              {status.toUpperCase()}
+            </Text>
           </View>
         </View>
+      </LinearGradient>
+
+      {/* ── Perforation seam with punched-out notches ── */}
+      <View style={[card.seam, { backgroundColor: COLORS.card }]}>
+        <View style={[card.notch, card.notchLeft, { backgroundColor: COLORS.background }]} />
+        <View style={[card.dashedLine, { borderColor: COLORS.borderMedium }]} />
+        <View style={[card.notch, card.notchRight, { backgroundColor: COLORS.background }]} />
       </View>
 
+      {/* ── Statement body (solid card colour) ── */}
+      <View style={[card.body, { backgroundColor: COLORS.card, borderColor: COLORS.borderLight }]}>
+        <View style={card.bodyTopRow}>
+          {/* Circular progress ring */}
+          <View style={card.ringWrap}>
+            <Svg width={RING_SIZE} height={RING_SIZE}>
+              <Circle
+                cx={RING_SIZE / 2} cy={RING_SIZE / 2} r={RING_R}
+                stroke={COLORS.borderLight} strokeWidth={RING_STROKE} fill="none"
+              />
+              <Circle
+                cx={RING_SIZE / 2} cy={RING_SIZE / 2} r={RING_R}
+                stroke={done ? COLORS.success : COLORS.primary} strokeWidth={RING_STROKE} fill="none"
+                strokeDasharray={`${RING_CIRC} ${RING_CIRC}`}
+                strokeDashoffset={ringOffset}
+                strokeLinecap="round"
+                rotation={-90}
+                origin={`${RING_SIZE / 2}, ${RING_SIZE / 2}`}
+              />
+            </Svg>
+            <View style={card.ringCenter}>
+              <Text style={[card.ringPct, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>
+                {Math.round(pct * 100)}%
+              </Text>
+            </View>
+          </View>
 
+          {/* Stat rows */}
+          <View style={card.statList}>
+            <View style={card.statRow}>
+              <Text style={[card.statLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>Invested</Text>
+              <Text style={[card.statVal, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]} numberOfLines={1}>
+                ₹{item.totalAmount.toLocaleString('en-IN')}
+              </Text>
+            </View>
+            <View style={[card.statDivider, { backgroundColor: COLORS.borderLight }]} />
+            <View style={card.statRow}>
+              <Text style={[card.statLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>EMIs Paid</Text>
+              <Text style={[card.statVal, { color: COLORS.textPrimary, fontFamily: FONTS.family.bold }]}>{paid}/{total}</Text>
+            </View>
+            <View style={[card.statDivider, { backgroundColor: COLORS.borderLight }]} />
+            <View style={card.statRow}>
+              <Text style={[card.statLbl, { color: COLORS.textTertiary, fontFamily: FONTS.family.regular }]}>
+                {done ? 'Status' : 'Remaining'}
+              </Text>
+              <Text style={[card.statVal, { color: done ? COLORS.success : COLORS.primary, fontFamily: FONTS.family.bold }]}>
+                {done ? 'Completed' : `${remaining} EMI${remaining === 1 ? '' : 's'}`}
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Next due strip */}
+        <View style={[card.dueStrip, { backgroundColor: COLORS.primary + '0A' }]}>
+          <Ionicons name="calendar-outline" size={13} color={COLORS.primary} />
+          <Text style={[card.dueTxt, { color: COLORS.textSecondary, fontFamily: FONTS.family.medium }]} numberOfLines={1}>
+            {done ? 'Scheme completed' : `Next due: ${formatDate(item.nextDueDate ?? '')}`}
+          </Text>
+        </View>
+
+        {/* Actions */}
+        <View style={card.actionRow}>
+          <TouchableOpacity
+            style={[card.btn, card.btnOutline, { borderColor: COLORS.primary + '40' }]}
+            activeOpacity={0.85}
+            onPress={() => navigation.navigate('SchemePassbook', { ppData: item })}
+          >
+            <Ionicons name="book-outline" size={15} color={COLORS.primary} />
+            <Text style={[card.btnOutlineTxt, { color: COLORS.primary, fontFamily: FONTS.family.bold }]}>
+              Passbook
+            </Text>
+          </TouchableOpacity>
+          {!done && (
+            <TouchableOpacity
+              style={[card.btn, card.btnSolid, { backgroundColor: COLORS.primary }]}
+              activeOpacity={0.9}
+              onPress={() => navigation.navigate('PayInstallment', { ppData: item })}
+            >
+              <Ionicons name="card-outline" size={15} color={COLORS.white} />
+              <Text style={[card.btnSolidTxt, { color: COLORS.white, fontFamily: FONTS.family.bold }]}>
+                Pay
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
     </View>
   );
 }
 
-const RADIUS = 22;
-
-const glass = StyleSheet.create({
+const card = StyleSheet.create({
   shadowWrap: {
-    width: GLASS_CARD_WIDTH,
-    borderRadius: RADIUS,
-    shadowColor: '#000000',  // must be hex for RN shadow — maps to COLORS.black
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.18,
-    shadowRadius: 14,
-    elevation: 6,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 5,
   },
-  card: { borderRadius: RADIUS, overflow: 'hidden', minHeight: 210 },
-  sheet: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    borderRadius: RADIUS,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.40)',
+
+  // Header band
+  band: {
+    borderTopLeftRadius: RADIUS, borderTopRightRadius: RADIUS,
+    paddingHorizontal: 16, paddingTop: 16, paddingBottom: 14,
   },
-  blob: { position: 'absolute', borderRadius: 999, backgroundColor: 'rgba(255,255,255,0.22)' },
-  blobTop:    { width: 170, height: 170, top: -60, right: -40 },
-  blobBottom: { width: 130, height: 130, bottom: -50, left: -35, backgroundColor: 'rgba(255,255,255,0.12)' },
+  bandRow: { flexDirection: 'row', alignItems: 'center' },
+  iconWrap: {
+    width: 34, height: 34, borderRadius: 11,
+    backgroundColor: 'rgba(255,255,255,0.20)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.32)',
+    alignItems: 'center', justifyContent: 'center',
+  },
+  title: { color: '#fff', fontSize: 15.5, letterSpacing: -0.2 },
+  regNo: { color: 'rgba(255,255,255,0.78)', fontSize: 10.5, marginTop: 2 },
+  badge: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8, marginLeft: 8 },
+  badgeTxt: { fontSize: 8.5, letterSpacing: 0.4 },
 
-  content: { padding: 18 },
-  topRow:  { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  iconWrap:{ width: 36, height: 36, borderRadius: 11, backgroundColor: 'rgba(255,255,255,0.22)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.35)', alignItems: 'center', justifyContent: 'center' },
-  badge:   { paddingHorizontal: 9, paddingVertical: 4, borderRadius: 10 },
-  badgeTxt:{ fontSize: 9, letterSpacing: 0.4 },
+  // Perforation seam
+  seam: { height: 18, justifyContent: 'center', overflow: 'visible' },
+  dashedLine: {
+    flex: 1, marginHorizontal: 14, borderTopWidth: 1.5, borderStyle: 'dashed',
+  },
+  notch: { position: 'absolute', width: 18, height: 18, borderRadius: 9, top: 0 },
+  notchLeft:  { left: -9 },
+  notchRight: { right: -9 },
 
-  title:   { color: '#fff', fontSize: 17, letterSpacing: -0.2 },   // white on gradient — intentional glass text
-  regNo:   { color: 'rgba(255,255,255,0.78)', fontSize: 11, marginTop: 2, marginBottom: 14 },  // glass overlay text
+  // Body
+  body: {
+    borderBottomLeftRadius: RADIUS, borderBottomRightRadius: RADIUS,
+    borderWidth: 1, borderTopWidth: 0, padding: 16,
+  },
+  bodyTopRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 14 },
 
-  statsRow:{ flexDirection: 'row', alignItems: 'center', marginBottom: 14 },
-  val:     { color: '#fff', fontSize: 14 },          // white on gradient — intentional glass text
-  lbl:     { color: 'rgba(255,255,255,0.72)', fontSize: 10, marginTop: 2 },  // glass overlay text
-  div:     { width: 1, height: 28, backgroundColor: 'rgba(255,255,255,0.28)', marginHorizontal: 8 },
+  ringWrap: { width: RING_SIZE, height: RING_SIZE, alignItems: 'center', justifyContent: 'center' },
+  ringCenter: { position: 'absolute', alignItems: 'center', justifyContent: 'center' },
+  ringPct: { fontSize: 13 },
 
-  track:   { height: 5, backgroundColor: 'rgba(255,255,255,0.28)', borderRadius: 3, marginBottom: 8, overflow: 'hidden' },
-  fill:    { height: '100%', backgroundColor: '#fff', borderRadius: 3 },
-  metaRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 },
-  next:    { color: 'rgba(255,255,255,0.85)', fontSize: 11, flex: 1, marginRight: 8 },  // glass overlay text
-  pct:     { color: '#fff', fontSize: 11 },   // white on gradient — intentional glass text
+  statList: { flex: 1, marginLeft: 16, gap: 7 },
+  statRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  statLbl: { fontSize: 11.5 },
+  statVal: { fontSize: 13 },
+  statDivider: { height: 1 },
 
-  actionRow:  { flexDirection: 'row', gap: 10 },
-  btn:        { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 11, borderRadius: 12 },
-  btnGhost:   { backgroundColor: 'rgba(255,255,255,0.18)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.40)' },  // glass effect
-  btnGhostTxt:{ color: '#fff', fontSize: 13 },   // white on glass — intentional
-  btnSolid:   { backgroundColor: '#fff' },        // white pill on gradient — intentional
-  btnSolidTxt:{ fontSize: 13 },
+  dueStrip: {
+    flexDirection: 'row', alignItems: 'center', gap: 7,
+    borderRadius: 10, paddingHorizontal: 12, paddingVertical: 9, marginBottom: 14,
+  },
+  dueTxt: { fontSize: 11.5, flex: 1 },
+
+  actionRow: { flexDirection: 'row', gap: 10 },
+  btn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 12, borderRadius: 12 },
+  btnOutline: { backgroundColor: 'transparent', borderWidth: 1.5 },
+  btnOutlineTxt: { fontSize: 13 },
+  btnSolid: {},
+  btnSolidTxt: { fontSize: 13 },
 });
