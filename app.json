@@ -3,7 +3,7 @@
     "name": "Dhanapal DigiGold",
     "slug": "dhanapal-scheme",
     "scheme": "dhanapal-scheme",
-    "version": "1.0.5",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
@@ -18,14 +18,18 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.brightechsoftware.dhanapaldigigold",
+      "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan barcodes and capture images.",
         "NSPhotoLibraryUsageDescription": "This app accesses your photo library to upload images.",
         "NSPhotoLibraryAddUsageDescription": "This app saves photos to your photo library.",
         "UIBackgroundModes": [
+          "remote-notification",
           "remote-notification"
-        ]
-      }
+        ],
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "buildNumber": "2"
     },
     "android": {
       "package": "com.brightechsoftware.dhanapaldigigold",

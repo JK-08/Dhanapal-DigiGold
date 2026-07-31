@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Platform, SafeAreaView } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useOtpVerify, removeListener } from 'react-native-otp-verify';
+import { useOtpVerify, removeListener } from '../../utils/otpVerify';
 import { COLORS, FONTS, SIZES, SHADOWS } from '../../theme/theme';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { verifyOtp } from '../../store/authSlice';

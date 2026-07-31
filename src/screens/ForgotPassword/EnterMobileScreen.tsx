@@ -13,7 +13,7 @@ import AppInput from '../../components/ui/appcomponents/AppInput';
 import AppButton from '../../components/ui/appcomponents/AppButton';
 import AppHeader from '../../components/ui/appcomponents/AppHeader';
 import { useToast } from '../../components/ui/Toast';
-import { getHash } from 'react-native-otp-verify';
+import { getHash } from '../../utils/otpVerify';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 

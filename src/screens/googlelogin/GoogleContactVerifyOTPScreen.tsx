@@ -5,7 +5,7 @@ import { View, Text, StyleSheet, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useOtpVerify, removeListener } from 'react-native-otp-verify';
+import { useOtpVerify, removeListener } from '../../utils/otpVerify';
 import { COLORS, FONTS, SIZES, SHADOWS } from '../../theme/theme';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 import { authService } from '../../api/services/authService';

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet,
-  ScrollView,
+  ScrollView, Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
@@ -41,6 +41,7 @@ export default function LoginScreen() {
   useEffect(() => {
     GoogleSignin.configure({
       webClientId: '1038057958960-gg9fji7abv6php2ahfi6kf3ttmu33nea.apps.googleusercontent.com',
+      iosClientId: '1038057958960-n8o4db9uae78oh0gukrvv8fdofbmt5id.apps.googleusercontent.com',
       scopes: ['profile', 'email'],
       offlineAccess: true,
     });
@@ -93,7 +94,7 @@ export default function LoginScreen() {
   const handleGoogleSignIn = async () => {
     try {
       setGoogleLoading(true);
-      await GoogleSignin.hasPlayServices();
+      if (Platform.OS === 'android') await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       const idToken  = userInfo.data?.idToken;
       if (!idToken) { toast.error('Google Sign-In Failed', { message: 'No ID token received' }); return; }
