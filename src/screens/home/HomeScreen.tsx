@@ -342,7 +342,7 @@ export default function HomeScreen() {
         <PoweredByFooter />
       </ScrollView>
 
-      <InAppMessageModal />
+      {/* <InAppMessageModal /> */}
     </View>
   );
 }
