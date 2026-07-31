@@ -28,7 +28,7 @@ import { PPData } from '../../types/Account/PhoneDetails';
 import { accountService } from '../../api/services/accountService';
 import { AccountInsertData } from '../../types/Account/AccountInsert';
 import { useToast } from '../../components/ui/Toast';
-import SubPageHeader from '../../components/ui/SubPageHeader';
+import AppHeader from '../../components/ui/appcomponents/AppHeader';
 
 type RouteProps = RouteProp<RootStackParamList, 'PayInstallment'>;
 type NavProps   = NativeStackNavigationProp<RootStackParamList, 'PayInstallment'>;
@@ -336,10 +336,10 @@ export default function PayInstallmentScreen() {
   const isProcessing = ['creating_order', 'checkout_open', 'verifying'].includes(status);
 
   return (
-    <SafeAreaView style={[s.container, { backgroundColor: COLORS.background }]} edges={['top', 'bottom']}>
+    <SafeAreaView style={[s.container, { backgroundColor: COLORS.background }]} edges={['bottom']}>
 
       {/* Header */}
-      <SubPageHeader title="Pay Installment" subtitle={schemeName} />
+      <AppHeader title="Pay Installment" subtitle={schemeName} showBack  />
 
       <ScrollView
         style={{ flex: 1 }}

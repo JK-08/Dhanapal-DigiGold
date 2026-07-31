@@ -72,8 +72,8 @@ export default function GoogleContactUpdateScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }} edges={['top', 'bottom']}>
-      <AppHeader title="Add Mobile Number" showBack variant="white" />
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }} edges={['bottom']}>
+      <AppHeader title="Add Mobile Number" showBack  />
       <View style={[styles.content, { paddingHorizontal: SIZES.padding.xl }]}>
         <View style={styles.header}>
           <Text style={styles.title}>Link Your Mobile</Text>

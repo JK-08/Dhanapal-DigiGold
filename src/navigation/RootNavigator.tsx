@@ -30,6 +30,8 @@ export type RootStackParamList = {
   CreateMpin:              undefined;
   MpinLogin:               undefined;
   ForgotMpin:              undefined;
+  ForgotMpinOtp:           undefined;
+  ForgotMpinNewPin:        { otp: string };
   ResetMpin:               undefined;
   LoginLog:undefined;
   ComponentsUsage:         undefined;
@@ -120,7 +122,9 @@ export default function RootNavigator() {
         <Stack.Screen name="GoogleContactVerifyOTP" component={Screens.GoogleContactVerifyOTPScreen} />
         <Stack.Screen name="CreateMpin"              component={Screens.CreateMpinScreen} />
         <Stack.Screen name="MpinLogin"               component={Screens.VerifyMpinScreen} />
-        <Stack.Screen name="ForgotMpin"              component={Screens.ForgotAndVerifyMpinScreen} />
+        <Stack.Screen name="ForgotMpin"              component={Screens.ForgotMpinSendOtpScreen} />
+        <Stack.Screen name="ForgotMpinOtp"            component={Screens.ForgotMpinOtpScreen} />
+        <Stack.Screen name="ForgotMpinNewPin"         component={Screens.ForgotMpinNewPinScreen} />
         <Stack.Screen name="ResetMpin"               component={Screens.ResetMpinScreen} />
         <Stack.Screen name="ComponentsUsage"         component={Screens.ComponentsUsageScreen} />
         <Stack.Screen name="Main"                    component={Screens.BottomTabNavigator} />

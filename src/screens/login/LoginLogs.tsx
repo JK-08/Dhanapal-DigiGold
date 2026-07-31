@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { useTheme } from '../../theme';
-import SubPageHeader from '../../components/ui/SubPageHeader';
+import AppHeader from '../../components/ui/appcomponents/AppHeader';
 import PoweredByFooter from '../../components/ui/PoweredByFooter';
 import { loginCheckService, LoginLog } from '../../api/services/loginCheckService';
 
@@ -135,8 +135,8 @@ export default function LoginLogsScreen() {
   }, [users, query]);
 
   return (
-    <SafeAreaView style={[s.container, { backgroundColor: COLORS.background }]} edges={['top', 'bottom']}>
-      <SubPageHeader title="Login Logs" subtitle={`${users.length} record${users.length !== 1 ? 's' : ''}`} />
+    <SafeAreaView style={[s.container, { backgroundColor: COLORS.background }]} edges={['bottom']}>
+      <AppHeader title="Login Logs" subtitle={`${users.length} record${users.length !== 1 ? 's' : ''}`} showBack  />
 
       {/* Search */}
       <View style={s.searchWrap}>

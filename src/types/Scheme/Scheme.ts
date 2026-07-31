@@ -23,6 +23,8 @@ export interface SchemesResponse {
   schemes: ApiScheme[];
 }
 
+import { COLORS } from '../../theme/theme';
+
 // ── Display helpers ──────────────────────────────────────────────
 export const METAL_LABEL: Record<string, string> = {
   G: 'Gold',
@@ -32,15 +34,15 @@ export const METAL_LABEL: Record<string, string> = {
 };
 
 export const METAL_COLOR: Record<string, string> = {
-  G: '#A8CFA8',
-  S: '#9E9E9E',
-  P: '#78909C',
-  D: '#00ACC1',
+  G: COLORS.goldPrimary,   // #A8CFA8 Sage Green
+  S: COLORS.gray400,       // #9E9E9E Silver gray
+  P: COLORS.gray500,       // #757575 Platinum gray
+  D: COLORS.infoLight,     // #42A5F5 Diamond blue
 };
 
 export const METAL_GRADIENT: Record<string, [string, string]> = {
-  G: ['#E8A020', '#C87010'],
-  S: ['#909090', '#606060'],
-  P: ['#607D8B', '#455A64'],
-  D: ['#00ACC1', '#00838F'],
+  G: [COLORS.goldPrimary, COLORS.goldDark],
+  S: [COLORS.gray400,     COLORS.gray600],
+  P: [COLORS.gray500,     COLORS.gray700],
+  D: [COLORS.infoLight,   COLORS.info],
 };

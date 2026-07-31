@@ -17,7 +17,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTheme } from '../../theme';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 import { METAL_LABEL, METAL_COLOR } from '../../types/Scheme/Scheme';
-import SubPageHeader from '../../components/ui/SubPageHeader';
+import AppHeader from '../../components/ui/appcomponents/AppHeader';
 import AppContentHtml from '../../components/ui/AppContentHtml';
 import { useAppContent } from '../../api/hooks/AppContent/useAppContent';
 
@@ -55,9 +55,9 @@ export default function SchemeTermsScreen() {
   const isFixed = scheme.FixedIns === 'Y';
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: COLORS.background }]} edges={['top', 'bottom']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: COLORS.background }]} edges={['bottom']}>
       {/* ── Header ── */}
-      <SubPageHeader title="Terms & Conditions" subtitle={scheme.schemeName} />
+      <AppHeader title="Terms & Conditions" subtitle={scheme.schemeName} showBack  />
 
       {/* ── Terms & Conditions HTML (fetched from app-content by SchemeId) ── */}
       <View style={{ flex: 1 }}>

@@ -18,10 +18,11 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { IMAGE_BASE_URL } from '@env';
 
 import { useTheme } from '../../theme';
+import { COLORS } from '../../theme/theme';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 import { METAL_LABEL, METAL_COLOR } from '../../types/Scheme/Scheme';
 import { useMemberScheme } from '../../api/hooks/Member/useMemberScheme';
-import SubPageHeader from '../../components/ui/SubPageHeader';
+import AppHeader from '../../components/ui/appcomponents/AppHeader';
 
 type RouteProps = RouteProp<RootStackParamList, 'SchemeDetails'>;
 type NavProps   = NativeStackNavigationProp<RootStackParamList, 'SchemeDetails'>;
@@ -62,8 +63,8 @@ export default function SchemeDetailsScreen() {
   );
 
   return (
-    <SafeAreaView style={[st.flex, { backgroundColor: COLORS.background }]} edges={['top']}>
-      <SubPageHeader title="Scheme Details" subtitle={scheme.schemeName} />
+    <SafeAreaView style={[st.flex, { backgroundColor: COLORS.background }]} edges={['bottom']}>
+      <AppHeader title="Scheme Details" subtitle={scheme.schemeName} showBack  />
 
       <ScrollView contentContainerStyle={st.scrollContent} showsVerticalScrollIndicator={false}>
 
@@ -79,16 +80,16 @@ export default function SchemeDetailsScreen() {
             <LinearGradient colors={[mColor, mColor + 'CC']} style={st.heroImg} />
           )}
           <LinearGradient
-            colors={['transparent', 'rgba(0,0,0,0.72)']}
+            colors={[COLORS.transparent, COLORS.blackOpacity70]}
             style={st.heroOverlay}
           >
             <View style={st.heroBadgeRow}>
               <View style={[st.metalBadge, { backgroundColor: mColor + 'E6' }]}>
-                <Ionicons name="ellipse" size={7} color="#fff" />
+                <Ionicons name="ellipse" size={7} color={COLORS.white} />
                 <Text style={[st.metalBadgeTxt, { fontFamily: FONTS.family.bold }]}>{mLabel}</Text>
               </View>
               <View style={[st.metalBadge, { backgroundColor: canJoin ? COLORS.success + 'E6' : COLORS.error + 'E6' }]}>
-                <Ionicons name={canJoin ? 'checkmark-circle' : 'lock-closed'} size={11} color="#fff" />
+                <Ionicons name={canJoin ? 'checkmark-circle' : 'lock-closed'} size={11} color={COLORS.white} />
                 <Text style={[st.metalBadgeTxt, { fontFamily: FONTS.family.bold }]}>
                   {canJoin ? 'Open for Enrolment' : 'Enrolment Closed'}
                 </Text>
@@ -150,7 +151,7 @@ export default function SchemeDetailsScreen() {
                 <View style={st.amountWrap}>
                   {amounts.map((g) => (
                     <View key={g.GROUPCODE} style={[st.amountChip, { backgroundColor: mColor + '10', borderColor: mColor + '35' }]}>
-                      <Text style={[st.amountChipTxt, { color: mColor, fontFamily: FONTS.family.bold }]}>
+                      <Text style={[st.amountChipTxt, { color: COLORS.primary, fontFamily: FONTS.family.bold }]}>
                         ₹{g.AMOUNT.toLocaleString('en-IN')}
                       </Text>
                     </View>
@@ -223,7 +224,7 @@ export default function SchemeDetailsScreen() {
       {/* ── Sticky footer CTA ────────────────────────────────── */}
       <View style={[st.footer, { backgroundColor: COLORS.background, borderTopColor: COLORS.borderLight }]}>
         <TouchableOpacity
-          style={[st.ctaBtn, { backgroundColor: canJoin ? mColor : COLORS.borderLight, ...(canJoin ? SHADOWS.md : {}) }]}
+          style={[st.ctaBtn, { backgroundColor: canJoin ? COLORS.primary : COLORS.borderLight, ...(canJoin ? SHADOWS.md : {}) }]}
           activeOpacity={canJoin ? 0.9 : 1}
           disabled={!canJoin}
           onPress={() => navigation.navigate('SchemeTerms', { scheme })}
@@ -256,9 +257,9 @@ const st = StyleSheet.create({
   heroOverlay: { ...StyleSheet.absoluteFillObject, justifyContent: 'flex-end', padding: 16 },
   heroBadgeRow: { flexDirection: 'row', gap: 8, marginBottom: 10 },
   metalBadge: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 9, paddingVertical: 4, borderRadius: 9 },
-  metalBadgeTxt: { color: '#fff', fontSize: 10, letterSpacing: 0.3 },
-  heroTitle: { color: '#fff', fontSize: 19, letterSpacing: -0.2, marginBottom: 3 },
-  heroCode: { color: 'rgba(255,255,255,0.8)', fontSize: 11.5 },
+  metalBadgeTxt: { color: COLORS.white, fontSize: 10, letterSpacing: 0.3 },
+  heroTitle: { color: COLORS.white, fontSize: 19, letterSpacing: -0.2, marginBottom: 3 },
+  heroCode: { color: COLORS.whiteOpacity80, fontSize: 11.5 },
 
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 16 },
   statCard: {

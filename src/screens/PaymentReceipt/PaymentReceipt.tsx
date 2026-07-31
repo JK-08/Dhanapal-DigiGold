@@ -19,7 +19,7 @@ import { RootStackParamList } from '../../navigation/RootNavigator';
 import { PaymentHistory } from '../../types/Account/PhoneDetails';
 import { useCompanies } from '../../api/hooks/Company/useCompanies';
 import { downloadPaymentReceipt } from '../../utils/PaymentReceiptPDF';
-import SubPageHeader from '../../components/ui/SubPageHeader';
+import AppHeader from '../../components/ui/appcomponents/AppHeader';
 
 type RouteProps = RouteProp<RootStackParamList, 'PaymentReceipt'>;
 
@@ -66,11 +66,13 @@ export default function PaymentReceipt() {
   };
 
   return (
-    <SafeAreaView style={[st.flex, { backgroundColor: COLORS.background }]} edges={['top', 'bottom']}>
-      <SubPageHeader
+    <SafeAreaView style={[st.flex, { backgroundColor: COLORS.background }]} edges={['bottom']}>
+      <AppHeader
         title="Payment Receipt"
         subtitle={`Receipt No: ${payment.receiptNo}`}
-        rightElement={
+        showBack
+        
+        rightComponent={
           <TouchableOpacity onPress={handleDownload} disabled={downloading} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
             {downloading
               ? <ActivityIndicator size="small" color={COLORS.primary} />

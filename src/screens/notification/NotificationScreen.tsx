@@ -265,7 +265,7 @@ export default function NotificationScreen() {
         subtitle={unreadCount > 0 ? `${unreadCount} unread` : undefined}
         showBack
         onBackPress={() => (navigation as any).navigate('Home')}
-        variant="primary"
+        
         actions={[
           ...(unreadCount > 0 ? [{
             iconName: 'checkmark-done-outline',

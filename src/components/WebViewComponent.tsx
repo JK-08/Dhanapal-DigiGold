@@ -25,7 +25,7 @@ export default function WebViewComponent() {
         title={'Dhanapal Jewellery'}
         showBack
         onBackPress={() => navigation.goBack()}
-        variant="gold"
+        
       />
 
       <WebView

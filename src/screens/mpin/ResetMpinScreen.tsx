@@ -110,7 +110,7 @@ export default function ResetMpinScreen() {
       <AppHeader
         title="Change MPIN"
         showBack
-        variant="white"
+        
       />
 
       <ScrollView

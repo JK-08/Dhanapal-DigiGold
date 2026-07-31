@@ -17,12 +17,12 @@ export default function FaqScreen() {
   const { html, loading, error, refetch } = useAppContent('FAQ');
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }} edges={['top', 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }} edges={[ 'bottom']}>
       <AppHeader
         title="FAQ"
         showBack
         onBackPress={() => navigation.goBack()}
-        variant="primary"
+        
       />
       <View style={{ flex: 1 }}>
         <AppContentHtml html={html} loading={loading} error={error} onRetry={refetch} />

@@ -109,7 +109,7 @@ export default function VerifyOTPScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }} edges={['top', 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }} edges={[ 'bottom']}>
       <AppHeader title="Reset Password" showBack  />
       <ScrollView contentContainerStyle={{ paddingHorizontal: SIZES.padding.xl, paddingTop: SIZES.lg, paddingBottom: 32 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
       <View style={styles.content}>

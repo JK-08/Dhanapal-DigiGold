@@ -127,7 +127,7 @@ export default function ContactScreen() {
             title="Contact"
             showBack
             onBackPress={() => navigation.navigate('Home')}
-            variant="primary"
+            
           />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[s.content, { paddingHorizontal: SIZES.padding.container }]}>

@@ -37,7 +37,7 @@ import { memberService } from '../../api/services/memberService';
 import { NMData } from '../../types/Member/NMData';
 import { useToast } from '../../components/ui/Toast';
 import { useAppSelector } from '../../store/hooks';
-import SubPageHeader from '../../components/ui/SubPageHeader';
+import AppHeader from '../../components/ui/appcomponents/AppHeader';
 
 type RouteProps = RouteProp<RootStackParamList, 'SchemeJoin'>;
 type NavProps   = NativeStackNavigationProp<RootStackParamList, 'SchemeJoin'>;
@@ -1071,10 +1071,10 @@ export default function SchemeJoinScreen() {
   }, [status]);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: COLORS.background }]} edges={['top', 'bottom']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: COLORS.background }]} edges={['bottom']}>
 
       {/* ── Header ── */}
-      <SubPageHeader title="Join Scheme" subtitle={scheme.schemeName} />
+      <AppHeader title="Join Scheme" subtitle={scheme.schemeName} showBack  />
 
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
         <ScrollView ref={scrollRef} style={styles.scroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">

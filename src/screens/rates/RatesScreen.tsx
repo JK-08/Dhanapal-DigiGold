@@ -21,7 +21,7 @@ import { ratesService } from '../../api/services/ratesService';
 import { RatesResponse, MetalRates, RateEntry } from '../../types/Rates/Rates';
 
 import { RootStackParamList } from '../../navigation/RootNavigator';
-import SubPageHeader from '../../components/ui/SubPageHeader';
+import AppHeader from '../../components/ui/appcomponents/AppHeader';
 
 const { width: SW } = Dimensions.get('window');
 const CHART_PADDING = 24;
@@ -219,12 +219,14 @@ export default function RatesScreen() {
   const tabTranslate = tabAnim.interpolate({ inputRange: [0, 1], outputRange: [0, TAB_W] });
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: COLORS.background }]} edges={['top', 'bottom']}>
+    <SafeAreaView style={[s.safe, { backgroundColor: COLORS.background }]} edges={['bottom']}>
 
       {/* Header */}
-      <SubPageHeader
+      <AppHeader
         title="Metal Rates"
-        rightElement={
+        showBack
+        
+        rightComponent={
           <TouchableOpacity onPress={load} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
             <Ionicons name="refresh-outline" size={22} color={COLORS.textSecondary} />
           </TouchableOpacity>

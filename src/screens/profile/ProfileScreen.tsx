@@ -493,7 +493,7 @@ export default function ProfileScreen() {
       paddingHorizontal={0}
       paddingTop={0}
       paddingBottom={40}
-      header={<AppHeader title="My Profile" variant="primary" showBack onBackPress={() => navigation.navigate('Home' as any)} />}
+      header={<AppHeader title="My Profile"  showBack onBackPress={() => navigation.navigate('Home' as any)} />}
     >
       {/* ── HERO BANNER ─────────────────────────────────────────── */}
       <LinearGradient
@@ -571,68 +571,6 @@ export default function ProfileScreen() {
       </LinearGradient>
 
       <View style={{ paddingHorizontal: SIZES.padding.md }}>
-
-        <AppDivider marginVertical={8} />
-
-        {/* ── PERSONAL INFO ────────────────────────────────────── */}
-        <AppCard padding="none">
-          <SectionHeader icon="person-outline" title="Personal Information" />
-          <InfoRow icon="call-outline"        label="Mobile Number"  value={reduxUser?.contactNumber} />
-          <AppDivider marginVertical={0} />
-          <InfoRow icon="mail-outline"        label="Email Address"  value={reduxUser?.email} />
-          <AppDivider marginVertical={0} />
-          <View style={{ flexDirection: 'row' }}>
-            <InfoRowHalf icon="male-female-outline" label="Gender"        value={reduxUser?.gender} />
-            <View style={[styles.verticalDivider, { backgroundColor: COLORS.border }]} />
-            <InfoRowHalf icon="calendar-outline"    label="Date of Birth" value={reduxUser?.dateOfBirth} />
-          </View>
-          <AppDivider marginVertical={0} />
-          <View style={[styles.editRow, { borderTopColor: COLORS.border }]}>
-            <TouchableOpacity
-              style={[styles.editBtn, { borderColor: COLORS.primary }]}
-              onPress={() => setEditPersonal(true)}
-            >
-              <Ionicons name="pencil-outline" size={13} color={COLORS.primary} />
-              <AppText variant="bodySmall" color={COLORS.primary} style={{ marginLeft: 6, fontWeight: '600' }}>
-                Edit Personal Info
-              </AppText>
-            </TouchableOpacity>
-          </View>
-        </AppCard>
-
-        <AppDivider marginVertical={8} />
-
-        {/* ── ADDRESS ─────────────────────────────────────────── */}
-        <AppCard padding="none">
-          <SectionHeader icon="location-outline" title="Address" />
-          <InfoRow icon="home-outline"     label="Address Line 1" value={reduxUser?.address1} />
-          <AppDivider marginVertical={0} />
-          <InfoRow icon="home-outline"     label="Address Line 2" value={reduxUser?.address2} />
-          <AppDivider marginVertical={0} />
-          <View style={{ flexDirection: 'row' }}>
-            <InfoRowHalf icon="business-outline" label="City"    value={reduxUser?.city} />
-            <View style={[styles.verticalDivider, { backgroundColor: COLORS.border }]} />
-            <InfoRowHalf icon="map-outline"      label="State"   value={reduxUser?.state} />
-          </View>
-          <AppDivider marginVertical={0} />
-          <View style={{ flexDirection: 'row' }}>
-            <InfoRowHalf icon="mail-outline"  label="Pincode" value={reduxUser?.pincode} />
-            <View style={[styles.verticalDivider, { backgroundColor: COLORS.border }]} />
-            <InfoRowHalf icon="globe-outline" label="Country" value={reduxUser?.country} />
-          </View>
-          <AppDivider marginVertical={0} />
-          <View style={[styles.editRow, { borderTopColor: COLORS.border }]}>
-            <TouchableOpacity
-              style={[styles.editBtn, { borderColor: COLORS.primary }]}
-              onPress={() => setEditAddress(true)}
-            >
-              <Ionicons name="pencil-outline" size={13} color={COLORS.primary} />
-              <AppText variant="bodySmall" color={COLORS.primary} style={{ marginLeft: 6, fontWeight: '600' }}>
-                Edit Address
-              </AppText>
-            </TouchableOpacity>
-          </View>
-        </AppCard>
 
         <AppDivider marginVertical={8} />
 

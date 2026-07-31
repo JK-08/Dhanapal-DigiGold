@@ -76,7 +76,7 @@ export default function CreateMpinScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }} edges={['top', 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }} edges={[ 'bottom']}>
       <AppLoader visible={loading} message="Creating MPIN..." />
       <AppHeader title="Create MPIN"  />
 

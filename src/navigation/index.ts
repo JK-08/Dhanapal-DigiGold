@@ -8,7 +8,9 @@ export { default as GoogleContactUpdateScreen }    from '../screens/googlelogin/
 export { default as GoogleContactVerifyOTPScreen } from '../screens/googlelogin/GoogleContactVerifyOTPScreen';
 export { default as CreateMpinScreen }             from '../screens/mpin/CreateMpinScreen';
 export { default as VerifyMpinScreen }             from '../screens/mpin/VerifyMpinScreen';
-export { default as ForgotAndVerifyMpinScreen }    from '../screens/mpin/ForgotAndVerifyMpinScreen';
+export { default as ForgotMpinSendOtpScreen }      from '../screens/mpin/ForgotMpinSendOtpScreen';
+export { default as ForgotMpinOtpScreen }          from '../screens/mpin/ForgotMpinOtpScreen';
+export { default as ForgotMpinNewPinScreen }       from '../screens/mpin/ForgotMpinNewPinScreen';
 export { default as ResetMpinScreen }              from '../screens/mpin/ResetMpinScreen';
 export { default as ComponentsUsageScreen }        from '../screens/ComponentsUsage/ComponentsUsageScreen';
 export { default as BottomTabNavigator }           from './BottomTabNavigator';

@@ -23,7 +23,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTheme } from '../../theme';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 import { PPData, PaymentHistory } from '../../types/Account/PhoneDetails';
-import SubPageHeader from '../../components/ui/SubPageHeader';
+import AppHeader from '../../components/ui/appcomponents/AppHeader';
 
 type RouteProps = RouteProp<RootStackParamList, 'SchemePassbook'>;
 type NavProps = NativeStackNavigationProp<RootStackParamList, 'SchemePassbook'>;
@@ -355,8 +355,8 @@ export default function SchemePassbook() {
   const visibleDueDates = dueExpanded ? remainingDueDates : remainingDueDates.slice(0, 1);
 
   return (
-    <SafeAreaView style={[s.flex, { backgroundColor: COLORS.background }]} edges={['top', 'bottom']}>
-      <SubPageHeader title="Scheme Passbook" subtitle={ppData.schemeSummary?.schemeName} />
+    <SafeAreaView style={[s.flex, { backgroundColor: COLORS.background }]} edges={['bottom']}>
+      <AppHeader title="Scheme Passbook" subtitle={ppData.schemeSummary?.schemeName} showBack  />
 
       <ScrollView
         style={s.flex}

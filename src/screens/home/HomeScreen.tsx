@@ -303,7 +303,7 @@ export default function HomeScreen() {
                   <SchemeListCard
                     item={item}
                     width={SLIDE_W}
-                    onJoin={(s) => (navigation as any).navigate('SchemeTerms', { scheme: s })}
+                    onJoin={(s) => (navigation as any).navigate('SchemeDetails', { scheme: s })}
                   />
                 )}
                 contentContainerStyle={{ paddingHorizontal: PAD }}
