@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
@@ -90,7 +89,7 @@ export default function ProfileScreen() {
   const dispatch   = useAppDispatch();
   const reduxUser  = useAppSelector((s) => s.auth.user);
 
-  const { fetchUser, updatePhoto, deletePhoto, deleteUser } = useUserProfile();
+  const { fetchUser, deleteUser } = useUserProfile();
 
   const [refreshing, setRefreshing] = useState(false);
   const [alert, setAlert] = useState<{
@@ -117,26 +116,6 @@ export default function ProfileScreen() {
     setRefreshing(true);
     await loadProfile();
     setRefreshing(false);
-  };
-
-  const handlePickPhoto = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true, aspect: [1, 1], quality: 0.8,
-    });
-    if (result.canceled || !result.assets?.[0]) return;
-    const asset = result.assets[0];
-    const ext   = asset.uri.split('.').pop() ?? 'jpg';
-    try {
-      const photoPath = await updatePhoto(userIdStr, {
-        uri: asset.uri, name: `photo_${userId}.${ext}`, type: `image/${ext}`,
-      });
-      if (photoPath && typeof photoPath === 'string') {
-        const updated = { ...reduxUser, picture: photoPath };
-        dispatch(setUser(updated));
-        await AsyncStorageHelper.saveUserSession(updated);
-      }
-    } catch (e) { console.warn('[ProfileScreen] Upload failed:', e); }
   };
 
   const showAlert = (title: string, message: string, onConfirm: () => void, danger = false) =>
@@ -171,8 +150,6 @@ export default function ProfileScreen() {
             source={reduxUser?.picture ? { uri: reduxUser.picture } : null}
             name={reduxUser?.username ?? ''}
             size="xl"
-            showEdit
-            onEditPress={handlePickPhoto}
           />
           <View style={styles.heroInfo}>
             <AppText variant="h5" color={COLORS.white} style={{ fontWeight: '700' }}>
@@ -193,25 +170,6 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        {!!reduxUser?.picture && (
-          <TouchableOpacity
-            style={styles.removePhotoBtn}
-            onPress={() => showAlert(
-              'Remove Photo', 'Remove your profile photo?',
-              async () => {
-                await deletePhoto(userIdStr);
-                const updated = { ...reduxUser, picture: undefined };
-                dispatch(setUser(updated));
-                await AsyncStorageHelper.saveUserSession(updated);
-              }, true
-            )}
-          >
-            <Ionicons name="trash-outline" size={12} color={COLORS.whiteOpacity70} />
-            <AppText variant="caption" color={COLORS.whiteOpacity70} style={{ marginLeft: 4 }}>
-              Remove photo
-            </AppText>
-          </TouchableOpacity>
-        )}
       </LinearGradient>
       
 
@@ -300,9 +258,7 @@ const styles = StyleSheet.create({
   heroTop:         { flexDirection: 'row', alignItems: 'flex-start', gap: 16 },
   heroInfo:        { flex: 1, justifyContent: 'flex-start', gap: 6, paddingTop: 8 },
   heroMetaRow:     { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  removePhotoBtn:  { flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-end', marginTop: 10 },
-
-  sectionBlock:    { marginTop: 35 },
+sectionBlock:    { marginTop: 35 },
   sectionLabelRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8, paddingLeft: 2 },
   sectionIconWrap: { width: 22, height: 22, borderRadius: 6, alignItems: 'center', justifyContent: 'center' },
 
