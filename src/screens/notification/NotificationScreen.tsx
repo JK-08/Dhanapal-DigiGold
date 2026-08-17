@@ -47,6 +47,7 @@ function NotifCard({
   onDelete: (id: number) => void;
 }) {
   const { COLORS, FONTS, SHADOWS } = useTheme();
+  const [expanded, setExpanded] = React.useState(false);
   const scaleAnim = React.useRef(new Animated.Value(1)).current;
 
   const onIn  = () => Animated.spring(scaleAnim, { toValue: 0.97, useNativeDriver: true, speed: 40 }).start();
@@ -74,97 +75,102 @@ function NotifCard({
           <View style={[styles.unreadDot, { backgroundColor: COLORS.brand }]} />
         )}
 
-        {/* Icon or image */}
-        <View style={[
-          styles.iconWrap,
-          { backgroundColor: item.read ? COLORS.gray100 : COLORS.brand + '18' },
-        ]}>
-          {item.imageUrl ? (
-            <Image
-              source={{ uri: item.imageUrl }}
-              style={{ width: 50, height: 50, borderRadius: 12,alignSelf: 'center' }}
-              resizeMode="cover"
-            />
-          ) : (
-            <Ionicons
-              name={item.read ? 'notifications-outline' : 'notifications'}
-              size={20}
-              color={item.read ? COLORS.contentMuted : COLORS.brand}
-            />
-          )}
-        </View>
+        {/* Row: icon + content + actions */}
+        <View style={{ flex: 1, flexDirection: 'row', gap: 10, alignItems: 'flex-start' }}>
+          {/* Icon or image thumbnail */}
+          <View style={[
+            styles.iconWrap,
+            { backgroundColor: item.read ? COLORS.gray100 : COLORS.brand + '18' },
+          ]}>
+            {item.imageUrl ? (
+              <Image
+                source={{ uri: item.imageUrl }}
+                style={{ width: 50, height: 50, borderRadius: 12 }}
+                resizeMode="cover"
+              />
+            ) : (
+              <Ionicons
+                name={item.read ? 'notifications-outline' : 'notifications'}
+                size={20}
+                color={item.read ? COLORS.contentMuted : COLORS.brand}
+              />
+            )}
+          </View>
 
-        {/* Content */}
-        <View style={{ flex: 1, gap: 3 }}>
-          <Text
-            numberOfLines={1}
-            style={{
-              fontFamily: FONTS.family.semiBold,
-              fontSize:   FONTS.bodyMedium.fontSize,
-              color:      item.read ? COLORS.contentSecondary : COLORS.contentPrimary,
-            }}
-          >
-            {item.title}
-          </Text>
-          <Text
-            numberOfLines={2}
-            style={{
+          {/* Content */}
+          <View style={{ flex: 1, gap: 3 }}>
+            <Text
+              numberOfLines={1}
+              style={{
+                fontFamily: FONTS.family.semiBold,
+                fontSize:   FONTS.bodyMedium.fontSize,
+                color:      item.read ? COLORS.contentSecondary : COLORS.contentPrimary,
+              }}
+            >
+              {item.title}
+            </Text>
+            <Text
+              numberOfLines={expanded ? undefined : 2}
+              style={{
+                fontFamily: FONTS.family.regular,
+                fontSize:   FONTS.caption.fontSize,
+                color:      COLORS.contentMuted,
+                lineHeight: 18,
+              }}
+            >
+              {item.message}
+            </Text>
+            {item.message && item.message.length > 80 && (
+              <TouchableOpacity onPress={() => setExpanded(e => !e)} activeOpacity={0.7}>
+                <Text style={{
+                  fontFamily: FONTS.family.semiBold,
+                  fontSize:   FONTS.caption.fontSize,
+                  color:      COLORS.brand,
+                  marginTop:  2,
+                }}>
+                  {expanded ? 'Show less' : 'Show more'}
+                </Text>
+              </TouchableOpacity>
+            )}
+            <Text style={{
               fontFamily: FONTS.family.regular,
               fontSize:   FONTS.caption.fontSize,
-              color:      COLORS.contentMuted,
-              lineHeight: 18,
-            }}
-          >
-            {item.message}
-          </Text>
-           {/* {item.status && item.status !== 'SENT' && (
-            <View style={[styles.statusBadge, {
-              backgroundColor:
-                item.status === 'PENDING'  ? COLORS.warning  + '20' :
-                item.status === 'FAILED'   ? COLORS.error    + '20' :
-                COLORS.success + '20',
-            }]}>
-              <Text style={{
-                fontFamily: FONTS.family.semiBold,
-                fontSize:   FONTS.caption.fontSize - 1,
-                color:
-                  item.status === 'PENDING'  ? COLORS.warning  :
-                  item.status === 'FAILED'   ? COLORS.error    :
-                  COLORS.success,
-              }}>
-                {item.status}
-              </Text>
-            </View>
-          )} */}
-          <Text style={{
-            fontFamily: FONTS.family.regular,
-            fontSize:   FONTS.caption.fontSize,
-            color:      COLORS.contentDisabled,
-            marginTop:  2,
-          }}>
-            {item.createdAt ? timeAgo(item.createdAt) : ''}
-          </Text>
+              color:      COLORS.contentDisabled,
+              marginTop:  2,
+            }}>
+              {item.createdAt ? timeAgo(item.createdAt) : ''}
+            </Text>
+          </View>
+
+          {/* Actions */}
+          <View style={styles.actions}>
+            {!item.read && (
+              <TouchableOpacity
+                onPress={() => onRead(item.id)}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                style={[styles.actionBtn, { backgroundColor: COLORS.brand + '15' }]}
+              >
+                <Ionicons name="checkmark" size={14} color={COLORS.brand} />
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity
+              onPress={() => onDelete(item.id)}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              style={[styles.actionBtn, { backgroundColor: COLORS.error + '15' }]}
+            >
+              <Ionicons name="trash-outline" size={14} color={COLORS.error} />
+            </TouchableOpacity>
+          </View>
         </View>
 
-        {/* Actions */}
-        <View style={styles.actions}>
-          {!item.read && (
-            <TouchableOpacity
-              onPress={() => onRead(item.id)}
-              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-              style={[styles.actionBtn, { backgroundColor: COLORS.brand + '15' }]}
-            >
-              <Ionicons name="checkmark" size={14} color={COLORS.brand} />
-            </TouchableOpacity>
-          )}
-          <TouchableOpacity
-            onPress={() => onDelete(item.id)}
-            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-            style={[styles.actionBtn, { backgroundColor: COLORS.error + '15' }]}
-          >
-            <Ionicons name="trash-outline" size={14} color={COLORS.error} />
-          </TouchableOpacity>
-        </View>
+        {/* Full-width image below content */}
+        {item.imageUrl && (
+          <Image
+            source={{ uri: item.imageUrl }}
+            style={styles.fullImage}
+            resizeMode="cover"
+          />
+        )}
       </TouchableOpacity>
     </Animated.View>
   );
@@ -402,8 +408,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2.5,
   },
   card: {
-    flexDirection: 'row',
-    alignItems:    'flex-start',
+    flexDirection: 'column',
     padding:       12,
     borderRadius:  14,
     borderWidth:   1,
@@ -453,11 +458,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius:    10,
   },
-  statusBadge: {
-    alignSelf:       'flex-start',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius:    4,
-    marginTop:       3,
+  fullImage: {
+    width: '100%',
+    height: 180,
+    borderRadius: 10,
+    marginTop: 4,
   },
 });

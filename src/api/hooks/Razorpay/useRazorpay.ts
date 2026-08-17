@@ -85,15 +85,25 @@ export function useRazorpay(): UseRazorpayReturn {
       setStatus('creating_order');
       setError(null);
 
+      console.log('------------------------------------------');
+      console.log('[STEP 2] CREATE ORDER — Request');
+      console.log(JSON.stringify(orderReq, null, 2));
+
       const createRes = await razorpayService.createOrder(orderReq);
       if (!createRes.data) throw new Error(createRes.message ?? 'Order creation failed');
 
       const order = createRes.data;
       orderIdRef.current = order.order_id;
       setOrderData(order);
+      console.log('[STEP 2] CREATE ORDER — Response');
+      console.log('  order_id :', order.order_id);
+      console.log('  amount   :', order.amount);
+      console.log('  currency :', order.currency);
+      console.log('------------------------------------------');
 
       // ── Step 2: Open Razorpay WebView checkout ────────────────
       setStatus('checkout_open');
+      console.log('[STEP 3] CHECKOUT OPEN — Launching Razorpay WebView');
 
       const paymentData: RazorpaySuccessPayment = await _checkoutFn({
         ...rzpOptions,
@@ -110,6 +120,11 @@ export function useRazorpay(): UseRazorpayReturn {
 
       // ── Step 3: Build verify payload ──────────────────────────
       setStatus('verifying');
+      console.log('[STEP 3] CHECKOUT — Payment received from Razorpay');
+      console.log('  payment_id :', paymentData.razorpay_payment_id);
+      console.log('  order_id   :', paymentData.razorpay_order_id);
+      console.log('  signature  :', paymentData.razorpay_signature);
+      console.log('------------------------------------------');
 
       // NOTE: /razorpay/verify-payment binds @RequestBody Map<String,String>
       // on the backend, so it ONLY accepts the three flat string fields below.
@@ -122,12 +137,14 @@ export function useRazorpay(): UseRazorpayReturn {
         razorpay_signature:  paymentData.razorpay_signature,
       };
 
-      // ── Log outgoing verify-payment body ──────────────────────
-      console.log('=== /verify-payment REQUEST BODY ===');
+      console.log('[STEP 3] VERIFY PAYMENT — Request');
       console.log(JSON.stringify(verifyPayload, null, 2));
-      console.log('====================================');
 
       const verifyRes = await razorpayService.verifyPayment(verifyPayload);
+
+      console.log('[STEP 3] VERIFY PAYMENT — Response');
+      console.log(JSON.stringify(verifyRes, null, 2));
+      console.log('------------------------------------------');
 
       setVerifyData(verifyRes.data ?? null);
 
@@ -138,6 +155,8 @@ export function useRazorpay(): UseRazorpayReturn {
         await afterVerify(paymentData, verifyRes.data ?? null);
       }
 
+      console.log('[STEP 5] PAYMENT FLOW COMPLETE ✔');
+      console.log('==========================================');
       setStatus('success');
 
     } catch (err: any) {
@@ -147,8 +166,13 @@ export function useRazorpay(): UseRazorpayReturn {
         rzpErr?.description?.toLowerCase().includes('cancel');
 
       if (isCancelled) {
+        console.log('[STEP X] PAYMENT CANCELLED by user');
+        console.log('==========================================');
         setStatus('cancelled');
       } else {
+        console.log('[STEP X] PAYMENT FAILED');
+        console.log('  Error:', rzpErr?.description ?? (err as any)?.message);
+        console.log('==========================================');
         setStatus('failed');
         setError(
           rzpErr?.description ??

@@ -366,8 +366,8 @@ export default function PayInstallmentScreen() {
           <InfoRow label="Next Instalment No." value={`# ${nextInstNum}`} valueColor={COLORS.brand} />
           <InfoRow label="Maturity Date"       value={formatDate(ppData.maturityDate)} />
           <InfoRow label="Next Due Date"       value={formatDate(ppData.nextDueDate)} valueColor={COLORS.warning} />
-          <InfoRow label="Total Invested"      value={`₹${ppData.totalAmount.toLocaleString('en-IN')}`} />
-          <InfoRow label="Total with Bonus"    value={`₹${ppData.totalAmountWithBonus.toLocaleString('en-IN')}`} valueColor={COLORS.success} />
+          <InfoRow label="Total Invested"      value={`₹${(ppData.totalAmount ?? 0).toLocaleString('en-IN')}`} />
+          <InfoRow label="Total with Bonus"    value={`₹${(ppData.totalAmountWithBonus ?? 0).toLocaleString('en-IN')}`} valueColor={COLORS.success} />
         </View>
 
         {/* ── Amount Section ── */}

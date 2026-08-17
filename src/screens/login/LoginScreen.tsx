@@ -78,11 +78,13 @@ export default function LoginScreen() {
       contactOrEmailOrUsername: mobile.trim(),
       password,
     }));
+    console.log('Login Response:', res);
     if (loginUser.fulfilled.match(res) && res.payload?.token) {
       const user = res.payload;
       await AsyncStorageHelper.saveUserSession(user);
       toast.success('Welcome back!', { message: `Hello, ${user.username ?? 'User'}` });
-      const mpinSet = await AsyncStorageHelper.isMpinSet();
+      const mpinSet = user.mpinSet === 'Y';
+      if (mpinSet) await AsyncStorageHelper.setMpinSet(true);
       navigation.replace(mpinSet ? 'MpinLogin' : 'CreateMpin');
     } else {
       const msg = (res.payload as string) ?? 'Login failed. Please try again.';
@@ -107,7 +109,8 @@ export default function LoginScreen() {
           navigation.navigate('GoogleContactUpdate', { userId: user.id, picture: user.picture });
         } else {
           toast.success('Welcome back!', { message: `Signed in as ${user.username ?? user.email}` });
-          const mpinSet = await AsyncStorageHelper.isMpinSet();
+          const mpinSet = user.mpinSet === 'Y';
+          if (mpinSet) await AsyncStorageHelper.setMpinSet(true);
           navigation.replace(mpinSet ? 'MpinLogin' : 'CreateMpin');
         }
       } else {

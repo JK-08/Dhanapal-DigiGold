@@ -7,6 +7,7 @@ import {
   Dimensions,
   StatusBar,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
@@ -32,29 +33,10 @@ import { useOnboardingBanners } from '../../api/hooks/Onboard/useOnboardingBanne
 
 const { width, height } = Dimensions.get('window');
 
-const LOCAL_SLIDES = [
-  {
-    id: 'slide1',
-    image: require('../../assets/onboard/onboard1.jpg'),
-    title: 'Your Digital\nGold Vault',
-    tag: 'SMART INVESTING',
-    description: 'Buy, sell and grow 24K digital gold from the comfort of your home.',
-  },
-  {
-    id: 'slide2',
-    image: require('../../assets/onboard/onboard2.jpg'),
-    title: 'Secured &\nInsured Gold',
-    tag: 'TRUST & SAFETY',
-    description: 'Every gram you own is 100% insured and stored in certified vaults.',
-  },
-  {
-    id: 'slide3',
-    image: require('../../assets/onboard/onboard3.jpg'),
-    title: 'Start With\nJust ₹100',
-    tag: 'FOR EVERYONE',
-    description: 'No minimum investment. Build your gold portfolio at your own pace.',
-  },
-];
+type Slide = {
+  id: string;
+  image: { uri: string };
+};
 
 /* ─── Full-screen image slide ─── */
 function Slide({
@@ -62,7 +44,7 @@ function Slide({
   index,
   scrollX,
 }: {
-  item: typeof LOCAL_SLIDES[0];
+  item: Slide;
   index: number;
   scrollX: SharedValue<number>;
 }) {
@@ -88,18 +70,6 @@ function Slide({
         source={item.image}
         style={[sl.image, imgStyle]}
         resizeMode="cover"
-      />
-      {/* Deep cinematic gradient — dark top + very dark bottom */}
-      <LinearGradient
-        colors={[
-          COLORS.blackOpacity50,
-          COLORS.transparent,
-          COLORS.blackOpacity10,
-          COLORS.blackOpacity90,
-        ]}
-        locations={[0, 0.3, 0.55, 1]}
-        style={StyleSheet.absoluteFill}
-        pointerEvents="none"
       />
     </View>
   );
@@ -156,44 +126,6 @@ function GoldButton({ label, onPress }: { label: string; onPress: () => void }) 
   );
 }
 
-/* ─── Scroll-driven text block for one slide ─── */
-function SlideText({
-  item,
-  index,
-  scrollX,
-}: {
-  item: typeof LOCAL_SLIDES[0];
-  index: number;
-  scrollX: SharedValue<number>;
-}) {
-  const style = useAnimatedStyle(() => {
-    const range = [(index - 1) * width, index * width, (index + 1) * width];
-    return {
-      opacity: interpolate(scrollX.value, range, [0, 1, 0], Extrapolation.CLAMP),
-      transform: [
-        {
-          translateY: interpolate(
-            scrollX.value,
-            range,
-            [16, 0, -16],
-            Extrapolation.CLAMP,
-          ),
-        },
-      ],
-    };
-  });
-  return (
-    <Animated.View style={[StyleSheet.absoluteFill, style, s.textBlock]}>
-      <View style={s.tagRow}>
-        <View style={s.tagLine} />
-        <Text style={s.tagTxt}>{item.tag}</Text>
-      </View>
-      <Text style={s.title}>{item.title}</Text>
-      <Text style={s.desc}>{item.description}</Text>
-    </Animated.View>
-  );
-}
-
 /* ─── Dot indicator ─── */
 function Dot({ active }: { active: boolean }) {
   const w = useSharedValue(active ? 24 : 7);
@@ -221,10 +153,12 @@ const OnboardingScreen = ({ navigation }: any) => {
   const [idx, setIdx] = useState(0);
   const scrollX = useSharedValue(0);
   const insets = useSafeAreaInsets();
-  const { banners, getImageUrl } = useOnboardingBanners();
+  const { banners, loading, getImageUrl } = useOnboardingBanners();
 
-  // Build slides: prefer API banners, fall back to local
-  const slides = LOCAL_SLIDES;
+  const slides: Slide[] = banners.map((b) => ({
+    id: String(b.BannerId),
+    image: { uri: getImageUrl(b.image_path) },
+  }));
 
   const isLast = idx === slides.length - 1;
 
@@ -251,6 +185,15 @@ const OnboardingScreen = ({ navigation }: any) => {
   const onMomentumEnd = useCallback((e: any) => {
     setIdx(Math.round(e.nativeEvent.contentOffset.x / width));
   }, []);
+
+  if (loading) {
+    return (
+      <View style={[s.root, { justifyContent: 'center', alignItems: 'center' }]}>
+        <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
+        <ActivityIndicator size="large" color={COLORS.secondary} />
+      </View>
+    );
+  }
 
   return (
     <View style={s.root}>
@@ -281,7 +224,7 @@ const OnboardingScreen = ({ navigation }: any) => {
           <Image
             source={require('../../assets/company/logo.png')}
             style={s.logo}
-            resizeMode="contain"
+            resizeMode="cover"
           />
         </View>
         {!isLast && (
@@ -295,25 +238,22 @@ const OnboardingScreen = ({ navigation }: any) => {
 
       {/* ── Bottom content panel ── */}
       <View style={[s.bottomPanel, { paddingBottom: insets.bottom + 16 }]}>
-        {/* Scroll-driven text — all slides stacked, driven by scrollX */}
-        <View style={s.textHost}>
-          {slides.map((item, i) => (
-            <SlideText key={item.id} item={item} index={i} scrollX={scrollX} />
-          ))}
-        </View>
-
-        {/* Dots + Buttons — static, no remount */}
         <View style={s.ctaRow}>
-          <View style={s.dots}>
+          {/* <View style={s.dots}>
             {slides.map((_, i) => <Dot key={i} active={i === idx} />)}
-          </View>
+          </View> */}
+          
+
           <View style={s.btnGroup}>
-            <TouchableOpacity
-              style={s.outlineBtn}
-              onPress={handleLogin}
-              activeOpacity={0.8}
-            >
-              <Text style={s.outlineTxt}>Sign In</Text>
+            <TouchableOpacity style={s.signInWrap} onPress={handleLogin} activeOpacity={0.8}>
+              <LinearGradient
+                colors={[COLORS.secondaryLight, COLORS.secondary, COLORS.secondaryDark]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={s.outlineBtn}
+              >
+                <Text style={s.outlineTxt}>Sign In</Text>
+              </LinearGradient>
             </TouchableOpacity>
             <GoldButton
               label={isLast ? 'Get Started' : 'Next →'}
@@ -328,12 +268,11 @@ const OnboardingScreen = ({ navigation }: any) => {
 
 export default OnboardingScreen;
 
-const BOTTOM_H = height * 0.38;
+const BOTTOM_H = height * 0.2;
 
 const s = StyleSheet.create({
   root: { flex: 1, backgroundColor: COLORS.black },
 
-  /* top bar — top offset applied dynamically via insets */
   topBar: {
     position: 'absolute',
     left: 0,
@@ -344,50 +283,22 @@ const s = StyleSheet.create({
     paddingHorizontal: 22,
   },
   logoWrap: {
-    borderRadius: 12,
+    borderRadius: 17,
     overflow: 'hidden',
-    backgroundColor: COLORS.blackOpacity30,
+    // backgroundColor: COLORS.blackOpacity30,
     padding: 6,
   },
-  logo: { width: 110, height: 34 },
-  skipBtn: { borderRadius: 20, overflow: 'hidden',backgroundColor:COLORS.surfacePage },
+  logo: { width: 34, height: 34 },
+  skipBtn: { borderRadius: 20, overflow: 'hidden', backgroundColor: COLORS.surfacePage },
   skipBlur: { paddingHorizontal: 16, paddingVertical: 8 },
   skipTxt: {
     fontFamily: FONTS.family.medium,
     fontSize: SIZES.font.md,
     color: COLORS.black,
     letterSpacing: 0.4,
-    fontWeight:"bold"
+    fontWeight: 'bold',
   },
 
-  /* slide number badge */
-  slideBadge: {
-    position: 'absolute',
-    top: height * 0.44,
-    right: 22,
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: 3,
-  },
-  slideBadgeNum: {
-    fontFamily: FONTS.family.extraBold,
-    fontSize: 36,
-    color: COLORS.secondary,
-    lineHeight: 38,
-    letterSpacing: -1,
-  },
-  slideBadgeSep: {
-    fontFamily: FONTS.family.light,
-    fontSize: 18,
-    color: COLORS.whiteOpacity30,
-  },
-  slideBadgeTotal: {
-    fontFamily: FONTS.family.regular,
-    fontSize: 16,
-    color: COLORS.whiteOpacity30,
-  },
-
-  /* bottom panel — paddingBottom applied dynamically via insets */
   bottomPanel: {
     position: 'absolute',
     bottom: 0,
@@ -396,47 +307,6 @@ const s = StyleSheet.create({
     height: BOTTOM_H,
     paddingHorizontal: 26,
     justifyContent: 'flex-end',
-  },
-
-  textHost: {
-    height: 160,
-    marginBottom: 20,
-  },
-  textBlock: {
-    justifyContent: 'flex-end',
-  },
-  tagRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginBottom: 10,
-  },
-  tagLine: {
-    width: 28,
-    height: 2,
-    borderRadius: 1,
-    backgroundColor: COLORS.secondary,
-  },
-  tagTxt: {
-    fontFamily: FONTS.family.semiBold,
-    fontSize: 11,
-    color: COLORS.secondary,
-    letterSpacing: 2.5,
-  },
-
-  title: {
-    fontFamily: FONTS.family.extraBold,
-    fontSize: 36,
-    color: COLORS.white,
-    lineHeight: 42,
-    letterSpacing: -0.8,
-    marginBottom: 10,
-  },
-  desc: {
-    fontFamily: FONTS.family.regular,
-    fontSize: SIZES.font.md,
-    color: COLORS.whiteOpacity50,
-    lineHeight: SIZES.font.md * 1.65,
   },
 
   ctaRow: { gap: 16 },
@@ -448,20 +318,20 @@ const s = StyleSheet.create({
     gap: 12,
     alignItems: 'center',
   },
+  signInWrap: { flex: 0.75 },
   outlineBtn: {
-    flex: 0.75,
     height: 54,
     borderRadius: 14,
-    borderWidth: 1.5,
-    borderColor: COLORS.whiteOpacity20,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
   outlineTxt: {
     fontFamily: FONTS.family.semiBold,
     fontSize: SIZES.font.md,
-    color: COLORS.whiteOpacity80,
+    color: COLORS.backgroundDark,
     letterSpacing: 0.3,
+    fontWeight: 'bold',
   },
 
   goldBtn: {

@@ -134,7 +134,7 @@ export default function GlassSchemeCard({ item, width }: { item: PPData; index?:
             <View style={card.statRow}>
               <Text style={[card.statLbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Invested</Text>
               <Text style={[card.statVal, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]} numberOfLines={1}>
-                ₹{item.totalAmount.toLocaleString('en-IN')}
+                ₹{(item.totalAmount ?? 0).toLocaleString('en-IN')}
               </Text>
             </View>
             <View style={[card.statDivider, { backgroundColor: COLORS.borderSubtle }]} />

@@ -57,7 +57,7 @@ const HomeBannerScreen = () => {
         <View style={styles.container}>
             <FlatList
                 ref={flatListRef}
-                data={sliders}
+                data={[...sliders].reverse()}
                 keyExtractor={(item) => String(item.SliderId)}
                 horizontal
                 pagingEnabled
@@ -86,7 +86,7 @@ const HomeBannerScreen = () => {
             />
             {/* Dot indicators */}
             <View style={styles.dots}>
-                {sliders.map((_, i) => (
+                {[...sliders].reverse().map((_, i) => (
                     <View
                         key={i}
                         style={[styles.dot, i === activeIndex && styles.dotActive]}

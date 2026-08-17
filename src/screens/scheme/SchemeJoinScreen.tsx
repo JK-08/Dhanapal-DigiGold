@@ -503,11 +503,22 @@ function FailureModal({ visible, message, onRetry, onCancel }: {
   );
 }
 
-// ── Success Modal ─────────────────────────────────────────────────
-function SuccessModal({ visible, schemeName, amount, onClose }: {
+// ── Join Success Modal ───────────────────────────────────────────
+interface JoinResult {
+  status:      string;
+  personalId:  string;
+  groupCode:   string;
+  regNo:       string;
+  joinDate:    string;
+  amount:      number;
+  totalIns:    string;
+  sno:         string;
+}
+
+function JoinSuccessModal({ visible, result, schemeName, onClose }: {
   visible:    boolean;
+  result:     JoinResult | null;
   schemeName: string;
-  amount:     number;
   onClose:    () => void;
 }) {
   const { COLORS, FONTS } = useTheme();
@@ -526,38 +537,83 @@ function SuccessModal({ visible, schemeName, amount, onClose }: {
     }
   }, [visible]);
 
+  if (!result) return null;
+
+  const rows: { label: string; value: string; highlight?: boolean }[] = [
+    { label: 'Status',      value: result.status,     highlight: true },
+    { label: 'Member ID',   value: result.personalId, highlight: true },
+    { label: 'Group Code',  value: result.groupCode },
+    { label: 'Reg No.',     value: result.regNo },
+    { label: 'Receipt No.', value: result.sno },
+    { label: 'Join Date',   value: result.joinDate.split(' ')[0] },
+    { label: 'Amount',      value: `₹${result.amount.toLocaleString('en-IN')} / month` },
+    { label: 'Instalments', value: result.totalIns },
+  ];
+
   return (
     <Modal visible={visible} transparent animationType="none">
-      <View style={styles.successOverlay}>
-        <Animated.View style={[styles.successCard, { backgroundColor: COLORS.surfacePage, transform: [{ scale }], opacity }]}>
-          <View style={[styles.successIconWrap, { backgroundColor: COLORS.success + '18' }]}>
+      <View style={jm.overlay}>
+        <Animated.View style={[jm.card, { backgroundColor: COLORS.surfacePage, transform: [{ scale }], opacity }]}>
+
+          {/* Icon */}
+          <View style={[jm.iconWrap, { backgroundColor: COLORS.success + '18' }]}>
             <Ionicons name="checkmark-circle" size={64} color={COLORS.success} />
           </View>
-          <Text style={[styles.successTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
-            Successfully Joined!
+
+          <Text style={[jm.title, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
+            Successfully Joined! 🎉
           </Text>
-          <Text style={[styles.successDesc, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
-            You have successfully enrolled in{'\n'}
-            <Text style={{ color: COLORS.brand, fontFamily: FONTS.family.semiBold }}>{schemeName}</Text>
+          <Text style={[jm.subtitle, { color: COLORS.contentSecondary, fontFamily: FONTS.family.regular }]}>
+            {schemeName}
           </Text>
-          {amount > 0 && (
-            <View style={[styles.amountChip, { backgroundColor: COLORS.brand + '12', borderColor: COLORS.brand + '30' }]}>
-              <Text style={[styles.amountChipText, { color: COLORS.brand, fontFamily: FONTS.family.bold }]}>
-                ₹{amount.toLocaleString('en-IN')} / month
-              </Text>
-            </View>
-          )}
-          <Text style={[styles.successNote, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
-            Your scheme details have been sent to your registered mobile number.
-          </Text>
-          <TouchableOpacity style={[styles.successBtn, { backgroundColor: COLORS.brand }]} onPress={onClose}>
-            <Text style={[styles.successBtnText, { color: COLORS.white, fontFamily: FONTS.family.bold }]}>Go to Home</Text>
+
+          {/* Details table */}
+          <View style={[jm.table, { borderColor: COLORS.borderSubtle }]}>
+            {rows.map((row, i) => (
+              <View
+                key={row.label}
+                style={[
+                  jm.tableRow,
+                  { borderBottomColor: COLORS.borderSubtle },
+                  i === rows.length - 1 && { borderBottomWidth: 0 },
+                ]}
+              >
+                <Text style={[jm.tableLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>
+                  {row.label}
+                </Text>
+                <Text style={[jm.tableValue, {
+                  color: row.highlight ? COLORS.success : COLORS.contentPrimary,
+                  fontFamily: row.highlight ? FONTS.family.bold : FONTS.family.semiBold,
+                }]}>
+                  {row.value}
+                </Text>
+              </View>
+            ))}
+          </View>
+
+          <TouchableOpacity style={[jm.btn, { backgroundColor: COLORS.brand }]} onPress={onClose}>
+            <Ionicons name="home-outline" size={18} color={COLORS.white} />
+            <Text style={[jm.btnText, { color: COLORS.white, fontFamily: FONTS.family.bold }]}>Go to Home</Text>
           </TouchableOpacity>
         </Animated.View>
       </View>
     </Modal>
   );
 }
+
+const jm = StyleSheet.create({
+  overlay:    { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', alignItems: 'center', justifyContent: 'center', padding: 20 },
+  card:       { width: '100%', borderRadius: 24, padding: 24, alignItems: 'center' },
+  iconWrap:   { width: 96, height: 96, borderRadius: 48, alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
+  title:      { fontSize: 22, marginBottom: 4 },
+  subtitle:   { fontSize: 13, marginBottom: 20, opacity: 0.7 },
+  table:      { width: '100%', borderWidth: 1, borderRadius: 14, overflow: 'hidden', marginBottom: 20 },
+  tableRow:   { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 11, borderBottomWidth: 1 },
+  tableLabel: { fontSize: 13 },
+  tableValue: { fontSize: 13 },
+  btn:        { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%', paddingVertical: 14, borderRadius: 14 },
+  btnText:    { fontSize: 16 },
+});
 
 // ── Main Screen ──────────────────────────────────────────────────
 const DRAFT_KEY = 'SCHEME_JOIN_DRAFT';
@@ -809,9 +865,10 @@ export default function SchemeJoinScreen() {
     (!isFixed || selectedGroup !== null);
 
   const isProcessing = ['creating_order', 'checkout_open', 'verifying'].includes(status);
-  const showSuccess  = status === 'success';
   const showFailed   = status === 'failed';
 
+  const [joinResult,     setJoinResult]     = useState<JoinResult | null>(null);
+  const [showJoinResult, setShowJoinResult] = useState(false);
 
   // ── Build userDetails payload for /verify_payment ─────────────
   const buildUserDetails = (): UserDetails => {
@@ -1032,6 +1089,15 @@ export default function SchemeJoinScreen() {
     const regno     = isFixed ? String(selectedGroup?.CURRENTREGNO ?? '') : '';
     const receipt   = `join_${scheme.SchemeId}_${mobile}_${Date.now()}`;
 
+    console.log('==========================================');
+    console.log('[STEP 1] SCHEME JOIN — Form Submitted');
+    console.log('  Scheme     :', scheme.schemeName, '| ID:', scheme.SchemeId);
+    console.log('  Amount     : ₹', effectiveAmount);
+    console.log('  GroupCode  :', groupCode, '| RegNo:', regno);
+    console.log('  Receipt    :', receipt);
+    console.log('  Customer   :', name.trim(), '|', mobile, '|', email);
+    console.log('==========================================');
+
     pay(
       {
         AMOUNT:            effectiveAmount, // paise
@@ -1053,28 +1119,29 @@ export default function SchemeJoinScreen() {
       buildUserDetails(),
       // After the payment is verified, create the member via /api/v1/member/create.
       async (payment) => {
+        console.log('------------------------------------------');
+        console.log('[STEP 4] POST-VERIFY — Creating Member');
+        console.log('  razorpay_payment_id :', payment.razorpay_payment_id);
+        console.log('  razorpay_order_id   :', payment.razorpay_order_id);
+        console.log('  razorpay_signature  :', payment.razorpay_signature);
         const payload = buildMemberPayload(payment);
-        console.log('=== /api/v1/member/create REQUEST BODY ===');
+        console.log('[STEP 4] /api/v1/member/create REQUEST BODY:');
         console.log(JSON.stringify(payload, null, 2));
-        console.log('==========================================');
-        await memberService.createMember(payload);
+        console.log('------------------------------------------');
+        const response = await memberService.createMember(payload);
+        console.log('[STEP 4] /api/v1/member/create RESPONSE:');
+        console.log(JSON.stringify(response, null, 2));
+        console.log('[STEP 4] Member created successfully ✓');
+        setJoinResult(response as unknown as JoinResult);
+        setShowJoinResult(true);
       },
     );
   };
 
-  // On payment success: clear draft, redirect straight to Home, and show an
-  // auto-dismissing popup there (no button needed).
+  // On payment success: clear draft — JoinSuccessModal handles navigation.
   useEffect(() => {
     if (status !== 'success') return;
     AsyncStorage.removeItem(DRAFT_KEY);
-    toast.success('Successfully Joined! 🎉', {
-      message: `You enrolled in ${scheme.schemeName}.`,
-      position: 'top',
-      duration: 4000,
-      closable: false,
-    });
-    reset();
-    navigation.navigate('Main');
   }, [status]);
 
   return (
@@ -1594,6 +1661,16 @@ export default function SchemeJoinScreen() {
 
       <RazorpayWebCheckout ref={rzpWebRef} />
       <FailureModal visible={showFailed} message={error ?? ''} onRetry={() => { reset(); void handleSubmit(); }} onCancel={() => reset()} />
+      <JoinSuccessModal
+        visible={showJoinResult}
+        result={joinResult}
+        schemeName={scheme.schemeName}
+        onClose={() => {
+          setShowJoinResult(false);
+          reset();
+          navigation.navigate('Main');
+        }}
+      />
     </SafeAreaView>
   );
 }
