@@ -23,10 +23,8 @@ import RazorpayWebCheckout, { RazorpayWebCheckoutRef } from '../../components/ui
 import { useTheme } from '../../theme';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 import { useRazorpay } from '../../api/hooks/Razorpay/useRazorpay';
-import { UserDetails, RazorpaySuccessPayment } from '../../types/Razorpay/Razorpay';
+import { SchemeCollectInsert } from '../../types/Razorpay/Razorpay';
 import { PPData } from '../../types/Account/PhoneDetails';
-import { accountService } from '../../api/services/accountService';
-import { AccountInsertData } from '../../types/Account/AccountInsert';
 import { useToast } from '../../components/ui/Toast';
 import AppHeader from '../../components/ui/appcomponents/AppHeader';
 
@@ -190,75 +188,33 @@ export default function PayInstallmentScreen() {
   const showFailed   = status === 'failed';
 
   // ── Pay ───────────────────────────────────────────────────────
-  // ── Build userDetails payload for /verify_payment ─────────────
-  const buildUserDetails = (): UserDetails => {
-    const today   = new Date();
-    const todayStr = today.toISOString().split('T')[0];
-    const todayDT  = `${todayStr} 00:00:00`;
-    const pi       = ppData.personalInfo;
-
-    return {
-      newMember: {
-        pName:    ppData.pName     || undefined,
-        doorNo:   pi?.doorNo      || undefined,
-        address1: pi?.address1    || undefined,
-        address2: pi?.address2    || undefined,
-        area:     pi?.area        || undefined,
-        city:     pi?.city        || undefined,
-        state:    pi?.state       || undefined,
-        country:  pi?.country     || undefined,
-        pinCode:  pi?.pinCode     || undefined,
-        mobile:   pi?.mobile      || undefined,
-        mobile2:  pi?.mobile2     || undefined,
-      },
-      createSchemeSummary: {
-        schemeId:   scheme?.schemeId      || undefined,
-        groupCode:  ppData.groupCode      || undefined,
-        regNo:      String(ppData.regNo)  || undefined,
-        joinDate:   ppData.joinDate       || todayStr,
-        updateTime: todayDT,
-        totalIns:   scheme?.instalment    || undefined,
-        costId:     pi?.costId            || undefined,
-      },
-      schemeCollectInsert: {
-        groupCode:  ppData.groupCode      || undefined,
-        regNo:      String(ppData.regNo),
-        rDate:      todayDT,
-        amount:     String(effectiveAmount),
-        modePay:    'ONLINE',
-        installment:String(nextInstNum),
-        SchemeId:   scheme?.schemeId ? Number(scheme.schemeId) : undefined,
-        chqBankCode:'RAZORPAY',
-        // chqCardNo filled by useRazorpay hook with razorpay_payment_id
-      },
-    };
-  };
-
-  // ── Build /api/v1/account/insert payload for a further installment ──
-  const buildInstallmentPayload = (payment: RazorpaySuccessPayment): AccountInsertData => {
+  // ── Build SCHEMEDETAILS payload sent UP FRONT with /create-order ──
+  // The backend parks this (keyed by the Razorpay order_id) and inserts the
+  // installment itself once the payment is confirmed — via /verify-payment
+  // or the Razorpay webhook, whichever arrives first (see
+  // RazorpayService.processPendingPayment). The real razorpay_payment_id
+  // doesn't exist yet at this point (checkout hasn't opened), so chqCardNo /
+  // chqRtnReason use the RECEIPT — it's unique, known now, and traceable
+  // back to AppPayment_record.receipt.
+  const buildSchemeDetails = (receipt: string): SchemeCollectInsert => {
     const now  = new Date();
     const pad  = (n: number) => String(n).padStart(2, '0');
-    const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
-    const hasWeightLedger = scheme?.weightLedger === 'Y';
+    const todayDT = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} 00:00:00`;
 
     return {
       groupCode:    ppData.groupCode || '',
-      regNo:        ppData.regNo || 0,
-      rDate:        today,
-      amount:       effectiveAmount,
-      modePay:      4,
-      accCode:      '00001',
-      updateTime:   today,
-      installment:  nextInstNum,
-      weight:       hasWeightLedger ? parseFloat(scheme?.totalWeight || '0') : 0,
-      sWeight:      hasWeightLedger ? parseFloat(scheme?.lastWeight || '0')  : 0,
-      userID:       999,
-      schemeId:     scheme?.schemeId ? parseInt(scheme.schemeId) : 0,
-      chqBankCode:  4,
-      chqCardNo:    payment.razorpay_payment_id,   // paymentId
+      regNo:        String(ppData.regNo),
+      rDate:        todayDT,
+      amount:       String(effectiveAmount),
+      modePay:      'ONLINE',
+      updateTime:   todayDT,
+      installment:  String(nextInstNum),
+      SchemeId:     scheme?.schemeId ? Number(scheme.schemeId) : undefined,
+      chqBankCode:  'RAZORPAY',
+      chqCardNo:    receipt,     // payment_id not known yet — use the receipt
       chqBranch:    'Online',
       chkBank:      'Razorpay',
-      chqRtnReason: payment.razorpay_order_id,      // orderId
+      chqRtnReason: receipt,
     };
   };
 
@@ -277,7 +233,9 @@ export default function PayInstallmentScreen() {
         GROUPCODE:          ppData.groupCode,
         INSTALLMENTNUMBER:  nextInstNum,
         REGNO:              String(ppData.regNo),
+        SCHEMEDETAILS:      buildSchemeDetails(RECEIPT),
       },
+      /* newJoin */ false,
       {
         _checkoutFn: (opts: any) => rzpWebRef.current!.open(opts),
         name:        'Dhanapal DigiGold',
@@ -290,22 +248,8 @@ export default function PayInstallmentScreen() {
         },
         theme: { color: COLORS.brand },
       },
-      buildUserDetails(),
-      // After the payment is verified, record the installment via /api/v1/account/insert.
-      async (payment) => {
-        const payload = buildInstallmentPayload(payment);
-        console.log('=== /api/v1/account/insert REQUEST BODY ===');
-        console.log(JSON.stringify(payload, null, 2));
-        console.log('===========================================');
-        const result = await accountService.insertEntry(payload);
-        // Backend returns the plain string "Success" or an error/validation message.
-        const ok = typeof result === 'string' && result.toLowerCase().includes('success');
-        if (!ok) {
-          throw new Error(typeof result === 'string' && result.trim()
-            ? result
-            : 'Installment could not be recorded. Please contact support.');
-        }
-      },
+      // Installment was already recorded server-side by the time verify-payment
+      // returns (verifyData.processResult holds the result) — nothing left to do.
     );
   };
 

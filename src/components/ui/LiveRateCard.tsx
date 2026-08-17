@@ -43,10 +43,7 @@ export default function LiveRateCard({ onRatesPress, style }: Props) {
 
   const gold   = rates?.gold;
   const silver = rates?.silver;
-  const goldUp   = (gold?.changePct ?? 0) >= 0;
-  const silverUp = (silver?.changePct ?? 0) >= 0;
   const fmtRate = (n?: number) => (n != null ? `₹${Math.round(n).toLocaleString('en-IN')}` : '—');
-  const fmtPct  = (n?: number) => (n != null ? `${n >= 0 ? '+' : ''}${n.toFixed(2)}%` : '—');
 
   // Entrance animation
   const cardSlide = useRef(new Animated.Value(24)).current;
@@ -96,29 +93,26 @@ export default function LiveRateCard({ onRatesPress, style }: Props) {
             onPress={() => onRatesPress?.('Gold')}
           >
             <View style={[styles.iconWrap, { backgroundColor: GOLD_CLR + '18' }]}>
-              <Ionicons name="diamond-outline" size={moderateScale(18)} color={GOLD_CLR} />
+              <Ionicons name="diamond-outline" size={moderateScale(22)} color={GOLD_CLR} />
             </View>
             <View style={styles.info}>
-              <Text style={{ fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xs, color: COLORS.contentPrimary }}>
+              <Text style={{ fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.sm, color: COLORS.contentMuted }}>
                 Gold 91.6%
               </Text>
               {ratesLoading ? (
                 <ActivityIndicator size="small" color={GOLD_CLR} style={{ marginTop: 3, alignSelf: 'flex-start' }} />
               ) : (
-                <Text style={{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.lg, color: COLORS.contentPrimary }}>
+                <Text
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.7}
+                  style={{ fontFamily: FONTS.family.bold, fontSize: 18, color: COLORS.contentPrimary }}
+                >
                   {fmtRate(gold?.currentRate)}
-                  <Text style={{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.contentMuted }}>/g</Text>
+                  <Text style={{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.contentMuted }}> /g</Text>
                 </Text>
               )}
             </View>
-            {!ratesLoading && (
-              <View style={styles.changeCol}>
-                <Ionicons name={goldUp ? 'caret-up' : 'caret-down'} size={13} color={goldUp ? COLORS.success : COLORS.error} />
-                <Text style={{ fontFamily: FONTS.family.medium, fontSize: SIZES.font.xs, color: goldUp ? COLORS.success : COLORS.error }}>
-                  {fmtPct(gold?.changePct)}
-                </Text>
-              </View>
-            )}
           </TouchableOpacity>
 
           <View style={[styles.divider, { backgroundColor: COLORS.borderSubtle }]} />
@@ -130,29 +124,26 @@ export default function LiveRateCard({ onRatesPress, style }: Props) {
             onPress={() => onRatesPress?.('Silver')}
           >
             <View style={[styles.iconWrap, { backgroundColor: SILVER_CLR + '18' }]}>
-              <Ionicons name="ellipse-outline" size={moderateScale(18)} color={SILVER_CLR} />
+              <Ionicons name="ellipse-outline" size={moderateScale(22)} color={SILVER_CLR} />
             </View>
             <View style={styles.info}>
-              <Text style={{ fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.xs, color: COLORS.contentPrimary }}>
+              <Text style={{ fontFamily: FONTS.family.semiBold, fontSize: SIZES.font.sm, color: COLORS.contentMuted }}>
                 Silver 91.6%
               </Text>
               {ratesLoading ? (
                 <ActivityIndicator size="small" color={SILVER_CLR} style={{ marginTop: 3, alignSelf: 'flex-start' }} />
               ) : (
-                <Text style={{ fontFamily: FONTS.family.bold, fontSize: SIZES.font.lg, color: COLORS.contentPrimary }}>
+                <Text
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.7}
+                  style={{ fontFamily: FONTS.family.bold, fontSize: 18, color: COLORS.contentPrimary }}
+                >
                   {fmtRate(silver?.currentRate)}
-                  <Text style={{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.contentMuted }}>/g</Text>
+                  <Text style={{ fontFamily: FONTS.family.regular, fontSize: SIZES.font.sm, color: COLORS.contentMuted }}> /g</Text>
                 </Text>
               )}
             </View>
-            {!ratesLoading && (
-              <View style={styles.changeCol}>
-                <Ionicons name={silverUp ? 'caret-up' : 'caret-down'} size={13} color={silverUp ? COLORS.success : COLORS.error} />
-                <Text style={{ fontFamily: FONTS.family.medium, fontSize: SIZES.font.xs, color: silverUp ? COLORS.success : COLORS.error }}>
-                  {fmtPct(silver?.changePct)}
-                </Text>
-              </View>
-            )}
           </TouchableOpacity>
         </View>
 
@@ -208,30 +199,32 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 12,
+    minWidth: 0,
+    paddingVertical: 4,
   },
   iconWrap: {
-    width: 38,
-    height: 38,
-    borderRadius: 12,
+    width: 44,
+    height: 44,
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
   },
   info: {
     flex: 1,
-  },
-  changeCol: {
-    alignItems: 'center',
+    minWidth: 0,
   },
   divider: {
     width: StyleSheet.hairlineWidth,
     height: 46,
-    marginHorizontal: 7,
+    marginHorizontal: 6,
+    flexShrink: 0,
   },
   footerDivider: {
     height: StyleSheet.hairlineWidth,
-    marginTop: 14,
-    marginBottom: 10,
+    marginTop: 5,
+    marginBottom: 5,
   },
   footer: {
     flexDirection: 'row',

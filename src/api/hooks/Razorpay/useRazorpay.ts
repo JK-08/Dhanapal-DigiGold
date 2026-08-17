@@ -8,7 +8,6 @@ import {
   VerifyPaymentData,
   RazorpaySuccessPayment,
   RazorpayError,
-  UserDetails,
 } from '../../../types/Razorpay/Razorpay';
 
 export type PaymentStatus =
@@ -27,18 +26,22 @@ export interface UseRazorpayReturn {
   error:      string | null;
   pay: (
     orderReq:        CreateOrderRequest,
+    newJoin:         boolean,
     checkoutOptions: Record<string, any>,
-    userDetails?:    UserDetails,
     afterVerify?:    AfterVerifyFn,
   ) => Promise<void>;
   reset: () => void;
 }
 
 /**
- * Optional hook invoked AFTER the payment signature is verified and BEFORE the
- * status flips to 'success'. Receives the raw Razorpay success payload (with the
- * payment / order ids) so the caller can create a member, post an installment,
- * etc. If it throws, the flow is marked as 'failed'.
+ * Optional hook invoked AFTER /verify-payment returns, once the backend has
+ * (re)confirmed the payment and moved the parked NMDATA/SCHEMEDETAILS payload
+ * into the real DB (member/installment creation happens server-side — see
+ * RazorpayService.processPendingPayment, triggered by either this call or the
+ * Razorpay webhook, whichever arrives first). Use this ONLY for UI side
+ * effects (showing a result screen, clearing a draft, etc.) — do NOT call
+ * /member/create or /account/insert here, the backend already did it.
+ * If it throws, the flow is marked as 'failed'.
  */
 export type AfterVerifyFn = (
   payment:    RazorpaySuccessPayment,
@@ -47,9 +50,12 @@ export type AfterVerifyFn = (
 
 /**
  * Orchestrates the 3-step Razorpay flow:
- *   1. create-order  -> get order_id + key
+ *   1. create-order (with NEWJOIN + NMDATA/SCHEMEDETAILS already in orderReq)
+ *      -> backend parks the payload and returns order_id + key
  *   2. open WebView checkout -> user pays
- *   3. verify-payment (with userDetails) OR payment-failed
+ *   3. verify-payment -> backend verifies signature and moves the parked
+ *      payload into the real DB (idempotent — the webhook may have already
+ *      done this, verify-payment just polls/returns the same result)
  */
 export function useRazorpay(): UseRazorpayReturn {
   const [status,     setStatus]     = useState<PaymentStatus>('idle');
@@ -68,8 +74,8 @@ export function useRazorpay(): UseRazorpayReturn {
 
   const pay = async (
     orderReq:        CreateOrderRequest,
+    newJoin:         boolean,
     checkoutOptions: Record<string, any>,
-    userDetails?:    UserDetails,
     afterVerify?:    AfterVerifyFn,
   ) => {
     const { _checkoutFn, ...rzpOptions } = checkoutOptions;
@@ -80,16 +86,24 @@ export function useRazorpay(): UseRazorpayReturn {
       return;
     }
 
+    // Local (non-state) flag — `status`/`verifyData` React state don't update
+    // synchronously within this single call, so the catch block below can't
+    // rely on them to know whether the payment itself was already captured.
+    let paymentCapturedButProcessingFailed = false;
+
     try {
       // ── Step 1: Create order ──────────────────────────────────
+      // orderReq already carries NMDATA (newJoin=true) or SCHEMEDETAILS
+      // (newJoin=false) — the backend parks it now and creates the real
+      // member/installment automatically once payment is confirmed.
       setStatus('creating_order');
       setError(null);
 
       console.log('------------------------------------------');
-      console.log('[STEP 2] CREATE ORDER — Request');
+      console.log('[STEP 2] CREATE ORDER — Request  (NEWJOIN =', newJoin, ')');
       console.log(JSON.stringify(orderReq, null, 2));
 
-      const createRes = await razorpayService.createOrder(orderReq);
+      const createRes = await razorpayService.createOrder(orderReq, newJoin);
       if (!createRes.data) throw new Error(createRes.message ?? 'Order creation failed');
 
       const order = createRes.data;
@@ -127,10 +141,11 @@ export function useRazorpay(): UseRazorpayReturn {
       console.log('------------------------------------------');
 
       // NOTE: /razorpay/verify-payment binds @RequestBody Map<String,String>
-      // on the backend, so it ONLY accepts the three flat string fields below.
-      // Sending a nested `userDetails` object makes Spring reject the request
-      // with a generic 400 before the controller runs. Member creation is done
-      // separately via the `afterVerify` callback (-> /api/v1/member/create).
+      // on the backend, so it ONLY accepts these three flat string fields.
+      // No userDetails here — the full payload already went up with
+      // /create-order (NMDATA/SCHEMEDETAILS) and the backend moves it into
+      // the real DB itself (see processPendingPayment), returning the result
+      // in verifyRes.data.processResult below.
       const verifyPayload = {
         razorpay_payment_id: paymentData.razorpay_payment_id,
         razorpay_order_id:   paymentData.razorpay_order_id,
@@ -148,8 +163,29 @@ export function useRazorpay(): UseRazorpayReturn {
 
       setVerifyData(verifyRes.data ?? null);
 
-      // ── Step 4: Post-verify side-effect (e.g. create member) ──
-      // Runs only after the signature is verified. If it fails, the whole
+      // ── Step 3b: Did the backend actually finish creating the record? ──
+      // The Razorpay signature can verify successfully (payment captured)
+      // while the server-side move of the parked NMDATA/SCHEMEDETAILS into
+      // the real DB still failed (see processPendingPayment). That failure
+      // is only visible in the processResult string, NOT in the HTTP/
+      // ApiResponse status — so check it explicitly. The customer's money
+      // IS captured either way; this only decides whether we tell them the
+      // member/installment record itself needs attention.
+      const processResult = verifyRes.data?.processResult ?? '';
+      console.log('[STEP 3b] VERIFY PAYMENT — processResult =', processResult);
+      if (processResult.startsWith('PROCESS_FAILED') || processResult.startsWith('TEMP_NOT_FOUND') || processResult.startsWith('PROCESS_ERROR')) {
+        paymentCapturedButProcessingFailed = true;
+        throw new Error(
+          'Payment was received, but we could not finish setting up your record automatically. ' +
+          'Please contact support with this reference: ' + orderIdRef.current,
+        );
+      }
+
+      // ── Step 4: Post-verify UI side-effect ─────────────────────
+      // Member/installment creation already happened server-side (backend
+      // moved the parked NMDATA/SCHEMEDETAILS into the real DB — result is
+      // in verifyRes.data.processResult). This callback is for UI only
+      // (show a result screen, clear a draft, etc). If it throws, the whole
       // flow is treated as failed so the user can retry.
       if (afterVerify) {
         await afterVerify(paymentData, verifyRes.data ?? null);
@@ -181,7 +217,11 @@ export function useRazorpay(): UseRazorpayReturn {
         );
       }
 
-      if (orderIdRef.current) {
+      // Don't call markFailed when the payment itself was genuinely captured
+      // and only the server-side record creation failed — the order should
+      // stay SUCCESS, and AppPayment_TempData is already left claimable for
+      // a retry by the backend (PROCESSED reset to 0 on PROCESS_FAILED/ERROR).
+      if (orderIdRef.current && !paymentCapturedButProcessingFailed) {
         razorpayService.markFailed(orderIdRef.current).catch(() => {});
       }
     }

@@ -30,10 +30,8 @@ import { useTheme } from '../../theme';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 import { METAL_LABEL } from '../../types/Scheme/Scheme';
 import { useRazorpay } from '../../api/hooks/Razorpay/useRazorpay';
-import { UserDetails, RazorpaySuccessPayment } from '../../types/Razorpay/Razorpay';
 import { useMemberScheme } from '../../api/hooks/Member/useMemberScheme';
 import { MemberSchemeGroup } from '../../types/Member/MemberScheme';
-import { memberService } from '../../api/services/memberService';
 import { NMData } from '../../types/Member/NMData';
 import { useToast } from '../../components/ui/Toast';
 import { useAppSelector } from '../../store/hooks';
@@ -504,15 +502,19 @@ function FailureModal({ visible, message, onRetry, onCancel }: {
 }
 
 // ── Join Success Modal ───────────────────────────────────────────
+// Member creation now happens server-side (inside processPendingPayment,
+// triggered by /verify-payment or the Razorpay webhook — whichever arrives
+// first). The backend only returns a Java Map.toString() in processResult
+// (not real JSON), so we can't reliably parse personalId/status/joinDate
+// back out of it. Show what the app already knows locally instead — the
+// scheme, amount and (for fixed-installment schemes) the group/reg no the
+// member selected before paying. A freshly generated reg no for a new
+// flexible-amount join isn't known client-side, so that row is omitted.
 interface JoinResult {
-  status:      string;
-  personalId:  string;
-  groupCode:   string;
-  regNo:       string;
-  joinDate:    string;
+  groupCode?:  string;
+  regNo?:      string;
   amount:      number;
   totalIns:    string;
-  sno:         string;
 }
 
 function JoinSuccessModal({ visible, result, schemeName, onClose }: {
@@ -540,12 +542,9 @@ function JoinSuccessModal({ visible, result, schemeName, onClose }: {
   if (!result) return null;
 
   const rows: { label: string; value: string; highlight?: boolean }[] = [
-    { label: 'Status',      value: result.status,     highlight: true },
-    { label: 'Member ID',   value: result.personalId, highlight: true },
-    { label: 'Group Code',  value: result.groupCode },
-    { label: 'Reg No.',     value: result.regNo },
-    { label: 'Receipt No.', value: result.sno },
-    { label: 'Join Date',   value: result.joinDate.split(' ')[0] },
+    { label: 'Status',      value: 'Success', highlight: true },
+    ...(result.groupCode ? [{ label: 'Group Code', value: result.groupCode }] : []),
+    ...(result.regNo     ? [{ label: 'Reg No.',    value: result.regNo }]     : []),
     { label: 'Amount',      value: `₹${result.amount.toLocaleString('en-IN')} / month` },
     { label: 'Instalments', value: result.totalIns },
   ];
@@ -870,60 +869,12 @@ export default function SchemeJoinScreen() {
   const [joinResult,     setJoinResult]     = useState<JoinResult | null>(null);
   const [showJoinResult, setShowJoinResult] = useState(false);
 
-  // ── Build userDetails payload for /verify_payment ─────────────
-  const buildUserDetails = (): UserDetails => {
-    const today = new Date();
-    const todayStr    = today.toISOString().split('T')[0]; // yyyy-MM-dd
-    const todayDT     = `${todayStr} 00:00:00`;
-    const dobFormatted = dobSet
-      ? `${String(dobDay).padStart(2,'0')}/${String(dobMonth).padStart(2,'0')}/${dobYear}`
-      : undefined;
-    const titleMap: Record<string, string> = { Male: 'Mr', Female: 'Mrs', Other: 'Mx' };
-    const groupCode = isFixed ? (selectedGroup?.GROUPCODE ?? '') : '';
-    const regNo     = isFixed ? String(selectedGroup?.CURRENTREGNO ?? '') : '';
-
-    return {
-      newMember: {
-        title:               titleMap[gender] ?? undefined,
-        pName:               name.trim()       || undefined,
-        dob:                 dobFormatted,
-        email:               email.trim()       || undefined,
-        address1:            doorStreet.trim()  || undefined,
-        mobile:              mobile.trim()       || undefined,
-        pinCode:             pincode.trim()      || undefined,
-        city:                city.trim()         || undefined,
-        state:               stateVal.trim()     || undefined,
-        area:                area.trim()         || undefined,
-        nomeni:              nominee.trim()       || undefined,
-        nomineeRelationship: nomRel.trim()        || undefined,
-        nomineeMobile:       nomMobile.trim()     || undefined,
-        panno:               pan.trim().toUpperCase() || undefined,
-      },
-      createSchemeSummary: {
-        schemeId:   String(scheme.SchemeId),
-        groupCode:  groupCode || undefined,
-        regNo:      regNo || undefined,
-        joinDate:   todayStr,
-        updateTime: todayDT,
-        totalIns:   String(scheme.Instalment),
-      },
-      schemeCollectInsert: {
-        groupCode:  groupCode || undefined,
-        regNo:      regNo || undefined,
-        rDate:      todayDT,
-        amount:     String(effectiveAmount),
-        modePay:    'ONLINE',
-        installment:'1',
-        SchemeId:   scheme.SchemeId,
-        chqBankCode:'RAZORPAY',
-        // chqCardNo filled by useRazorpay hook with razorpay_payment_id
-      },
-    };
-  };
-
-  // ── Build NMData payload for /api/v1/member/create ────────────
-  // Called only after the Razorpay payment succeeds & signature is verified.
-  const buildMemberPayload = (payment: RazorpaySuccessPayment): NMData => {
+  // ── Build NMData payload sent UP FRONT with /create-order (NEWJOIN=true) ──
+  // The backend parks this (keyed by the Razorpay order_id) and creates the
+  // member itself once the payment is confirmed — via /verify-payment or the
+  // Razorpay webhook, whichever arrives first (see
+  // RazorpayService.processPendingPayment -> NewMemberService.createNewMember).
+  const buildMemberPayload = (): NMData => {
     const now  = new Date();
     const pad  = (n: number) => String(n).padStart(2, '0');
     const dateStr     = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
@@ -990,10 +941,10 @@ export default function SchemeJoinScreen() {
         modePay:      '4',
         accCode:      '00001',   // FIXED
         chqBankCode:  '4',
-        chqCardNo:    payment.razorpay_payment_id,   // paymentId
+        chqCardNo:    '',
         chqBranch:    'Online',
         chkBank:      'Razorpay',
-        chqRtnReason: payment.razorpay_order_id,     // orderId
+        chqRtnReason: '',
       },
       referralCode: '',
     };
@@ -1087,27 +1038,19 @@ export default function SchemeJoinScreen() {
 
     const groupCode = isFixed ? (selectedGroup?.GROUPCODE ?? '') : '';
     const regno     = isFixed ? String(selectedGroup?.CURRENTREGNO ?? '') : '';
-    const receipt   = `join_${scheme.SchemeId}_${mobile}_${Date.now()}`;
-
-    console.log('==========================================');
-    console.log('[STEP 1] SCHEME JOIN — Form Submitted');
-    console.log('  Scheme     :', scheme.schemeName, '| ID:', scheme.SchemeId);
-    console.log('  Amount     : ₹', effectiveAmount);
-    console.log('  GroupCode  :', groupCode, '| RegNo:', regno);
-    console.log('  Receipt    :', receipt);
-    console.log('  Customer   :', name.trim(), '|', mobile, '|', email);
-    console.log('==========================================');
 
     pay(
       {
-        AMOUNT:            effectiveAmount, // paise
+        AMOUNT:            effectiveAmount, // rupees — backend multiplies by 100 for paise
         CURRENCY:          'INR',
-        RECEIPT:           receipt,
+        RECEIPT:           '',
         SCHEMEID:          String(scheme.SchemeId),
         GROUPCODE:         groupCode,
         REGNO:             regno,
         INSTALLMENTNUMBER: 1,
+        NMDATA:            buildMemberPayload(),
       },
+      /* newJoin */ true,
       {
         _checkoutFn: (opts: any) => rzpWebRef.current!.open(opts),
         name:        'Dhanapal DigiGold',
@@ -1116,23 +1059,16 @@ export default function SchemeJoinScreen() {
         prefill: { name, email, contact: mobile },
         theme:   { color: mColor },
       },
-      buildUserDetails(),
-      // After the payment is verified, create the member via /api/v1/member/create.
-      async (payment) => {
-        console.log('------------------------------------------');
-        console.log('[STEP 4] POST-VERIFY — Creating Member');
-        console.log('  razorpay_payment_id :', payment.razorpay_payment_id);
-        console.log('  razorpay_order_id   :', payment.razorpay_order_id);
-        console.log('  razorpay_signature  :', payment.razorpay_signature);
-        const payload = buildMemberPayload(payment);
-        console.log('[STEP 4] /api/v1/member/create REQUEST BODY:');
-        console.log(JSON.stringify(payload, null, 2));
-        console.log('------------------------------------------');
-        const response = await memberService.createMember(payload);
-        console.log('[STEP 4] /api/v1/member/create RESPONSE:');
-        console.log(JSON.stringify(response, null, 2));
-        console.log('[STEP 4] Member created successfully ✓');
-        setJoinResult(response as unknown as JoinResult);
+      // Member was already created server-side by the time verify-payment
+      // returns (see processPendingPayment). Just show the success screen
+      // with what we already know locally.
+      async () => {
+        setJoinResult({
+          groupCode: groupCode || undefined,
+          regNo:     regno || undefined,
+          amount:    effectiveAmount,
+          totalIns:  String(scheme.Instalment),
+        });
         setShowJoinResult(true);
       },
     );

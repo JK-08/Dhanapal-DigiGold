@@ -12,12 +12,22 @@ import {
 } from '../../types/Razorpay/Razorpay';
 
 export const razorpayService = {
-  /** Step 1 — create a Razorpay order on the server */
-  createOrder: (body: CreateOrderRequest) =>
+  /**
+   * Step 1 — create a Razorpay order on the server.
+   *
+   * `newJoin` is sent as the `NEWJOIN` query param the backend requires:
+   *   true  -> body.NMDATA must be set (new member joining a scheme)
+   *   false -> body.SCHEMEDETAILS must be set (existing member, installment)
+   * The backend parks whichever payload is present and auto-creates the
+   * member/installment once the payment is confirmed (verify-payment or
+   * webhook — see RazorpayService.processPendingPayment).
+   */
+  createOrder: (body: CreateOrderRequest, newJoin: boolean) =>
     callApi<CreateOrderRequest, ApiResponse<CreateOrderData>>({
       method: 'post',
       url:    RAZORPAY.CREATE_ORDER,
       data:   body,
+      params: { NEWJOIN: newJoin },
     }),
 
   /** Step 2 — verify signature after successful Razorpay checkout */

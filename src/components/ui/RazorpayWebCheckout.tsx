@@ -182,7 +182,7 @@ const RazorpayWebCheckout = forwardRef<RazorpayWebCheckoutRef>((_, ref) => {
       onRequestClose={handleUserCancel}
       statusBarTranslucent
     >
-      <SafeAreaView style={[s.safe, { backgroundColor: COLORS.surfacePage }]} edges={[]}>
+      <SafeAreaView style={[s.safe, { backgroundColor: COLORS.surfacePage }]} edges={['bottom','top']}>
         {/* Header */}
         
 

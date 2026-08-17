@@ -72,7 +72,7 @@ export default function MainHeader({ onProfilePress, onNotificationPress, onRate
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
       >
-        <SafeAreaView edges={['top']}>
+        <SafeAreaView edges={['top',]}>
           {/* Decorative circles */}
           <View pointerEvents="none" style={[styles.circle1, { backgroundColor: COLORS.whiteOpacity10 }]} />
           <View pointerEvents="none" style={[styles.circle2, { backgroundColor: COLORS.goldOpacity20 }]} />

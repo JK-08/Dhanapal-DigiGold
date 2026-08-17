@@ -1,5 +1,7 @@
 // src/types/Razorpay/Razorpay.ts
 
+import { NMData } from '../Member/NMData';
+
 // ── Generic backend ApiResponse wrapper ──────────────────────────
 export interface ApiResponse<T = unknown> {
   status:  'success' | 'error';
@@ -9,14 +11,28 @@ export interface ApiResponse<T = unknown> {
 }
 
 // ── create-order REQUEST  (sent TO backend — all uppercase keys) ──
+//
+// The backend's /razorpay/create-order now parks the FULL member/installment
+// payload (NMDATA or SCHEMEDETAILS) in a temp table the moment the order is
+// created, keyed off NEWJOIN (sent as a query param — see razorpayService).
+// It is only turned into a real PERSONALINFO/SCHEMEMAST row (new join) or
+// SCHEMECOLLECT/SCHEMETRAN row (installment) once the payment is confirmed —
+// either by the app calling /verify-payment, or by the Razorpay webhook,
+// whichever arrives first. So the app no longer calls /member/create or
+// /account/insert itself after verifying; the backend does it.
 export interface CreateOrderRequest {
-  AMOUNT:              number;   // in paise (₹1 = 100)
+  AMOUNT:              number;   // rupees — backend multiplies by 100 for paise
   CURRENCY:            string;   // 'INR'
   RECEIPT:             string;   // unique receipt string
   SCHEMEID?:           string;
   GROUPCODE:           string;
   INSTALLMENTNUMBER?:  number;
   REGNO:               string;
+  // Full payload to park — exactly ONE of these is required depending on NEWJOIN.
+  // NMData is the same type used for /api/v1/member/create — field names are
+  // verified against the backend's Java model there.
+  NMDATA?:             NMData;               // NEWJOIN = true  (new member joining a scheme)
+  SCHEMEDETAILS?:      SchemeCollectInsert;   // NEWJOIN = false (existing member paying an installment)
 }
 
 // ── create-order RESPONSE (received FROM backend) ─────────────────
@@ -30,80 +46,7 @@ export interface CreateOrderData {
   contact?:  string;
 }
 
-// ── verify-payment userDetails sub-DTOs ──────────────────────────
-
-export interface NewMember {
-  title?:                   string;
-  initial?:                 string;
-  pName?:                   string;
-  sName?:                   string;
-  dob?:                     string;   // dd/MM/yyyy
-  email?:                   string;
-  doorNo?:                  string;
-  address1?:                string;
-  address2?:                string;
-  area?:                    string;
-  city?:                    string;
-  state?:                   string;
-  country?:                 string;
-  pinCode?:                 string;
-  mobile?:                  string;
-  idProof?:                 string;
-  idProofNo?:               string;
-  upDateTime?:              string;
-  userId?:                  string;
-  appVer?:                  string;
-  needsms1?:                string;
-  needsms2?:                string;
-  needemail?:               string;
-  mobile2?:                 string;
-  smsSend?:                 string;
-  phoneRes?:                string;
-  fax?:                     string;
-  phoneRes2?:               string;
-  stdCode1?:                string;
-  stdCode2?:                string;
-  nomeni?:                  string;   // nominee name
-  panno?:                   string;
-  anniversaryDate?:         string;
-  nomineeMobile?:           string;
-  nomineeRelationship?:     string;
-  nomAddr1?:                string;
-  nomAddr2?:                string;
-  nomCity?:                 string;
-  nomState?:                string;
-  nomPincode?:              string;
-  nomCountry?:              string;
-  aadhaarMasked?:           string;
-  nomineeMobileVerified?:   boolean;
-  nomineeAadhaarVerified?:  boolean;
-  walletBalance?:           number;
-}
-
-export interface CreateSchemeSummary {
-  sno?:           string;
-  companyId?:     string;
-  schemeId?:      string;
-  groupCode?:     string;
-  regNo?:         string;
-  joinDate?:      string;   // yyyy-MM-dd
-  updateTime?:    string;
-  openingDate?:   string;
-  iEmp?:          string;
-  intro?:         string;
-  iGroupCode?:    string;
-  iRegNo?:        string;
-  homeCollect?:   string;
-  remark?:        string;
-  signaturePath?: string;
-  userId?:        string;
-  costId?:        string;
-  totalIns?:      string;
-  totalQty?:      string;
-  appVer?:        string;
-  previlegeId?:   string;
-}
-
+// ── SCHEMEDETAILS sub-DTO (sent inside CreateOrderRequest above) ──────────
 export interface SchemeCollectInsert {
   groupCode?:    string;
   regNo?:        string;
@@ -118,33 +61,34 @@ export interface SchemeCollectInsert {
   userID?:       string;
   SchemeId?:     number;
   chqBankCode?:  string;   // paymentMode  e.g. "RAZORPAY"
-  chqCardNo?:    string;   // merchantTxnNo — filled by hook with razorpay_payment_id
+  chqCardNo?:    string;   // merchantTxnNo — receipt at create-order time (payment_id not known yet)
   chqBranch?:    string;   // paymentSubInstType
   chkBank?:      string;
   chqRtnReason?: string;
 }
 
-export interface UserDetails {
-  newMember?:           NewMember;
-  createSchemeSummary?: CreateSchemeSummary;
-  schemeCollectInsert?: SchemeCollectInsert;
-  referralCode?:        string;
-}
-
 // ── verify-payment REQUEST ────────────────────────────────────────
+// Backend binds @RequestBody Map<String,String> — ONLY these three flat
+// fields are accepted. userDetails is no longer sent here; the full
+// member/installment payload already went up with /create-order (NMDATA /
+// SCHEMEDETAILS) and the backend moves it into the real DB itself.
 export interface VerifyPaymentRequest {
   razorpay_payment_id: string;
   razorpay_order_id:   string;
   razorpay_signature:  string;
-  userDetails?:        UserDetails;
 }
 
 // ── verify-payment RESPONSE ───────────────────────────────────────
+// Matches RazorpayService.verifyPayment()'s `data` map. `processResult` is
+// the string returned by processPendingPayment() — e.g. "PROCESSED: {...}"
+// with the created member/installment result, "ALREADY_PROCESSED" if the
+// webhook already claimed it, or "PROCESS_FAILED: ..." on error.
 export interface VerifyPaymentData {
-  verified:   boolean;
-  paymentId:  string;
-  orderId:    string;
-  receipt?:   string;
+  paymentId?:        string;
+  orderId:            string;
+  amount?:            number;
+  processResult:      string | null;
+  alreadyProcessed?:  boolean;
 }
 
 // ── payment-failed REQUEST ────────────────────────────────────────
