@@ -14,10 +14,14 @@ export const useOnboardingBanners = () => {
     onboardingService
       .getBanners()
       .then((res) => {
+        console.log('[Onboarding] Raw response:', JSON.stringify(res, null, 2));
         res.banners.forEach((b) => console.log('[Onboarding Banner URL]', getImageUrl(b.image_path)));
         setBanners(res.banners);
       })
-      .catch((err) => setError(err.message))
+      .catch((err) => {
+        console.error('[Onboarding] Error:', err);
+        setError(err.message);
+      })
       .finally(() => setLoading(false));
   }, []);
 

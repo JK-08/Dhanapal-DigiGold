@@ -938,12 +938,12 @@ export default function SchemeJoinScreen() {
       },
       schemeCollectInsert: {
         amount:       String(effectiveAmount),
-        modePay:      '4',
-        accCode:      '00001',   // FIXED
-        chqBankCode:  '4',
+        modePay:      'O',
+        accCode:      '1',   // FIXED
+        chqBankCode:  '1',
         chqCardNo:    '',
-        chqBranch:    'Online',
-        chkBank:      'Razorpay',
+        chqBranch:    '',
+        chkBank:      'RZ',
         chqRtnReason: '',
       },
       referralCode: '',
