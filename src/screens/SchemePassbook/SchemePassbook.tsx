@@ -220,7 +220,7 @@ function TransactionCard({ item, isLast, onView }: { item: PaymentHistory; isLas
                 onPress={onView}
                 hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
               >
-                <Ionicons name="eye-outline" size={13} color={COLORS.brand} />
+                <Ionicons name="eye" size={18} color={COLORS.brand} />
               </TouchableOpacity>
             </View>
           </View>

@@ -39,10 +39,6 @@ function formatDate(raw: string): string {
   return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
-function generateReceipt(groupCode: string, regNo: number, installment: number): string {
-  return `rcpt_${groupCode}_${regNo}_ins${installment}_${Date.now()}`;
-}
-
 // ── Info Row ──────────────────────────────────────────────────────
 function InfoRow({ label, value, valueColor }: { label: string; value: string; valueColor?: string }) {
   const { COLORS, FONTS } = useTheme();
@@ -187,20 +183,10 @@ export default function PayInstallmentScreen() {
   const showSuccess  = status === 'success';
   const showFailed   = status === 'failed';
 
-  // ── Pay ───────────────────────────────────────────────────────
-  // ── Build SCHEMEDETAILS payload sent UP FRONT with /create-order ──
-  // The backend parks this (keyed by the Razorpay order_id) and inserts the
-  // installment itself once the payment is confirmed — via /verify-payment
-  // or the Razorpay webhook, whichever arrives first (see
-  // RazorpayService.processPendingPayment). The real razorpay_payment_id
-  // doesn't exist yet at this point (checkout hasn't opened), so chqCardNo /
-  // chqRtnReason use the RECEIPT — it's unique, known now, and traceable
-  // back to AppPayment_record.receipt.
-  const buildSchemeDetails = (receipt: string): SchemeCollectInsert => {
-    const now  = new Date();
-    const pad  = (n: number) => String(n).padStart(2, '0');
+  const buildSchemeDetails = (): SchemeCollectInsert => {
+    const now     = new Date();
+    const pad     = (n: number) => String(n).padStart(2, '0');
     const todayDT = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} 00:00:00`;
-
     return {
       groupCode:    ppData.groupCode || '',
       regNo:        String(ppData.regNo),
@@ -209,31 +195,27 @@ export default function PayInstallmentScreen() {
       modePay:      'ONLINE',
       updateTime:   todayDT,
       installment:  String(nextInstNum),
-      SchemeId:     scheme?.schemeId ? Number(scheme.schemeId) : undefined,
+      schemeId:     scheme?.schemeId ? Number(scheme.schemeId) : undefined,
       chqBankCode:  'RAZORPAY',
-      chqCardNo:    receipt,     // payment_id not known yet — use the receipt
+      chqCardNo:    '',
       chqBranch:    'Online',
       chkBank:      'Razorpay',
-      chqRtnReason: receipt,
+      chqRtnReason: '',
     };
   };
 
   const handlePay = () => {
     if (!isReady) return;
-
-    const RECEIPT = generateReceipt(ppData.groupCode, ppData.regNo, nextInstNum);
-
     pay(
       {
-        // Send rupees — backend createOrder multiplies by 100 to get paise.
-        AMOUNT:             effectiveAmount,
-        CURRENCY:           'INR',
-        RECEIPT,
-        SCHEMEID:           scheme?.schemeId,
-        GROUPCODE:          ppData.groupCode,
-        INSTALLMENTNUMBER:  nextInstNum,
-        REGNO:              String(ppData.regNo),
-        SCHEMEDETAILS:      buildSchemeDetails(RECEIPT),
+        AMOUNT:            effectiveAmount,
+        CURRENCY:          'INR',
+        RECEIPT:           '',
+        SCHEMEID:          scheme?.schemeId,
+        GROUPCODE:         ppData.groupCode,
+        INSTALLMENTNUMBER: nextInstNum,
+        REGNO:             String(ppData.regNo),
+        SCHEMEDETAILS:     buildSchemeDetails(),
       },
       /* newJoin */ false,
       {
@@ -248,8 +230,6 @@ export default function PayInstallmentScreen() {
         },
         theme: { color: COLORS.brand },
       },
-      // Installment was already recorded server-side by the time verify-payment
-      // returns (verifyData.processResult holds the result) — nothing left to do.
     );
   };
 
@@ -361,7 +341,7 @@ export default function PayInstallmentScreen() {
 
         {/* ── Payment Summary ── */}
         {isReady && (
-          <View style={[s.card, { backgroundColor: COLORS.brand + '06', borderColor: COLORS.brand + '20', ...SHADOWS.sm }]}>
+          <View style={[s.card, ]}>
             <Text style={[s.sectionTitle, { color: COLORS.brand, fontFamily: FONTS.family.bold }]}>
               Payment Summary
             </Text>

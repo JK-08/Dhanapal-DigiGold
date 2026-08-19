@@ -49,7 +49,7 @@ export const MEMBER = {
 };
 
 export const ACCOUNT = {
-  PHONE_DETAILS: '/account/phonesearch',
+  PHONE_DETAILS: '/account/phone_details',
   INSERT:        '/account/insert',
   TODAY_RATE:    '/account/todayrate',
   RATE_HISTORY:  '/account/rate/history',

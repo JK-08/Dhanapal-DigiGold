@@ -173,7 +173,16 @@ export function useRazorpay(): UseRazorpayReturn {
       // member/installment record itself needs attention.
       const processResult = verifyRes.data?.processResult ?? '';
       console.log('[STEP 3b] VERIFY PAYMENT — processResult =', processResult);
-      if (processResult.startsWith('PROCESS_FAILED') || processResult.startsWith('TEMP_NOT_FOUND') || processResult.startsWith('PROCESS_ERROR')) {
+      console.log('[STEP 3b] Full verifyRes.data =', JSON.stringify(verifyRes.data, null, 2));
+
+      const isProcessingFailure =
+        processResult.startsWith('PROCESS_FAILED') ||
+        processResult.startsWith('TEMP_NOT_FOUND') ||
+        processResult.startsWith('PROCESS_ERROR')  ||
+        processResult.startsWith('PROCESSED: Error');
+
+      if (isProcessingFailure) {
+        console.warn('[STEP 3b] DB PROCESSING FAILED — processResult =', processResult);
         paymentCapturedButProcessingFailed = true;
         throw new Error(
           'Payment was received, but we could not finish setting up your record automatically. ' +
@@ -199,7 +208,7 @@ export function useRazorpay(): UseRazorpayReturn {
       const rzpErr = err as RazorpayError;
       const isCancelled =
         rzpErr?.code === 'BAD_REQUEST_ERROR' &&
-        rzpErr?.description?.toLowerCase().includes('cancel');
+        (rzpErr?.description ?? '').toLowerCase().includes('cancel');
 
       if (isCancelled) {
         console.log('[STEP X] PAYMENT CANCELLED by user');

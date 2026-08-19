@@ -270,7 +270,7 @@ export default function NotificationScreen() {
         title="Notifications"
         subtitle={unreadCount > 0 ? `${unreadCount} unread` : undefined}
         showBack
-        onBackPress={() => navigation.goBack()}
+        onBackPress={() => (navigation as any).navigate('Home')}
         
         actions={[
           ...(unreadCount > 0 ? [{

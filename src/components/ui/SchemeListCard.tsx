@@ -41,7 +41,7 @@ export default function SchemeListCard({
   const rotateIcon = anim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] });
 
   const mColor  = METAL_COLOR[item.MetalType] ?? COLORS.brand;
-  const mLabel  = METAL_LABEL[item.MetalType] ?? item.MetalType;
+  const mLabel  = METAL_LABEL[item.MetalType] ?? item.MetalType ?? '';
   const canJoin = item.ADDNEWMEMBER === 'Y';
 
   return (

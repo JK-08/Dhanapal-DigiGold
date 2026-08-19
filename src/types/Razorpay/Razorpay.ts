@@ -59,7 +59,7 @@ export interface SchemeCollectInsert {
   weight?:       string;
   sWeight?:      string;
   userID?:       string;
-  SchemeId?:     number;
+  schemeId?:     number;
   chqBankCode?:  string;   // paymentMode  e.g. "RAZORPAY"
   chqCardNo?:    string;   // merchantTxnNo — receipt at create-order time (payment_id not known yet)
   chqBranch?:    string;   // paymentSubInstType

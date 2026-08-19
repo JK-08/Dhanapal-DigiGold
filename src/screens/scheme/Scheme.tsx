@@ -89,7 +89,7 @@ function AllSchemeCard({
   const rotateIcon = anim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] });
 
   const mColor = METAL_COLOR[item.MetalType] ?? COLORS.brand;
-  const mLabel = METAL_LABEL[item.MetalType] ?? item.MetalType;
+  const mLabel = METAL_LABEL[item.MetalType] ?? item.MetalType ?? '';
   const canJoin = item.ADDNEWMEMBER === 'Y';
 
   return (
@@ -280,7 +280,7 @@ function MySchemeCard({
           <View style={styles.statItem}>
             <Text style={[styles.statLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Invested</Text>
             <Text style={[styles.statValue, { color: COLORS.brand, fontFamily: FONTS.family.semiBold }]}>
-              ₹{item.totalAmount.toLocaleString('en-IN')}
+              ₹{(item.totalAmount ?? 0).toLocaleString('en-IN')}
             </Text>
           </View>
           <View style={styles.statItem}>
@@ -300,7 +300,7 @@ function MySchemeCard({
             <View style={styles.detailRow}>
               <Text style={[styles.detailLabel, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Total Invested</Text>
               <Text style={[styles.detailValue, { color: COLORS.contentPrimary, fontFamily: FONTS.family.semiBold }]}>
-                ₹{item.totalAmount.toLocaleString('en-IN')}
+                ₹{(item.totalAmount ?? 0).toLocaleString('en-IN')}
               </Text>
             </View>
             <View style={styles.detailRow}>
