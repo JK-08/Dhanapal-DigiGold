@@ -98,12 +98,15 @@ export const googleLogin = createAsyncThunk(
   'auth/googleLogin',
   async (data: { idToken: string }, { rejectWithValue }: { rejectWithValue: (v: string) => any }) => {
     try {
+      console.log('[Google Login] ➡ Request idToken:', data.idToken?.slice(0, 40) + '...');
       const res = await authService.googleLogin(data);
+      console.log('[Google Login] ✅ Response:', JSON.stringify(res, null, 2));
       if (res.token) {
         await AsyncStorageHelper.saveUserSession(res);
       }
       return res;
     } catch (err: any) {
+      console.error('[Google Login] ❌ Error:', JSON.stringify(err, null, 2));
       return rejectWithValue(err.message);
     }
   }

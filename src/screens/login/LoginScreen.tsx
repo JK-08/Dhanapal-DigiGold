@@ -42,7 +42,7 @@ export default function LoginScreen() {
   useEffect(() => {
     if (Platform.OS === 'android') {
       GoogleSignin.configure({
-        webClientId: '900212830464-j1buk7h1rc869r00dnm3p5t7ob2hk6t2.apps.googleusercontent.com',
+        webClientId: '1038057958960-gg9fji7abv6php2ahfi6kf3ttmu33nea.apps.googleusercontent.com',
         scopes: ['profile', 'email'],
         offlineAccess: true,
       });
@@ -98,11 +98,22 @@ export default function LoginScreen() {
   const handleGoogleSignIn = async () => {
     try {
       setSocialLoading(true);
+      console.log('[Google SignIn] ➡ Starting...');
+
       await GoogleSignin.hasPlayServices();
+      console.log('[Google SignIn] ✅ Play Services OK');
+
       const userInfo = await GoogleSignin.signIn();
-      const idToken  = userInfo.data?.idToken;
+      console.log('[Google SignIn] ✅ userInfo:', JSON.stringify(userInfo, null, 2));
+
+      const idToken = userInfo.data?.idToken;
+      console.log('[Google SignIn] idToken:', idToken ? idToken.slice(0, 40) + '...' : 'NULL / MISSING');
+
       if (!idToken) { toast.error('Google Sign-In Failed', { message: 'No ID token received' }); return; }
+
       const res = await dispatch(googleLogin({ idToken }));
+      console.log('[Google SignIn] dispatch result:', JSON.stringify(res, null, 2));
+
       if (googleLogin.fulfilled.match(res)) {
         const user = res.payload;
         await AsyncStorageHelper.saveUserSession(user);
@@ -116,11 +127,17 @@ export default function LoginScreen() {
           navigation.replace(mpinSet ? 'MpinLogin' : 'CreateMpin');
         }
       } else {
+        console.error('[Google SignIn] ❌ Rejected payload:', JSON.stringify(res.payload, null, 2));
         toast.error('Google Sign-In Failed', { message: res.payload as string });
       }
     } catch (error: any) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) return;
-      if (error.code === statusCodes.IN_PROGRESS) return;
+      console.error('[Google SignIn] ❌ Caught error:', JSON.stringify({
+        code:    error?.code,
+        message: error?.message,
+        full:    error,
+      }, null, 2));
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) { console.log('[Google SignIn] Cancelled by user'); return; }
+      if (error.code === statusCodes.IN_PROGRESS)       { console.log('[Google SignIn] Already in progress'); return; }
       toast.error('Google Sign-In Failed', { message: error.message ?? 'Something went wrong' });
     } finally {
       setSocialLoading(false);
