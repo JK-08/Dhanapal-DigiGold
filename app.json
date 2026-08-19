@@ -29,7 +29,8 @@
         ],
         "ITSAppUsesNonExemptEncryption": false
       },
-      "buildNumber": "2"
+      "buildNumber": "3",
+      "appleTeamId": "236BJUX2XU"
     },
     "android": {
       "package": "com.brightechsoftware.dhanapaldigigold",
@@ -104,7 +105,8 @@
       "@react-native-google-signin/google-signin",
       "@react-native-firebase/app",
       "@react-native-firebase/messaging",
-      "expo-localization"
+      "expo-localization",
+      "expo-apple-authentication"
     ],
     "extra": {
       "apiBaseUrl": "https://scheme.dhanapaljewellery.com/api/v1",

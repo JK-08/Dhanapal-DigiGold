@@ -4,12 +4,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
 import { getHash } from '../../utils/otpVerify';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import * as AppleAuthentication from 'expo-apple-authentication';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { COLORS, FONTS, SIZES, SHADOWS } from '../../theme/theme';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { registerUser, googleLogin } from '../../store/authSlice';
+import { registerUser, googleLogin, appleLogin } from '../../store/authSlice';
 import { AsyncStorageHelper } from '../../utils/AsyncStorageHelper';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 import AppInput from '../../components/ui/appcomponents/AppInput';
@@ -42,12 +43,13 @@ export default function RegisterScreen() {
   }, []);
 
   const initializeGoogleSignIn = useCallback(() => {
-    GoogleSignin.configure({
-      webClientId: '1038057958960-gg9fji7abv6php2ahfi6kf3ttmu33nea.apps.googleusercontent.com',
-      iosClientId: '1038057958960-n8o4db9uae78oh0gukrvv8fdofbmt5id.apps.googleusercontent.com',
-      scopes: ['profile', 'email'],
-      offlineAccess: true,
-    });
+    if (Platform.OS === 'android') {
+      GoogleSignin.configure({
+        webClientId: '900212830464-j1buk7h1rc869r00dnm3p5t7ob2hk6t2.apps.googleusercontent.com',
+        scopes: ['profile', 'email'],
+        offlineAccess: true,
+      });
+    }
   }, []);
 
   const initializeAppHash = useCallback(async () => {
@@ -82,7 +84,7 @@ export default function RegisterScreen() {
   const handleGoogleSignIn = async () => {
     try {
       setGoogleLoading(true);
-      if (Platform.OS === 'android') await GoogleSignin.hasPlayServices();
+      await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       const idToken = userInfo.data?.idToken;
       if (!idToken) { toast.error('Google Sign-In Failed', { message: 'No ID token received' }); return; }
@@ -90,7 +92,6 @@ export default function RegisterScreen() {
       if (googleLogin.fulfilled.match(res)) {
         const user = res.payload;
         await AsyncStorageHelper.saveUserSession(user);
-        // if no contact number → need to link mobile
         if (!user.contactNumber && user.id) {
           toast.info('One more step!', { message: 'Please add your mobile number' });
           navigation.navigate('GoogleContactUpdate', { userId: user.id });
@@ -106,6 +107,42 @@ export default function RegisterScreen() {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) return;
       if (error.code === statusCodes.IN_PROGRESS) return;
       toast.error('Google Sign-In Failed', { message: error.message ?? 'Something went wrong' });
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
+
+  const handleAppleSignIn = async () => {
+    try {
+      setGoogleLoading(true);
+      const isAvailable = await AppleAuthentication.isAvailableAsync();
+      if (!isAvailable) { toast.error('Not Available', { message: 'Apple Sign-In is not available on this device' }); return; }
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      });
+      const idToken = credential.identityToken;
+      if (!idToken) { toast.error('Apple Sign-In Failed', { message: 'No identity token received' }); return; }
+      const res = await dispatch(appleLogin({ idToken }));
+      if (appleLogin.fulfilled.match(res)) {
+        const user = res.payload;
+        await AsyncStorageHelper.saveUserSession(user);
+        if (!user.contactNumber && user.id) {
+          toast.info('One more step!', { message: 'Please add your mobile number' });
+          navigation.navigate('GoogleContactUpdate', { userId: user.id });
+        } else {
+          toast.success('Welcome!', { message: `Signed in as ${user.username ?? user.email}` });
+          const mpinSet = await AsyncStorageHelper.isMpinSet();
+          navigation.replace(mpinSet ? 'MpinLogin' : 'CreateMpin');
+        }
+      } else {
+        toast.error('Apple Sign-In Failed', { message: res.payload as string });
+      }
+    } catch (error: any) {
+      if (error.code === 'ERR_REQUEST_CANCELED') return;
+      toast.error('Apple Sign-In Failed', { message: error.message ?? 'Something went wrong' });
     } finally {
       setGoogleLoading(false);
     }
@@ -176,18 +213,28 @@ export default function RegisterScreen() {
         <View style={styles.dividerLine} />
       </View>
 
-      {/* Google Sign In */}
-      <TouchableOpacity
-        style={styles.googleBtn}
-        onPress={handleGoogleSignIn}
-        activeOpacity={0.85}
-        disabled={googleLoading}
-      >
-        <Ionicons name="logo-google" size={20} color={COLORS.error} />
-        <Text style={styles.googleText}>
-          {googleLoading ? 'Signing in...' : 'Continue with Google'}
-        </Text>
-      </TouchableOpacity>
+      {/* Social Sign In */}
+      {Platform.OS === 'ios' ? (
+        <AppleAuthentication.AppleAuthenticationButton
+          buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+          buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+          cornerRadius={SIZES.radius.lg}
+          style={{ height: SIZES.button.height.md, marginBottom: SIZES.sm }}
+          onPress={handleAppleSignIn}
+        />
+      ) : (
+        <TouchableOpacity
+          style={styles.googleBtn}
+          onPress={handleGoogleSignIn}
+          activeOpacity={0.85}
+          disabled={googleLoading}
+        >
+          <Ionicons name="logo-google" size={20} color={COLORS.error} />
+          <Text style={styles.googleText}>
+            {googleLoading ? 'Signing in...' : 'Continue with Google'}
+          </Text>
+        </TouchableOpacity>
+      )}
 
       {/* Footer */}
       <TouchableOpacity onPress={() => navigation.navigate('Login')} activeOpacity={0.7}>
