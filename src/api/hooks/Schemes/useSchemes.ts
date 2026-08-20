@@ -14,7 +14,7 @@ export const useSchemes = () => {
   const fetchSchemes = useCallback(() => {
     setLoading(true);
     setError(null);
-    schemeService
+    return schemeService
       .getAll()
       .then((res) => setSchemes(res.schemes ?? []))
       .catch((err) => setError(err.message ?? 'Failed to load schemes'))

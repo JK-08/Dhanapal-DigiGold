@@ -32,14 +32,14 @@ export default function VerifyMpinScreen() {
     const res = await dispatch(verifyMpin(value));
     if (verifyMpin.fulfilled.match(res)) {
       toast.success('Welcome back!', { message: `Hello, ${user?.username ?? 'User'} 👋`, position: 'top' });
-      // Record login-check entry (fire-and-forget; never blocks login)
+      navigation.replace('Main');
+      // Run non-critical tasks in background after navigation
       if (user?.username && user?.contactNumber) {
         loginCheckService
           .register({ username: user.username, mobileNumber: user.contactNumber })
-          .catch(() => { /* ignore — non-critical */ });
+          .catch(() => {});
       }
-      await initNotifications();
-      navigation.replace('Main');
+      initNotifications().catch(() => {});
     } else {
       const msg = (typeof res.payload === 'string' && res.payload.trim())
         ? res.payload

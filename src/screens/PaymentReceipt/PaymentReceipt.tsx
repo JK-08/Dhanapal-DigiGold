@@ -176,7 +176,7 @@ export default function PaymentReceipt() {
             <View style={[st.tableHeader, { backgroundColor: COLORS.brand }]}>
               <Text style={[st.th, { flex: 0.5 }]}>S.No</Text>
               <Text style={[st.th, { flex: 1.8 }]}>Group-Reg No</Text>
-              <Text style={[st.th, { flex: 1 }]}>Installment</Text>
+              <Text style={[st.th1, { flex: 1 }]}>Installment</Text>
               {weight > 0 && <Text style={[st.th, { flex: 1 }]}>Weight</Text>}
               <Text style={[st.th, { flex: 1.2 }]}>Amount</Text>
             </View>
@@ -294,6 +294,7 @@ const st = StyleSheet.create({
   table: { borderWidth: 1, borderRadius: 10, overflow: 'hidden', marginBottom: 16 },
   tableHeader: { flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 8 },
   th: { color: '#fff', fontSize: 10, fontWeight: '700', textAlign: 'center', textTransform: 'uppercase' },
+  th1: { color: '#fff', fontSize: 8, fontWeight: '700', textAlign: 'center', textTransform: 'uppercase' },
   tableRow: { flexDirection: 'row', paddingVertical: 12, paddingHorizontal: 8, borderTopWidth: 1 },
   td: { fontSize: 12, textAlign: 'center' },
 

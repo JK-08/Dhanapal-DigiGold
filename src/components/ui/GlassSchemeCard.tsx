@@ -151,6 +151,13 @@ export default function GlassSchemeCard({ item, width }: { item: PPData; index?:
                 {done ? 'Completed' : `${remaining} EMI${remaining === 1 ? '' : 's'}`}
               </Text>
             </View>
+            <View style={[card.statDivider, { backgroundColor: COLORS.borderSubtle }]} />
+            <View style={card.statRow}>
+              <Text style={[card.statLbl, { color: COLORS.contentMuted, fontFamily: FONTS.family.regular }]}>Total Weight</Text>
+              <Text style={[card.statVal, { color: COLORS.accentDeep, fontFamily: FONTS.family.bold }]}>
+                {item.schemeSummary?.totalWeight ? `${item.schemeSummary.totalWeight} g` : '—'}
+              </Text>
+            </View>
           </View>
         </View>
 

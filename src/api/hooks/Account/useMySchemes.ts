@@ -15,10 +15,7 @@ export const useMySchemes = () => {
     setError(null);
     try {
       const phoneNo = await AsyncStorageHelper.getContactNumber();
-      if (!phoneNo) {
-        setMySchemes([]);
-        return;
-      }
+      if (!phoneNo) { setMySchemes([]); return; }
       const data = await accountService.getPhoneDetails(phoneNo);
       setMySchemes(data ?? []);
     } catch (err: any) {

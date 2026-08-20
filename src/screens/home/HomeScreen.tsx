@@ -1,6 +1,6 @@
 // src/screens/home/HomeScreen.tsx
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -10,9 +10,10 @@ import {
   TouchableOpacity,
   Dimensions,
   ActivityIndicator,
+  RefreshControl,
   ViewToken,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -120,8 +121,21 @@ export default function HomeScreen() {
   const { COLORS, FONTS, SIZES, SHADOWS } = useTheme();
   const navigation = useNavigation<NavProps>();
 
-  const { schemes, loading: schemesLoading } = useSchemes();
-  const { mySchemes, loading: mySchemesLoading } = useMySchemes();
+  const { schemes, loading: schemesLoading, refetch: refetchSchemes } = useSchemes();
+  const { mySchemes, loading: mySchemesLoading, refetch: refetchMySchemes } = useMySchemes();
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Refetch my schemes every time the Home tab comes into focus
+  useFocusEffect(
+    React.useCallback(() => { refetchMySchemes(); }, [])
+  );
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await Promise.all([refetchMySchemes(), refetchSchemes()]);
+    setRefreshing(false);
+  }, []);
 
   const activeSchemes = schemes.filter(s => s.ACTIVE === 'Y');
 
@@ -177,7 +191,18 @@ export default function HomeScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.surfacePage }}>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 32 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[COLORS.brand]}
+            tintColor={COLORS.brand}
+          />
+        }
+      >
 
         {/* Header — inside scroll so it scrolls away */}
         <MainHeader onProfilePress={() => navigation.navigate('Profile' as any)} />

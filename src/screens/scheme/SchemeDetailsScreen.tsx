@@ -79,7 +79,7 @@ export default function SchemeDetailsScreen() {
           ) : (
             <LinearGradient colors={[mColor, mColor + 'CC']} style={st.heroImg} />
           )}
-          <LinearGradient
+          {/* <LinearGradient
             colors={[COLORS.transparent, COLORS.blackOpacity70]}
             style={st.heroOverlay}
           >
@@ -101,7 +101,7 @@ export default function SchemeDetailsScreen() {
             <Text style={[st.heroCode, { fontFamily: FONTS.family.regular }]}>
               Scheme Code: {scheme.SchemeSName}
             </Text>
-          </LinearGradient>
+          </LinearGradient> */}
         </View>
 
         {/* ── Key info grid ───────────────────────────────────── */}

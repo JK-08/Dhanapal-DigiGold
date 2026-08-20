@@ -308,13 +308,6 @@ function CustomTabBar({ state, navigation }: any) {
         {/* Top accent line */}
         <View style={[styles.topAccent, { backgroundColor: COLORS.brand }]} />
         
-        {/* Decorative dots */}
-        <View style={styles.decorativeDots}>
-          <View style={[styles.dot, { backgroundColor: COLORS.brand + '15' }]} />
-          <View style={[styles.dot, { backgroundColor: COLORS.brand + '15' }]} />
-          <View style={[styles.dot, { backgroundColor: COLORS.brand + '15' }]} />
-        </View>
-
         <View style={styles.tabsContainer}>
           {state.routes.map((route: any, index: number) => {
             const tab = TABS[index];
@@ -378,18 +371,6 @@ const styles = StyleSheet.create({
     height: 3,
     borderRadius: 2,
     marginLeft: -25,
-  },
-  decorativeDots: {
-    position: 'absolute',
-    top: 10,
-    right: 20,
-    flexDirection: 'row',
-    gap: 4,
-  },
-  dot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
   },
   tabsContainer: {
     flexDirection: 'row',

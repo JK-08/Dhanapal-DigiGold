@@ -10,6 +10,7 @@ import { LanguageProvider } from "./src/providers/LanguageProvider";
 import RootNavigator from "./src/navigation/RootNavigator";
 import useFonts from "./src/utils/Fonts";
 import { ToastProvider } from "./src/components/ui/Toast";
+import AppGate from "./src/components/AppGate";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,7 +23,11 @@ function AppContent() {
 
   if (!fontsLoaded) return <View style={{ flex: 1 }} />;
 
-  return <RootNavigator />;
+  return (
+    <AppGate>
+      <RootNavigator />
+    </AppGate>
+  );
 }
 
 export default function App() {
