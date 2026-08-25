@@ -147,6 +147,7 @@ const AppPinInput = forwardRef<AppPinInputRef, AppPinInputProps>(
     const GAP = gap ?? (variant === "dots" ? 20 : 10);
 
     const [pin, setPin] = useState<string[]>(Array(length).fill(""));
+    const pinRef = useRef<string[]>(Array(length).fill(""));
     const [focused, setFocused] = useState(false);
     const hiddenRef = useRef<TextInput>(null);
     const shakeAnim = useRef(new Animated.Value(0)).current;
@@ -192,6 +193,7 @@ const AppPinInput = forwardRef<AppPinInputRef, AppPinInputProps>(
 
     const updatePin = useCallback(
       (next: string[]) => {
+        pinRef.current = next;
         setPin(next);
         const str = next.join("");
         onChangeText?.(str);
@@ -225,30 +227,32 @@ const AppPinInput = forwardRef<AppPinInputRef, AppPinInputProps>(
 
     const handleKeypadPress = useCallback(
       (key: string) => {
+        const current = pinRef.current;
         if (key === "⌫") {
-          const lastFilled = pin.map((d, i) => (d ? i : -1)).filter((i) => i >= 0);
+          const lastFilled = current.map((d, i) => (d ? i : -1)).filter((i) => i >= 0);
           if (lastFilled.length === 0) return;
           const idx = lastFilled[lastFilled.length - 1];
-          const next = [...pin];
+          const next = [...current];
           next[idx] = "";
           animateDot(idx, false);
           updatePin(next);
         } else {
-          const firstEmpty = pin.findIndex((d) => !d);
+          const firstEmpty = current.findIndex((d) => !d);
           if (firstEmpty === -1) return;
-          const next = [...pin];
+          const next = [...current];
           next[firstEmpty] = key;
           animateDot(firstEmpty, true);
           updatePin(next);
         }
       },
-      [pin, animateDot, updatePin]
+      [animateDot, updatePin]
     );
 
     useImperativeHandle(ref, () => ({
       focus: () => hiddenRef.current?.focus(),
       clear: () => {
         const next = Array(length).fill("");
+        pinRef.current = next;
         setPin(next);
         dotAnims.forEach((a) => a.setValue(0));
         onChangeText?.("");

@@ -9,6 +9,7 @@ import { COLORS, FONTS, SIZES, SHADOWS } from '../../theme/theme';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { verifyMpin } from '../../store/mpinSlice';
 import { RootStackParamList } from '../../navigation/RootNavigator';
+import { navigationRef } from '../../navigation/navigationRef';
 import AppPinInput, { AppPinInputRef } from '../../components/ui/appcomponents/AppPinInput';
 import AppLoader from '../../components/ui/appcomponents/AppLoader';
 import { useToast } from '../../components/ui/Toast';
@@ -32,8 +33,9 @@ export default function VerifyMpinScreen() {
     const res = await dispatch(verifyMpin(value));
     if (verifyMpin.fulfilled.match(res)) {
       toast.success('Welcome back!', { message: `Hello, ${user?.username ?? 'User'} 👋`, position: 'top' });
-      navigation.replace('Main');
-      // Run non-critical tasks in background after navigation
+      if (navigationRef.isReady()) {
+        navigationRef.reset({ index: 0, routes: [{ name: 'Main' }] });
+      }
       if (user?.username && user?.contactNumber) {
         loginCheckService
           .register({ username: user.username, mobileNumber: user.contactNumber })

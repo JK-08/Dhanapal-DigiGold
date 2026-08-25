@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View, ActivityIndicator } from 'react-native';
@@ -12,6 +12,7 @@ import {
   handleInitialNotification,
   handleBackgroundOpenedApp,
 } from '../utils/NotificationHandler';
+import { navigationRef } from './navigationRef';
 import { ApiScheme } from '../types/Scheme/Scheme';
 import { PPData, PaymentHistory } from '../types/Account/PhoneDetails';
 
@@ -60,7 +61,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function RootNavigator() {
   const { COLORS, isDark } = useTheme();
   const [initialRoute, setInitialRoute] = useState<InitialRoute | null>(null);
-  const navigationRef = useRef<any>(null);
 
   useEffect(() => {
     (async () => {
@@ -111,7 +111,7 @@ export default function RootNavigator() {
   }
 
   return (
-    <NavigationContainer theme={navigationTheme} ref={navigationRef} onReady={onNavigationReady}>
+    <NavigationContainer theme={navigationTheme} ref={navigationRef} onReady={onNavigationReady as any}>
       <Stack.Navigator
         initialRouteName={initialRoute}
         screenOptions={{ headerShown: false, contentStyle: { backgroundColor: COLORS.surfacePage }, animation: 'fade' }}

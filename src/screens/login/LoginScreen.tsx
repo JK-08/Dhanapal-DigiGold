@@ -98,21 +98,15 @@ export default function LoginScreen() {
   const handleGoogleSignIn = async () => {
     try {
       setSocialLoading(true);
-      console.log('[Google SignIn] ➡ Starting...');
 
       await GoogleSignin.hasPlayServices();
-      console.log('[Google SignIn] ✅ Play Services OK');
 
       const userInfo = await GoogleSignin.signIn();
-      console.log('[Google SignIn] ✅ userInfo:', JSON.stringify(userInfo, null, 2));
-
       const idToken = userInfo.data?.idToken;
-      console.log('[Google SignIn] idToken:', idToken ? idToken.slice(0, 40) + '...' : 'NULL / MISSING');
 
       if (!idToken) { toast.error('Google Sign-In Failed', { message: 'No ID token received' }); return; }
 
       const res = await dispatch(googleLogin({ idToken }));
-      console.log('[Google SignIn] dispatch result:', JSON.stringify(res, null, 2));
 
       if (googleLogin.fulfilled.match(res)) {
         const user = res.payload;
@@ -127,17 +121,11 @@ export default function LoginScreen() {
           navigation.replace(mpinSet ? 'MpinLogin' : 'CreateMpin');
         }
       } else {
-        console.error('[Google SignIn] ❌ Rejected payload:', JSON.stringify(res.payload, null, 2));
         toast.error('Google Sign-In Failed', { message: res.payload as string });
       }
     } catch (error: any) {
-      console.error('[Google SignIn] ❌ Caught error:', JSON.stringify({
-        code:    error?.code,
-        message: error?.message,
-        full:    error,
-      }, null, 2));
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) { console.log('[Google SignIn] Cancelled by user'); return; }
-      if (error.code === statusCodes.IN_PROGRESS)       { console.log('[Google SignIn] Already in progress'); return; }
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) return;
+      if (error.code === statusCodes.IN_PROGRESS) return;
       toast.error('Google Sign-In Failed', { message: error.message ?? 'Something went wrong' });
     } finally {
       setSocialLoading(false);
@@ -156,7 +144,6 @@ export default function LoginScreen() {
         ],
       });
       const idToken = credential.identityToken;
-      console.log('=== APPLE ID TOKEN ===', idToken);
       if (!idToken) { toast.error('Apple Sign-In Failed', { message: 'No identity token received' }); return; }
       const res = await dispatch(appleLogin({ idToken }));
       if (appleLogin.fulfilled.match(res)) {

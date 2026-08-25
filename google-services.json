@@ -14,7 +14,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "1038057958960-f3et0uetg2j3lseg05mtclduvfm2dtv0.apps.googleusercontent.com",
+          "client_id": "1038057958960-18h5hag0en26ta11is3r53kgfv54hj01.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.brightechsoftware.dhanapaldigigold",
@@ -37,6 +37,13 @@
             {
               "client_id": "1038057958960-gg9fji7abv6php2ahfi6kf3ttmu33nea.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1038057958960-n8o4db9uae78oh0gukrvv8fdofbmt5id.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.brightechsoftware.dhanapaldigigold"
+              }
             }
           ]
         }
