@@ -17,7 +17,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../../theme';
 import { useAppSelector } from '../../store/hooks';
 import LiveRateCard from './LiveRateCard';
-import LOGO from '../../assets/company/logo.png';
+import CompanyLogo from './CompanyLogo';
+import { useCompanies } from '../../api/hooks/Company/useCompanies';
 
 type Props = {
   onProfilePress?: () => void;
@@ -31,6 +32,8 @@ export default function MainHeader({ onProfilePress, onNotificationPress, onRate
   const user = useAppSelector((s) => s.auth.user);
   const firstName = user?.username ?? 'User';
   const profilePic = (user as any)?.profilePic ?? (user as any)?.picture ?? null;
+  const { companies } = useCompanies();
+  const company = companies[0];
 
   const goToRates = (metal: 'Gold' | 'Silver') =>
     onRatesPress ? onRatesPress(metal) : navigation.navigate('Rates', { metal });
@@ -94,7 +97,7 @@ export default function MainHeader({ onProfilePress, onNotificationPress, onRate
             <View style={styles.leftContainer}>
               <View style={styles.brandContainer}>
                 <View style={styles.logoWrapper}>
-                  <Image source={LOGO} resizeMode="cover" style={styles.logo} />
+                  <CompanyLogo company={company} resizeMode="cover" style={styles.logo} />
                 </View>
                 <View>
                   <Text style={{

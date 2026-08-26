@@ -3,12 +3,13 @@
 // pulled from the same /company/all API used on the Contact screen.
 
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking, ActivityIndicator, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Linking, ActivityIndicator } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTheme } from '../../theme';
 import { useCompanies } from '../../api/hooks/Company/useCompanies';
 import { Company } from '../../types/Company/Company';
 import { LegalScreenShell, Section, Para, BulletList } from './LegalContent';
+import CompanyLogo from '../../components/ui/CompanyLogo';
 
 const companyAddress = (c: Company): string => {
   const lines = [c.ADDRESS1, c.ADDRESS2, c.ADDRESS3, c.ADDRESS4]
@@ -28,7 +29,7 @@ export default function AboutUsScreen() {
       {/* ── Brand hero ── */}
       <View style={s.hero}>
         <View style={[s.heroLogoWrap, { backgroundColor: COLORS.brandTint }]}>
-          <Image source={require('../../../assets/logo.png')} style={s.heroLogo} resizeMode="contain" />
+          <CompanyLogo company={companies[0]} style={s.heroLogo} resizeMode="contain" />
         </View>
         <Text style={[s.heroTitle, { color: COLORS.contentPrimary, fontFamily: FONTS.family.bold }]}>
           Dhanapal DigiGold

@@ -8,7 +8,7 @@
 
 import React, { useState } from 'react';
 import {
-  View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, ActivityIndicator,
+  View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -20,6 +20,7 @@ import { PaymentHistory } from '../../types/Account/PhoneDetails';
 import { useCompanies } from '../../api/hooks/Company/useCompanies';
 import { downloadPaymentReceipt } from '../../utils/PaymentReceiptPDF';
 import AppHeader from '../../components/ui/appcomponents/AppHeader';
+import CompanyLogo from '../../components/ui/CompanyLogo';
 
 type RouteProps = RouteProp<RootStackParamList, 'PaymentReceipt'>;
 
@@ -86,7 +87,7 @@ export default function PaymentReceipt() {
 
           {/* Company header */}
           <View style={st.companyRow}>
-            <Image source={require('../../../assets/logo.png')} style={st.logo} resizeMode="contain" />
+            <CompanyLogo company={company} style={st.logo} resizeMode="contain" />
             <View style={{ flex: 1 }}>
               <Text style={[st.companyName, { color: COLORS.brandStrong, fontFamily: FONTS.family.bold }]} numberOfLines={1}>
                 {company?.COMPANYNAME?.trim() || 'Dhanapal DigiGold'}

@@ -30,6 +30,8 @@ import { BlurView } from 'expo-blur';
 import { AsyncStorageHelper } from '../../utils/AsyncStorageHelper';
 import { FONTS, SIZES, COLORS } from '../../theme/theme';
 import { useOnboardingBanners } from '../../api/hooks/Onboard/useOnboardingBanners';
+import { useCompanies } from '../../api/hooks/Company/useCompanies';
+import CompanyLogo from '../../components/ui/CompanyLogo';
 
 const { width, height } = Dimensions.get('window');
 
@@ -154,6 +156,8 @@ const OnboardingScreen = ({ navigation }: any) => {
   const scrollX = useSharedValue(0);
   const insets = useSafeAreaInsets();
   const { banners, loading, getImageUrl } = useOnboardingBanners();
+  const { companies } = useCompanies();
+  const company = companies[0];
 
   const slides: Slide[] = banners.map((b) => ({
     id: String(b.BannerId),
@@ -221,11 +225,7 @@ const OnboardingScreen = ({ navigation }: any) => {
       {/* ── Top bar: logo + skip ── */}
       <Animated.View entering={FadeIn.duration(800)} style={[s.topBar, { top: insets.top + 10 }]}>
         <View style={s.logoWrap}>
-          <Image
-            source={require('../../assets/company/logo.png')}
-            style={s.logo}
-            resizeMode="cover"
-          />
+          <CompanyLogo company={company} style={s.logo} resizeMode="cover" />
         </View>
         {!isLast && (
           <TouchableOpacity onPress={handleSkip} style={s.skipBtn} activeOpacity={0.7}>
