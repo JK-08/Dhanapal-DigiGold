@@ -6,6 +6,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import Constants from 'expo-constants';
 
 import { useTheme } from '../../theme';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -82,6 +83,8 @@ function ActionRow({ icon, label, onPress, danger = false }: {
 /* ────────────────────────────────────────────────────────────────
    Screen
    ──────────────────────────────────────────────────────────────── */
+
+const appVersion = Constants.expoConfig?.version ?? '';
 
 export default function ProfileScreen() {
   const { COLORS, SIZES } = useTheme();
@@ -248,7 +251,12 @@ export default function ProfileScreen() {
         }
         onDismiss={hideAlert}
       />
-      <PoweredByFooter style={{ marginBottom: 20 }} />
+      <PoweredByFooter />
+      {!!appVersion && (
+        <AppText variant="caption" style={{ textAlign: 'center', color: COLORS.contentMuted, marginBottom: 20 }}>
+          Version {appVersion}
+        </AppText>
+      )}
     </ScreenWrapper>
   );
 }

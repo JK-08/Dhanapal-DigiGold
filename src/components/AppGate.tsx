@@ -5,22 +5,25 @@ import {
 } from 'react-native';
 import { API_BASE_URL } from '@env';
 import Constants from 'expo-constants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../providers/ThemeProvider';
 import CustomAlert from './ui/CustomAlert';
 
 const { width } = Dimensions.get('window');
-const DISMISSED_KEY = '@update_dismissed_version';
 
 interface AppConfig {
-  VERSION: string;
+  PLAYSTORE_VERSION: string;
   STORE_URL: string;
+  APPSTORE_VERSION: string;
   APPSTORE_URL: string;
   IS_MAINTENANCE: boolean;
   MAINTENANCE_MSG: string;
 }
 
 type Status = 'loading' | 'ok' | 'maintenance' | 'update';
+
+function platformVersion(cfg: AppConfig): string {
+  return Platform.OS === 'ios' ? cfg.APPSTORE_VERSION : cfg.PLAYSTORE_VERSION;
+}
 
 function isOutdated(current: string, required: string): boolean {
   const c = current.split('.').map(Number);
@@ -160,9 +163,8 @@ function MaintenanceScreen({ config, onRetry }: { config: AppConfig; onRetry: ()
 
 /* ── AppGate ── */
 export default function AppGate({ children }: { children: React.ReactNode }) {
-  const [status, setStatus]                  = useState<Status>('ok');
-  const [config, setConfig]                  = useState<AppConfig | null>(null);
-  const [showUpdateAlert, setShowUpdateAlert] = useState(false);
+  const [status, setStatus] = useState<Status>('ok');
+  const [config, setConfig] = useState<AppConfig | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -174,11 +176,7 @@ export default function AppGate({ children }: { children: React.ReactNode }) {
         setConfig(cfg);
         if (cfg.IS_MAINTENANCE) { setStatus('maintenance'); return; }
         const current = Constants.expoConfig?.version ?? '0.0.0';
-        if (isOutdated(current, cfg.VERSION)) {
-          const dismissed = await AsyncStorage.getItem(DISMISSED_KEY);
-          if (dismissed !== cfg.VERSION) setShowUpdateAlert(true);
-          setStatus('update');
-        }
+        if (isOutdated(current, platformVersion(cfg))) setStatus('update');
       } catch { /* fail open */ }
     })();
   }, []);
@@ -204,22 +202,14 @@ export default function AppGate({ children }: { children: React.ReactNode }) {
     <View style={{ flex: 1 }}>
       {children}
       <CustomAlert
-        visible={status === 'update' && showUpdateAlert}
+        visible={status === 'update'}
         type="gold"
-        title={`New Version ${config?.VERSION} Available`}
+        title={`New Version ${config ? platformVersion(config) : ''} Available`}
         message={
           `A new version is available. Update the app for the latest features and improvements.\n\nபுதிய பதிப்பு கிடைக்கிறது. சிறந்த அனுபவத்திற்கு செயலியை புதுப்பிக்கவும்.`
         }
         dismissible={false}
         buttons={[
-          {
-            label: 'Later',
-            style: 'ghost',
-            onPress: async () => {
-              await AsyncStorage.setItem(DISMISSED_KEY, config!.VERSION);
-              setShowUpdateAlert(false);
-            },
-          },
           {
             label: 'Update Now',
             style: 'primary',
